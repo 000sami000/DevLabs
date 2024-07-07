@@ -1,0 +1,19 @@
+#editorjs {
+    margin:auto;
+    width: 92%;
+    height: 100%;
+    padding: 10px; /* Adjust as needed */
+    box-sizing: border-box;
+    text-align: left; /* Ensure text alignment is left */
+  }
+  
+  .ce-block__content,
+  .ce-toolbar__content,
+  .ce-toolbar__settings-btn,
+  .ce-toolbar__actions {
+    max-width: 100% !important;
+  }
+  
+  .ce-block__content {
+    width: 100%;
+  }

@@ -1,0 +1,22 @@
+.cdx-block--alignment {
+    text-align: initial;
+  }
+  
+  .cdx-block--alignment-left {
+    text-align: left;
+  }
+  
+  .cdx-block--alignment-center {
+    text-align: center;
+  }
+  
+  .cdx-block--alignment-right {
+    text-align: right;
+  }
+  
+  .cdx-block--alignment-justify {
+    text-align: justify;
+  }
+  h1{
+    font-size: 30px;
+  }

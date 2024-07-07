@@ -1,0 +1,18 @@
+.cdx-red-text {
+   font-size: 10px;
+    display: inline;
+  }
+  
+  .cdx-red-text-button {
+    background: none;
+    border: none;
+    color: rgb(81, 81, 81);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px;
+    font-weight: 700;
+  }
+  
+  .cdx-red-text-button:hover {
+    background-color: #f1f1f1;
+  }
