@@ -17,14 +17,14 @@ function Admin_main() {
   console.log(Selected);
   return (
     <div className="flex gap-3 w-[95%] m-auto mt-[4%]">
-      <div className="w-[22%] bg-[#999999] rounded-[5px] self-start sticky top-5">
+      <div className="w-[10%] bg-[#999999] rounded-[5px] self-start sticky top-5">
         <Left
           leftmenu={leftmenu}
           Selected={Selected}
           setSelected={setSelected}
         />
       </div>
-      <div className="w-[78%] bg-[#bcbcbc] rounded-[5px] p-5 px-[40px] relative ">
+      <div className="w-[90%] bg-[#bcbcbc] rounded-[5px] p-5 px-[40px] relative ">
         <Right Selected={Selected} />
       </div>
     </div>

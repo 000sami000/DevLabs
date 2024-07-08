@@ -101,7 +101,7 @@ function Solution_comp({sol_props,setSol_ed}) {
   }
   return (
       <>
-        <div className="w-[100%] m-auto bg-[#ffffff] rounded-md p-3 shadow-md">
+        <div id={_id} className="w-[100%] m-auto bg-[#ffffff] rounded-md p-3 shadow-md">
           <div className="w-full p-1 flex justify-between items-center rounded-[10px] pr-2">
             <div className="w-[88%] flex gap-5 items-center">
               <div className=" cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">

@@ -22,12 +22,12 @@ export const createProblem=(problemObj)=>{
     }
 
 }
-export const getProblems=()=>{
+export const getProblems=(selected)=>{
 
     return async(dispatch)=>{
         try
         {
-           const {data}=await api.fetchProblem();
+           const {data}=await api.fetchProblem(selected);
         //    console.log("data---:",data)
            dispatch(get_problems(data)) 
         }

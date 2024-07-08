@@ -12,9 +12,9 @@ API.interceptors.request.use((req)=>{
 })
 
 //problems
-export const fetchProblem=()=>{
+export const fetchProblem=(selected)=>{
 
-    return API.get(`/problem`);
+    return API.get(`/problem?page=${selected}`);
 
 }
 export const createProblem=(problemobj)=>{
@@ -44,6 +44,16 @@ export const delete_problem=(id)=>{
   export const verify_otp=(userobj)=>{
     return API.post('/user/verifyotp',userobj,{withCredentials:true})
   }
+  export const  update_user=(user_obj)=>{
+    return API.patch(`user/changeuser`,user_obj,{withCredentials:true})
+   }
+  export const  change_password=(user_obj)=>{
+    return API.patch(`user/changepassword`,user_obj,{withCredentials:true})
+   }
+   export const  delete_user=()=>{
+    return API.delete(`user/deleteuser`,{withCredentials:true})
+   }
+   
  //user
   export const  fetch_userProfile=(id)=>{
    return API.get(`user/userprofile/${id}`)
@@ -82,6 +92,7 @@ export const delete_problem=(id)=>{
    export const  search_savedSolution=(query)=>{
     return API.get(`user/searchsavedsolution?q=${query}`,{withCredentials:true})
    }
+  
    
   //solutions
   export const createSolution=(id,solutionobj)=>{

@@ -181,7 +181,7 @@ function User_solutions() {
       loading?<div className="flex justify-center "><Loader/></div>:
      Selected==="user_solutions"? usersolutions? usersolutions.map((itm)=>(
 
-      <div  onClick={()=>{navigate(`/problem/${itm.p_id}/sols`)}} className="bg-[#888888e6] p-2 flex gap-2 justify-between items-center rounded-[10px] cursor-pointer">
+      <div  onClick={()=>{navigate(`/problem/${itm.p_id}/sols?s_id=${itm._id}`)}} className="bg-[#888888e6] p-2 flex gap-2 justify-between items-center rounded-[10px] cursor-pointer">
         <div className="flex gap-7 w-[76%] items-center">
       <span className="   p-1 flex-grow-0 basis-auto   rounded-md flex items-center gap-1 ">
               <img

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     single_recent_post:{},
-    problems:[]
+    problems:[],
+    total:0,
 }
 export const problemSlice=createSlice({
    name:"problem_",
@@ -14,7 +15,7 @@ export const problemSlice=createSlice({
     },
     get_problems:(state,action)=>{
       console.log("get_problem action",action)
-        return  {...state,problems:action.payload}
+        return  {...state,problems:action.payload.problems,total:action.payload.total}
     },
     get_Single_problem:(state,action)=>{
       console.log("get_single_post action",action)

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   current_user: null,
   error: null,
@@ -49,6 +50,22 @@ const userSlice = createSlice({
       state.error=action.payload;
       state.loading=false;
     },
+    update_user:(state,action )=>{
+
+      console.log("update_user----action",action)
+      state.current_user=action.payload;
+      state.error=action.payload;
+      state.loading=false;
+          
+      },
+      deleteuser:(state,action)=>{
+   
+        console.log("update_user----action",action)
+        state.current_user="";
+        state.error=null;
+        state.loading=false;
+           
+        }
   },
 });
 export const {
@@ -58,7 +75,9 @@ export const {
   auth_failure,
   auth_signout,
   get_user,
-  get_user_unauth
+  get_user_unauth,
+  update_user,
+  deleteuser
 
 } = userSlice.actions;
 export default userSlice.reducer;

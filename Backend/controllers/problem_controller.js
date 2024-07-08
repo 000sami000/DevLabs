@@ -2,10 +2,15 @@ const { default: mongoose } = require("mongoose");
 const problem_Model = require("../models/problem_model");
 const solution_Model=require("../models/solution_model")
 const get_problems = async (req, res) => {
+    
+  const page=Number(Number(req.query.page)+1)||1
+  console.log('=====',page)
+  const skip=(page-1)*5;
   try {
-    const problems = await problem_Model.find().sort({ _id: -1 });
+    const total = await problem_Model.countDocuments({});
+    const problems = await problem_Model.find().sort({ _id: -1 }).limit(5).skip(skip);
     // console.log(problems)
-    res.status(200).json(problems);
+    res.status(200).json({problems,total});
   } catch (err) {
     // console.log(err)
     res.status(404).json({ message: err });

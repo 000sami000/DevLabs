@@ -8,7 +8,7 @@
     transition: background-color 0.3s;
   }
   
-  .toggle-switch .switch {
+   .switch {
     width: 30px;
     height: 30px;
     background-color: white;

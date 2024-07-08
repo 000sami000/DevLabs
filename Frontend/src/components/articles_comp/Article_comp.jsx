@@ -67,8 +67,8 @@ function Article_comp({ adata }) {
     creator_id,
     createdAt,
   thumbnail} = adata;
-//  let tempstring=thumbnail;
-  const dispatch = useDispatch();
+
+
   return (
     <>
       <div

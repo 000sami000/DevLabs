@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import Solution_comp from "./Solution_comp";
@@ -15,6 +15,10 @@ import Loader from "../Loader";
 
 
 function Solutions_main() {
+
+  // const queryParams = new URLSearchParams(location.search);
+  // const s_id = queryParams.get('s_id');
+  // const location = useLocation();
   const dispatch = useDispatch();
  
   let { p_id } = useParams();

@@ -5,7 +5,10 @@ const { isAuthorize } = require('../middleware/auth');
 const {verify_user_email,signin,signup,get_userprofile,update_userprofile,get_userproblem,
     get_user,get_userarticle,get_userarticle_saved,search_userproblem,search_userarticle,
     search_userarticle_saved,get_usersolution,verify_otp,search_usersolution,get_usersolution_saved,
-    search_usersolution_saved
+    search_usersolution_saved,
+    change_name_username,
+    delete_user,
+    change_password
 
 }=require('../controllers/user_controller');
 
@@ -14,6 +17,9 @@ router.post('/signup',signup);
 router.get('/getuser',isAuthorize,get_user)
 router.post('/verifyemail',verify_user_email)
 router.post('/verifyotp',isAuthorize,verify_otp)
+router.patch('/changeuser',isAuthorize,change_name_username)
+router.patch('/changepassword',isAuthorize,change_password)
+router.delete('/deleteuser',isAuthorize,delete_user)
 
 
 router.get('/userprofile/:u_id',get_userprofile);

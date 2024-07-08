@@ -63,7 +63,28 @@ const signin = async (req, res) => {
      console.log( req.forgot_email)
      console.log( req.verifying_otp)
      
+     if(otp!=req.verify_otp){
+      res.status(400).json({message:'Otp in invalid'})
+     }
+
+
      res.status(200).json({message:"ok"})
+  }
+  const change_password=async(req,res)=>{
+      const {password}=req.body;
+    try{
+      // const user= await user_Model.findById({_id:req.USER_ID})
+      // if (!user) {
+      //   return res.status(404).json({ message: "User already exists" });
+      // }
+    
+      const hashedpassword = await bcrypt.hash(password, 12);
+       user_Model.findByIdAndUpdate(req.USER_ID,{password:hashedpassword},{new:true})
+    res.status(200).json({message:"Password changed successfully"})
+
+    }catch(er){
+      res.status(404).json({message:err})
+    } 
   }
   const verify_user_email=async(req,res)=>{
       console.log("verify emil",req.body)
@@ -97,15 +118,52 @@ const signin = async (req, res) => {
       res.status(404).json({message:err})
      }
   }
+  const change_name_username=async(req,res)=>{
+      // const {username,name}=req.body;
+      // console.log(username)
+    try{
+      const user=await user_Model.findByIdAndUpdate(req.USER_ID,req.body,{new:true})
+      await problem_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
+      await solution_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username } });
+      await article_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
+      const {name,username,_id,email,saved_articles,saved_solutions}=user;
+      res.status(200).json({name,username,_id,email,saved_articles,saved_solutions})
+      
+    }catch(err){
+      // console.log("====",err)
+      res.status(404).json({message:err})
+    }
+  }
+
+  const delete_user=async(req,res)=>{
+    // const {username,name}=req.body;
+    // console.log(username)
+  try{
+     await problem_Model.deleteMany({ creator_id: req.USER_ID });
+     await solution_Model.deleteMany({ creator_id: req.USER_ID });
+     await article_Model.deleteMany({ creator_id: req.USER_ID });
+     await  user_Model.deleteOne({ _id: req.USER_ID });
+     res.status(200).json({message:"deleted successfully"})
+  }catch(err){
+    console.log("====",err)
+    res.status(404).json({message:err})
+  }
+}
+
+
+
   const signup = async (req, res) => {
    console.log("signup__backend",req.body)
     const { name,username, email, password, confirmpassword } = req.body;
     try {
       const existingUser = await user_Model.findOne({ email });
       if (existingUser) {
-        return res.status(404).json({ message: "User already exists" });
+        return res.status(404).json({ message: "User already exists " });
       }
-    
+      const isusername = await user_Model.findOne({ username });
+      if (isusername) {
+        return res.status(404).json({ message: "User name already used" });
+      }
       if (password !== confirmpassword) {
         return res.status(404).json({ message: "Password did't match" });
       }
@@ -144,7 +202,7 @@ const signin = async (req, res) => {
          // res.status(401).json({message:"Unauthorize access"})  
      }catch(err){ 
        console.log("get_user err---",err)
-       res.status(400).json({message:err})
+       res.status(404).json({message:err})
      } 
     }
   const get_userprofile=async(req,res)=>{
@@ -468,5 +526,8 @@ console.log("{}{{}{}{****",req.body)
     verify_user_email,verify_otp,
     search_usersolution,
     get_usersolution_saved,
-    search_usersolution_saved
+    search_usersolution_saved,
+    change_name_username,
+    delete_user,
+    change_password
   }

@@ -50,7 +50,6 @@ function Single_article() {
   };
   const { _id,title,article_content,tags,likes,dislikes, creator_username,creator_id,saved_art_by, isApproved, isActive, createdAt,
   } = Single_article;
-
   useEffect(()=>{
     if(Single_article){
       setLikes(likes?.length)
@@ -215,7 +214,7 @@ function Single_article() {
                   <div className="text-[13px]   pt-0 px-1">
                     {creator_username}
                   </div>
-                  {/* <div className="text-[13px]   pt-0 px-1">{formatDistanceToNow(createdAt)}</div> */}
+                  <div className="text-[13px]   pt-0 px-1">{createdAt && formatDistanceToNow(createdAt)}</div>
                 </div>
               </div>
 
