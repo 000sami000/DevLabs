@@ -34,6 +34,21 @@ const create_problem = async (req, res) => {
     res.status(404).json({ message: err });
   }
 };
+
+const search_problem_by_title=async (req,res)=>{
+
+  const page=Number(Number(req.query.page)+1)||1
+  console.log('=====',page)
+  const skip=(page-1)*5;
+  try{
+  const problems=await problem_Model.find({title:req.query.searchterm}).limit(5).skip(skip)
+    let total=problems.length
+  res.status(200).json({problems,total})
+  }catch(err){
+      console.log(err)
+    res.status(404).json({ message: err });
+  }
+}
 const single_problem = async (req, res) => {
   const { p_id } = req.params;
   console.log(p_id);
@@ -64,27 +79,29 @@ const delete_problem=async (req,res)=>{
 
 const like_problem = async (req, res) => {
   const { p_id } = req.params;
-  // if (!req.userID) {
-  //   return res.json({ message: "Unauthenticated" });
-  // }
-  if (!mongoose.Types.ObjectId.isValid(_id))
-    return res.status(404).send("No post with that id");
+  console.log("lllll",req.USER_ID)
+  if (!req.USER_ID) {
+    return res.status(400).json({ message: "Unauthenticated" });
+  }
+  console.log(">>>>>>",p_id)
+  if (!mongoose.Types.ObjectId.isValid(p_id))
+    return res.status(404).json({ message: "No problem with this id" });;
   try {
     // console.log('====',req.userID)
-    const post = await postModel.findById(p_id);
-    const index = post.likes.findIndex((id) => id === String(req.userID));
+    const problem = await problem_Model.findById(p_id);
+    const index = problem.likes.findIndex((id) => id === String(req.USER_ID));
     // console.log("index-->",index);
     if (index === -1) {
       //  console.log("if")
-      post.likes.push(req.userID);
+      problem.likes.push(req.USER_ID);
     } else {
       // console.log("else")
-      post.likes = post.likes.filter((id) => id !== String(req.userID));
-      // console.log("likes",post.likes)
+      problem.likes = problem.likes.filter((id) => id !== String(req.USER_ID));
+      // console.log("likes",problem.likes)
     }
-    // post.likeCount+=1;
-    // const updatedpost=await postModel.findByIdAndUpdate(_id,{likeCount:post.likeCount+1},{new:true})
-    const updatedpost = await postModel.findByIdAndUpdate(_id, post, {
+    // problem.likeCount+=1;
+    // const updatedpost=await postModel.findByIdAndUpdate(_id,{likeCount:problem.likeCount+1},{new:true})
+    const updatedpost = await problem_Model.findByIdAndUpdate(p_id, problem, {
       new: true,
     });
     res.status(200).json(updatedpost);
@@ -92,4 +109,5 @@ const like_problem = async (req, res) => {
     res.status(400).json({ error: err });
   }
 };
-module.exports = { get_problems, create_problem, single_problem,delete_problem };
+
+module.exports = { like_problem, get_problems, create_problem, single_problem,delete_problem };

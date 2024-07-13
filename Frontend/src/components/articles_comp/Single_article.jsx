@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { fetch_single_article,createComment  } from "../../api";
+import { fetch_single_article,createComment ,fetchComment,like_article,dislike_article,save_article } from "../../api";
 import { AiFillDislike, AiFillLike, AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 import { FaBookmark, FaComments, FaRegBookmark } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
-import { useSelector,useDispatch } from "react-redux";
-import WordLimitedTextarea from "../WordLimitedTextarea"
-import {fetchComment,like_article,dislike_article,save_article} from "../../api";
+import { useSelector } from "react-redux";
 import Loader from "../Loader"
-import { getUser } from "../../redux_/actions/user";
  import Update_article from "./Update_article";
+ import editorjsHTML from 'editorjs-html';
+ import "../text_editor/editorpro.css"
+import Comment from "../Comment";
+import {formatNumber} from "../format_num"
+import Report from "../Report";
 function Single_article() {
-  const dispatch=useDispatch();
+
   const [Single_article, setSingle_article] = useState({});
   const [Show_comment,setShow_comment]=useState(false)
-  let c_obj={content_creator_id:"",type_id:"",comment_type:"",comment_content:"",commentor_username:"",commentor_id:""}
-  const [Comments,setComments]=useState([])
+ 
+
   const { a_id } = useParams();
   const user=useSelector((state)=>state.userReducer.current_user)
+  const[current_adata,setcurrent_adata]=useState(null)
+
    const [loading,setloading]=useState(false);
   //  const [error,seterror]=useState(false);
-   const [cloading,setcloading]=useState(false);
+
   //  const [cerror,setcerror]=useState(false);
    const [isopen, setisopen]=useState(false)
    const [Likes,setLikes]=useState(0);
@@ -49,7 +53,7 @@ function Single_article() {
     }
   };
   const { _id,title,article_content,tags,likes,dislikes, creator_username,creator_id,saved_art_by, isApproved, isActive, createdAt,
-  } = Single_article;
+    total_comments } = Single_article;
   useEffect(()=>{
     if(Single_article){
       setLikes(likes?.length)
@@ -58,7 +62,7 @@ function Single_article() {
     }
   },[Single_article])
 
-
+ console.log("article------",article_content)
   function Save() {
     console.log("Savey");
     if (user&&saved_art_by?.length > 0) {
@@ -87,7 +91,7 @@ function Single_article() {
       const {data}=await save_article(_id);
       setSingle_article(data)
       // setLikes(data.likes.length)
-      console.log("hhhhh",data)
+      // console.log("hhhhh",data)
     }catch(err){
       console.log("savedarticle-- error", err);
     }
@@ -162,39 +166,83 @@ function Single_article() {
       console.log("dislike_article-- error", err);
     }
   }
-  const fetch_comment= async(type_id)=>{
-           
-    try{
-      setcloading(true);
-      const {data}=await fetchComment(type_id)
-      setcloading(false);
-      console.log("comments====",data)
-    setComments(data)
-    }catch(err){
-      setcloading(false);
-      console.log("fetch_comment-- error", err);
-    }
+
+
+
+  
+  function convertDataToHtml(blocks) {
+    var convertedHtml = "";
+    blocks.map((block) => {
+      switch (block.type) {
+        case "header":
+          convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+          break;
+        case "embded":
+          convertedHtml += `<div><iframe width="560" height="315" src="${block.data.embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+          break;
+        case "paragraph":
+          convertedHtml += `<p>${block.data.text}</p>`;
+          break;
+        case "delimiter":
+          convertedHtml += "<hr />";
+          break;
+        case "image":
+          convertedHtml += `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
+          break;
+        case "list":
+          convertedHtml += "<ul>";
+          block.data.items.forEach(function (li) {
+            convertedHtml += `<li>${li}</li>`;
+          });
+          convertedHtml += "</ul>";
+          break;
+        default:
+          console.log("Unknown block type", block.type);
+          break;
+      }
+    });
+    console.log("html}}}", convertedHtml);
+    return convertedHtml;
   }
+  // convertDataToHtml(article_content.blocks)
+  console.log("typeof",typeof(article_content))
 
-  const create_comment= async()=>{
-    if(text!=''){
-
-      c_obj={content_creator_id:creator_id,type_id:_id,comment_type:"article",comment_content:text,commentor_username:user.username,commentor_id:user._id}
-    }else{
-      //error
-      return;
+  const customParser = editorjsHTML({
+    table: (block) => {
+      const { withHeadings, content } = block.data;
+      let html = '<table>';
+      
+      content.forEach((row, rowIndex) => {
+        html += '<tr>';
+        row.forEach(cell => {
+          if (withHeadings && rowIndex === 0) {
+            html += `<th>${cell}</th>`;
+          } else {
+            html += `<td>${cell}</td>`;
+          }
+        });
+        html += '</tr>';
+      });
+      
+      html += '</table>';
+      return html;
     }
+  });
 
-        try{
-           const {data}=await createComment(c_obj)
-           console.log(data)
-           setComments((prev) => [data, ...prev])
-        }   catch(err){
-          console.log("create_comment-- error", err);
-        }           
+  let htmlContent = '';
+
+  if (typeof article_content === 'object') {
+   
+    try {
+      const html = customParser.parse(article_content);
+      htmlContent = html.join('');
+      console.log("///////",htmlContent)
+    } catch (err) {
+      console.error('Error parsing Editor.js content:', err);
+    }
+  } else {
+    htmlContent = article_content;
   }
-
-  const [text, setText] = useState('');
   return (
     <>
     {
@@ -227,7 +275,7 @@ function Single_article() {
               <span onClick={()=>{if(!user?._id){alert("Login to Like")}else{savedarticle(); }}}  className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
                <Save/>
               </span>
-              <span className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
+              <span onClick={()=>{setcurrent_adata({_id,creator_id,creator_username,title,report_type:"article"})}} className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
                 Report
               </span>
             </div>
@@ -238,9 +286,9 @@ function Single_article() {
             <div className=" text-[35px] pb-3 pl-5">{title}</div>
             <div
               dangerouslySetInnerHTML={{
-                __html: article_content,
+                 __html: htmlContent 
               }}
-              className="editor_article p-5"
+              className="editor_article p-5 ce-block__content"
             ></div>
             <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
             <div className="flex  justify-between p-2 px-4">
@@ -249,12 +297,12 @@ function Single_article() {
           </div>
             <div className="flex gap-10 items-center text-[20px]">
               <div className="flex gap-3 items-center ">
-               <div  className="flex items-center gap-1 cursor-pointer p-1 py-[1px] rounded-md hover:bg-[#ededed]" onClick={ ()=>{if(!user?._id){alert("Login to Like")}else{likearticle (); }} } > <Like/>&nbsp;{Likes}</div> 
-                <div className="flex items-center gap-1 cursor-pointer p-1 py-[1px] rounded-md hover:bg-[#ededed]"  onClick={ ()=>{if(!user?._id){alert("Login to DisLike")}else{dislikearticle (); }} }> <DisLike/>&nbsp;{DisLikes}</div>
+               <div  className="flex items-center gap-1 cursor-pointer p-1 py-[1px] rounded-md hover:bg-[#ededed]" onClick={ ()=>{if(!user?._id){alert("Login to Like")}else{likearticle (); }} } > <Like/>&nbsp;{formatNumber(Likes)}</div> 
+                <div className="flex items-center gap-1 cursor-pointer p-1 py-[1px] rounded-md hover:bg-[#ededed]"  onClick={ ()=>{if(!user?._id){alert("Login to DisLike")}else{dislikearticle (); }} }> <DisLike/>&nbsp;{formatNumber(DisLikes)}</div>
               </div>
-              <div  onClick={()=>{setShow_comment((prev)=>!prev); if(Show_comment) {fetch_comment(_id)}  }}  className="cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">
+              <div  onClick={()=>{setShow_comment((prev)=>!prev);   }}  className="cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">
                 <FaComments className="cursor-pointer" />
-                <span>2k</span>
+                <span>{formatNumber(total_comments)}</span>
                 
               </div>
             </div>
@@ -262,45 +310,12 @@ function Single_article() {
           </div>
           </div>
           {
-          Show_comment&&<div className="bg-[#343434] rounded-lg shadow-lg p-2">
-            <div className="text-center text-[#F99156] text-[15px] font-bold">
-              Comments
-            </div>
-            <hr className="bg-[#dadada] h-[2px] rounded-[2px] mb-2" />
-             { cloading?<div className="flex justify-center p-2"><Loader/></div>: !Comments?.length>0?<div>No Comments</div>: Comments.map((itm)=>(   
-              <div key={itm._id} className="w-full p-1 flex justify-between items-center rounded-[10px]">
-                <div className="w-[88%] flex gap-5 items-center">
-                  <div className=" w-[13%] overflow-x-hidden  cursor-pointer p-1 rounded-md flex items-center place-self-start gap-2 hover:bg-[#ededed56]">
-                    <img
-                      src="/default_profile.jpg"
-                      width={`30px`}
-                      className="rounded-[50%]"
-                    />
-                    <div className=" text-[#eaeaea]">
-                      <div className="text-wrap text-[11px] inline-block ">
-                        {itm.username}
-                      </div>
-                      <div className=" text-[10px]">tim101</div>
-                    </div>
-                  </div>
-                  <div className="w-[84%] break-words  text-[13px] text-[#eaeaea] ">
-                    {itm.comment_content}
-                  </div>
-                </div>
-                <div className="text-[#f96666] p-1  cursor-pointer rounded-md font-semibold hover:bg-[#ededed88]">
-                  Report
-                </div>
-              </div> ) ) 
-             }
-             <div className="flex gap-2 w-full items-center">
-              <WordLimitedTextarea maxWords={70} text={text} setText={setText}/>
-                 <button className="text-[green] p-1 hover:bg-[#49e349cf] rounded-md" onClick={create_comment}>Post</button>
-                </div>
-          </div>
+          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"article"}/>
           }
         </div>
         <div className="w-[25%] bg-[red] self-start">cssc</div>
         <Update_article Single_article={Single_article}  setSingle_article={setSingle_article} setisopen={setisopen} isopen={isopen}/>
+         <Report current_adata={current_adata} setcurrent_adata={setcurrent_adata}/>
       </div>
     }
     </>

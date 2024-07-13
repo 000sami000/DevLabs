@@ -1,6 +1,6 @@
 
 
-import { create_problem ,get_problems,get_Single_problem,delete_problem} from "../Slices/problemSlice"
+import { create_problem ,get_problems,get_Single_problem,delete_problem, like_problem} from "../Slices/problemSlice"
 import * as api from "../../api"
 
 ;
@@ -69,6 +69,25 @@ export const deleteProblem=(p_id,navigate)=>{
         catch(err)
         {
             console.log("deleteProblem err---",err)
+        }
+    }
+
+}
+export const likeProblem=(p_id)=>{
+
+    return async(dispatch)=>{
+        try
+        {
+           const {data}=await api.likeproblem(p_id);
+        
+           console.log("data---:",data)
+           dispatch(like_problem(data)) 
+           navigate('/')
+        
+        }
+        catch(err)
+        {
+            console.log("likeProblem err---",err)
         }
     }
 

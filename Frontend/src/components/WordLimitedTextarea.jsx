@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const WordLimitedTextarea = ({ maxWords ,text ,setText}) => {
+const WordLimitedTextarea = ({ maxWords ,text ,setText,place_holder}) => {
 
   const [wordCount, setWordCount] = useState(0);
 
@@ -21,7 +21,7 @@ const WordLimitedTextarea = ({ maxWords ,text ,setText}) => {
         onChange={handleChange}
         rows="3"
      maxLength={550}
-        placeholder="Type here..."
+        placeholder={place_holder||"write something.."}
         required
        
       />

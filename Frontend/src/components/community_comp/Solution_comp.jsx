@@ -1,5 +1,5 @@
-import React from "react";
-import { FaBookmark } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaBookmark, FaComments } from "react-icons/fa";
 import { formatDistanceToNow } from 'date-fns';
 import { IoArrowUpCircleOutline } from "react-icons/io5";
 import { IoArrowUpCircle } from "react-icons/io5";
@@ -10,15 +10,23 @@ import { MdDeleteOutline } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { useDispatch,useSelector } from "react-redux";
 import { deleteSolution, updateSolution, voteSolution ,saveSolution} from "../../redux_/actions/solution";
+
 import 'react-quill/dist/quill.snow.css';
 import DOMPurify from "dompurify";
-function Solution_comp({sol_props,setSol_ed}) {
+
+import Comment from "../Comment";
+import { formatNumber } from "../format_num";
+function Solution_comp({sol_props,setSol_ed,setcurrent_sdata}) {
   const user=useSelector((state)=>state.userReducer.current_user)
-  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id }=sol_props;
+  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments }=sol_props;
   // const cleanHTML = DOMPurify.sanitize(solution_content);
   // console.log("solution_content=++++",solution_content)
   // console.log("cleanhtml=++++",cleanHTML)
   console.log("///",sol_props)
+  const [text, setText] = useState('');
+  const [Comments,setComments]=useState([])
+  const [Show_comment,setShow_comment]=useState(false)
+  const [cloading,setcloading]=useState(false);
    const dispatch=useDispatch();
    const handleDelete=()=>{
          dispatch(deleteSolution(_id))
@@ -28,6 +36,7 @@ function Solution_comp({sol_props,setSol_ed}) {
     //  dispatch(updateSolution())
    }
 
+   
    function Upvote() {
     console.log("Upvote");
     if (user&&up_vote?.length > 0) {
@@ -111,7 +120,7 @@ function Solution_comp({sol_props,setSol_ed}) {
                   className="rounded-[50%]"
                 />
                 <div className="flex flex-col text-[12px]">
-                  <div>tim101</div>
+                  <div>{creator_username}</div>
                   <div className="self-start">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</div>
                 </div>
               </div>
@@ -124,7 +133,8 @@ function Solution_comp({sol_props,setSol_ed}) {
             <span onClick={()=>dispatch(saveSolution(_id))} className="text-[#F99156] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
             <Save/>
             </span>
-            <span className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
+            
+            <span onClick={()=>{setcurrent_sdata(sol_props)}} className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
               Report
             </span>
             </div>
@@ -140,41 +150,19 @@ function Solution_comp({sol_props,setSol_ed}) {
             </div>
           </div>
 
-
+        
           <hr className="bg-[#595858] h-[4px] rounded-[2px] mb-2" />
-
-
-          <div className="bg-[#343434] rounded-lg shadow-lg p-2">
-            <div className="text-center text-[#F99156] text-[15px] font-bold">
-              Comments
-            </div>
-            <hr className="bg-[#dadada] h-[2px] rounded-[2px] mb-2"/>
-            <div>
-              <div className="w-full p-1 flex justify-between items-center rounded-[10px]">
-                <div className="w-[88%] flex gap-5 items-center">
-                  <div className=" w-[13%] overflow-x-hidden  cursor-pointer p-1 rounded-md flex items-center place-self-start gap-2 hover:bg-[#ededed56]">
-                    <img
-                      src="/default_profile.jpg"
-                      width={`30px`}
-                      className="rounded-[50%]"
-                    />
-                    <div className=" text-[#eaeaea]">
-                      <div className="text-wrap text-[11px] inline-block ">Timddddddd ds Cook</div>
-                      <div className=" text-[10px]">tim101</div>
-                    </div>
-                  </div>
-                  <div className="w-[84%] break-words  text-[13px] text-[#eaeaea] ">
-                    
-                    i have been trying to install the quil text editor shdfjksh ds dfuhskfh jhskjfh 87hwkjh wefu le hfuhfiufiuhf ijioj oiweef uhfuhfiuhfiuh 
-                    ned
-                  </div>
-                </div>
-                <div className="text-[#f96666] p-1  cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
-                  Report
-                </div>
+          <div className="flex justify-end gap-10 items-center text-[20px]">
+          <div  onClick={()=>{setShow_comment((prev)=>!prev);   }}  className="cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">
+                <FaComments className="cursor-pointer" />
+                <span>{formatNumber(total_comments)}</span>
+                
               </div>
-            </div>
-          </div>
+              </div>
+          {
+          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"solution"} />
+          }
+        
         </div>
       </>
     

@@ -19,12 +19,12 @@ export const createArticle=(articleObj)=>{
     }
 
 }
-export const getArticles=()=>{
+export const getArticles=(selected)=>{
 
   return async(dispatch)=>{
       try
       {
-         const {data}=await api.fetchArticle();
+         const {data}=await api.fetchArticle(selected);
       //    console.log("data---:",data)
          dispatch(get_articles(data)) 
       }

@@ -108,7 +108,7 @@ function Article_comp({ adata }) {
             </span>
             <div className="h-[170px] w-[95%] overflow-hidden break-words text-wrap text-justify">{description} </div>
             <div className="flex flex-wrap gap-2 ">  {
-    tags.map((itm)=>{return<span className="bg-[#3d3d3dad] text-[white] p-2 rounded-lg shadow-lg">{itm}</span>})
+    tags.map((itm ,i)=>{return<span key={i} className="bg-[#3d3d3dad] text-[white] p-2 rounded-lg shadow-lg">{itm}</span>})
    }
     </div> 
           </div>

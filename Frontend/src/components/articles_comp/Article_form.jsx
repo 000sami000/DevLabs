@@ -66,7 +66,9 @@ function Article_form({user}) {
  <div className="flex justify-between ">
   
   <div className="w-[80%]">
+  <div className='border '>
    <Tags_input getter={getter}/> 
+   </div>
    </div>
    <button onClick={ submit_handler}  className="bg-[#ff9639] flex items-center rounded-[5px] p-2 text-[white] self-start gap-2 cursor-pointer">Create <IoAddCircle /></button>
     </div>

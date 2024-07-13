@@ -8,7 +8,8 @@ import { createSolution, updateSolution } from '../../redux_/actions/solution';
 function Solution_form({p_id,Sol_ed,setSol_ed}) {
   const dispatch=useDispatch();
   const [content,setcontent]=useState("")
-  const [ContentHtml,setContentHtml]=useState("")
+  const [ContentHtml,setContentHtml]=useState(Sol_ed?Sol_ed.solution_content:'')
+  // console.log("///???",Sol_ed)
    const user=useSelector((state)=>state.userReducer.current_user)
     // console.log(ContentHtml)
     console.log("[]]",p_id)
@@ -18,6 +19,7 @@ function Solution_form({p_id,Sol_ed,setSol_ed}) {
           
             dispatch(updateSolution(Sol_ed._id,{...Sol_ed,solution_content:ContentHtml}))
             setSol_ed(null);
+            setContentHtml('')
           }
           else{
             alert("you can't upload empty solution")
@@ -26,6 +28,7 @@ function Solution_form({p_id,Sol_ed,setSol_ed}) {
           if(ContentHtml){
             // console.log(user)
             dispatch(createSolution(p_id,{ContentHtml,creator_username:user.username}))
+            setContentHtml('')
           }
           else{
             alert("you can't upload emty solution")
@@ -47,7 +50,7 @@ function Solution_form({p_id,Sol_ed,setSol_ed}) {
      {
 
       Sol_ed!=null&&
-     <button className="bg-[#ff9639] flex items-center rounded-[5px] p-2 text-[white]  gap-2" onClick={()=>setSol_ed(null)}>Cancel <IoAddCircle /></button>
+     <button  className="bg-[#ff9639] flex items-center rounded-[5px] p-2 text-[white]  gap-2" onClick={()=>setSol_ed(null)}>Cancel <IoAddCircle /></button>
      }
     </div>
     </div>

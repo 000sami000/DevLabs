@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     
-    articles:[]
+    articles:[],
+    total:0
 }
 
 export const articleSlice=createSlice({
@@ -17,7 +18,8 @@ export const articleSlice=createSlice({
         
           get_articles:(state,action)=>{
             console.log("get_article action",action)
-             state.articles=action.payload;
+             state.articles=action.payload.articles;
+             state.total=action.payload.total;
           },
         
           delete_article:(state,action)=>{

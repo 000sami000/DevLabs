@@ -89,11 +89,11 @@ function User_profile() {
        </div>
        <div>
         <div>
-          <strong>{user.name}</strong>
+          <strong>{user?.name}</strong>
         </div>
         <div>
           <strong>Email:</strong>
-          { " "+user.email}
+          { " "+user?.email}
         </div>
         <br />
         <div>
@@ -191,7 +191,7 @@ function User_profile() {
             <div>
               {temp_data.education?.map((itm,index) => (
                 <div key={index} className="flex items-center">
-                  {itm} <TiDelete   onClick={()=>{settemp_data((prev)=>({...prev,education:prev.education.filter((del_itm)=>(del_itm!=itm))}))}}/>
+                  {itm} <TiDelete   onClick={()=>{settemp_data((prev)=>({...prev,education:prev.education.filter((del_itm)=>(del_itm!=itm))})); }}/>
                 </div>
               ))}
             </div>
@@ -200,7 +200,7 @@ function User_profile() {
                 className="text-[14px] w-[250px] p-1 rounded-md outline-none"
                 placeholder="Education Info"
                 onChange={(e)=>{obj={...obj,edu:e.target.value}}}
-              
+              // value={temp_data.education}
                           />
               <span>
                 <MdAddBox
@@ -210,6 +210,7 @@ function User_profile() {
                     if(obj.edu){
 
                     settemp_data((prev)=>({...prev,education:[...prev.education,obj.edu]}));
+                    obj.edu=''
                     }
                   
                   }}

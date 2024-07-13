@@ -63,6 +63,7 @@ export const getUser=()=>{
 }
 
 export const updateUser=(user_obj)=>{
+    console.log("/////////++",user_obj)
     return async(dispatch)=>{
         try{
          const {data}=await api.update_user(user_obj)

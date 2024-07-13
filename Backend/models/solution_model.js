@@ -22,7 +22,7 @@ let solution_schema=mongoose.Schema({
         type: [String],
         default: [],
       },
-   
+      total_comments:{type:Number,default:0},
     creator_username:{type:String,require:true},
     creator_id:{type:String,require:true},
     isApproved: { type: Boolean, default: false },

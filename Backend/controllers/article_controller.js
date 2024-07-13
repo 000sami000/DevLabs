@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const article_Model = require("../models/article_model");
 const user_Model = require("../models/user_model");
+
 const create_article = async (req, res) => {
   const {
     title,
@@ -11,12 +12,13 @@ const create_article = async (req, res) => {
     article_content,
     isActive,
   } = req.body;
+//  console.log( multer(req,"article_thumnail"))
   console.log("*****", req.body);
   console.log("likeeyyy");
   if (!req.file) {
     return res.status(400).json({ message: "No file selected" });
   }
-  console.log("the file :", req.file);
+  // console.log("the file :", req.file);
   const new_article = new article_Model({
     title: title,
     article_content,
@@ -37,17 +39,48 @@ const create_article = async (req, res) => {
 };
 
 const update_article=async(req,res)=>{
+  const {a_id}=req.params
+  if (!mongoose.Types.ObjectId.isValid(a_id))
+    return res.status(404).send("No article with that id");
   console.log(req.body);
   console.log(req.file);
+  if(req.file)
+  req.body.thumbnail=req.file;
+  try {
+      
+    const updated_art = await article_Model.findByIdAndUpdate(a_id,req.body,{new:true});
+    res.status(200).json(updated_art);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
    res.status(200).json({message:"okay"})
 }
+const search_article_by_title=async (req,res)=>{
 
+  const page=Number(Number(req.query.page)+1)||1
+  console.log('=====',page)
+  const skip=(page-1)*5;
+  try{
+  const article=await article_Model.find({title:req.query.searchterm}).limit(5).skip(skip)
+    let total=article.length
+  res.status(200).json({article,total})
+  }catch(err){
+      console.log(err)
+    res.status(404).json({ message: err });
+  }
+}
 const get_articles = async (req, res) => {
-  try {
-    const articles = await article_Model.find().sort({ _id: -1 });
-    // console.log(problems)
 
-    res.status(200).json(articles);
+
+  const page=Number(Number(req.query.page)+1)||1
+  console.log('=====aaa',page)
+  const skip=(page-1)*5;
+  try {
+    const total = await article_Model.countDocuments({});
+    const articles = await article_Model.find().sort({ _id: -1 }).limit(5).skip(skip);;
+    // console.log(problems)
+//  console.log(articles)
+    res.status(200).json({articles,total});
   } catch (err) {
     // console.log(err)
     res.status(404).json({ message: err });

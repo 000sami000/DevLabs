@@ -1,24 +1,80 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
 import { IoCloseCircle } from "react-icons/io5";
 import { deleteUser, updateUser } from "../../../redux_/actions/user";
+import { change_password } from "../../../api";
 function User_account() {
   const navigate=useNavigate()
   const [edit,setedit]=useState(false); 
   // let userlocalstorage = JSON.parse(localStorage.getItem("profile_"));
     const user=useSelector((state)=>state.userReducer.current_user)
     const [temp_user,settemp_user]=useState(user);
+    const fileInputRef = useRef(null);
+    const [imageUrl,setimageUrl]=useState('')
     // console.log(user)
     const [isopen,setisopen]=useState(false)
     const dispatch=useDispatch();
 
-    const [password,setpassword]=useState({password:"",confirmpassword:""})
+    const [passwordobj,setpasswordobj]=useState({password:"",confirmpassword:""})
+
+  const [Error,setError]=useState('');
+  const [Success,setSuccess]=useState('');
+  const [File,setFile]=useState(null)
+  const [deletemenu,setdeletemenu]=useState(false)
+    const handlesubmit=async()=>{
+      if(passwordobj.password===''||passwordobj.confirmpassword===''){
+        setError("both fields are required")
+        return;
+      }
+      if(passwordobj.password<8||passwordobj.confirmpassword<8){
+        setError("Password must be 8 digit long")
+        return;
+      }
+      if(passwordobj.password!==passwordobj.confirmpassword){
+        setError("Password and Confirm password are Different")
+        return;
+      }
+
+      try{
+          
+        const {data}=await change_password(passwordobj)
+        console.log("tthjkhjkhkhlk:",data)
+        setSuccess(data.message)
+      }catch(err){
+        console.log("Change password error:",err)
+      }
+    }
+
+
+    const handleFileChange = (event) => {
+      const File = event.target.files[0];
+      if (File) {
+        // Handle the selected file (e.g., upload it, display it, etc.)
+        console.log(File);
+        setimageUrl(URL.createObjectURL(File))
+       setFile(File)
+      //  settemp_user((prev)=>({...prev,profile_img_:File}))
+      }
+    };
+    const handleImageClick = () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    };
+  
   return (
     <div className='mt-[3%]'>
     <div className='absolute top-[-45px] rounded-[50%]'>
-          <img src='/default_profile.jpg' width={"14%"} className='rounded-[50%] shadow-[20px] '/>
+          <img   onClick={handleImageClick} src={temp_user.profile_img_||imageUrl||`/default_profile.jpg`} width={"14%"} className='rounded-[50%] shadow-[20px] cursor-pointer hover:w-[15%]'/>
+          <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={handleFileChange}
+      />
          </div>
          <br />
          <hr className="h-[4px] bg-[white] rounded-[2px]" />
@@ -41,9 +97,9 @@ function User_account() {
 
          <div  className="flex justify-between gap-2 items-end h-[50px]" >
          <div className="flex gap-3 text-[white]">
-         <button onClick={()=>{dispatch(updateUser(temp_user))}} className="bg-[#575757] px-2 py-1 rounded-lg" disabled={temp_user.name===user.name && temp_user.username===user.username}>Save Changes</button>
-         <button onClick={()=>{dispatch(deleteUser(navigate))}} className="bg-[#575757] px-2 py-1 rounded-lg text-[red]" >Delete Account</button>
-         <button onClick={()=>{setisopen((prev)=>!prev)}} className="bg-[#575757] px-2 py-1 rounded-lg">Change Password</button>
+         <button onClick={()=>{dispatch(updateUser({...temp_user,file:File}))}} className="bg-[#575757] px-2 py-1 rounded-lg" disabled={temp_user.name===user.name && temp_user.username===user.username}>Save Changes</button>
+         <button onClick={()=>{ setdeletemenu(true);setisopen((prev)=>!prev) }} className="bg-[#575757] px-2 py-1 rounded-lg text-[red]" >Delete Account</button>
+         <button onClick={()=>{setisopen((prev)=>!prev);setdeletemenu(false);}} className="bg-[#575757] px-2 py-1 rounded-lg">Change Password</button>
          </div>
         
          </div>
@@ -65,7 +121,22 @@ function User_account() {
 
         },
       }}>
-      <div className="w-[400px]">
+      { 
+          deletemenu?(      <div className="w-[400px]">
+      <div className="flex justify-end"> <IoCloseCircle className="text-[25px] text-[white]" onClick={()=>{setisopen((prev)=>!prev)}}/>
+      </div>
+      <br/>
+      <div className="text-center">Are sure about deleting this account</div>
+      <br/>
+      <div className="flex flex-col gap-3">
+        
+
+
+<div onClick={()=>{dispatch(deleteUser(navigate));}} className="mt-3 flex justify-end"><button className="bg-[orange] px-2 py-1 rounded-md text-[white]">Delete</button></div>
+      </div>
+
+       </div>):(
+        <div className="w-[400px]">
       <div className="flex justify-end"> <IoCloseCircle className="text-[25px] text-[white]" onClick={()=>{setisopen((prev)=>!prev)}}/>
       </div>
       <br/>
@@ -73,13 +144,15 @@ function User_account() {
       <br/>
       <div className="flex flex-col gap-3">
         
-<input placeholder="Type New Password" type={"password"} className="p-2 rounded-md outline-none"/>
-<input placeholder="Confirm Password" type={"password"}  className="p-2 rounded-md outline-none"/>
+<input onChange={(e)=>{setpasswordobj({...passwordobj,password:e.target.value})}} placeholder="Type New Password" type={"password"} className="p-2 rounded-md outline-none"/>
+<input onChange={(e)=>{setpasswordobj({...passwordobj,confirmpassword:e.target.value})}} placeholder="Confirm Password" type={"password"}  className="p-2 rounded-md outline-none"/>
 
-<div className="mt-3 flex justify-end"><button className="bg-[orange] px-2 py-1 rounded-md text-[white]">Change</button></div>
+<div onClick={handlesubmit} className="mt-3 flex justify-end"><button className="bg-[orange] px-2 py-1 rounded-md text-[white]">Change</button></div>
       </div>
 
-       </div>
+       </div>)
+      }
+     
        </Modal>
    </div>
   );

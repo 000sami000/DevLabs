@@ -6,7 +6,7 @@ let single_notif={
 }
 let user_schema = mongoose.Schema(
   {
-    // profile_img_:{type:String,default:""},
+    profile_img_:{type:Object,default:null},
     name: { type: String, required: true },
     email: { type: String, required: true },
     username: { type: String, required: true },

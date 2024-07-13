@@ -79,7 +79,7 @@ const signin = async (req, res) => {
       // }
     
       const hashedpassword = await bcrypt.hash(password, 12);
-       user_Model.findByIdAndUpdate(req.USER_ID,{password:hashedpassword},{new:true})
+     await  user_Model.findByIdAndUpdate(req.USER_ID,{password:hashedpassword},{new:true})
     res.status(200).json({message:"Password changed successfully"})
 
     }catch(er){
@@ -119,8 +119,10 @@ const signin = async (req, res) => {
      }
   }
   const change_name_username=async(req,res)=>{
+    console.log(">>>>}",req.file)
       // const {username,name}=req.body;
       // console.log(username)
+      req.body.profile_img_=req.file
     try{
       const user=await user_Model.findByIdAndUpdate(req.USER_ID,req.body,{new:true})
       await problem_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
@@ -196,8 +198,8 @@ const signin = async (req, res) => {
      try{
    
            const user=await user_Model.findById({_id:req.USER_ID})
-           const {name,username,_id,email,saved_articles,saved_solutions}=user;
-           res.status(200).json({name,username,_id,email,saved_articles,saved_solutions})
+           const {name,username,_id,email,saved_articles,saved_solutions,profile_img_}=user;
+           res.status(200).json({name,username,_id,email,saved_articles,saved_solutions,profile_img_})
            
          // res.status(401).json({message:"Unauthorize access"})  
      }catch(err){ 

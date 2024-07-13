@@ -28,7 +28,7 @@ function Tags_input({ Tags_arry = [], getter }) {
   };
 
   return (
-    <div className="border flex gap-3 p-1 flex-wrap">
+    <div className=" flex gap-3 p-1 flex-wrap">
       {Tags.map((itm, index) => {
         return (
           <span
@@ -46,7 +46,7 @@ function Tags_input({ Tags_arry = [], getter }) {
         );
       })}
       <input
-        className="border rounded-md p-1 outline-none bg-[#999999b2]"
+        className="border rounded-md p-1 outline-none bg-[#d6d6d6b2]"
         type="text"
         value={Val}
         onChange={(e) => setVal(e.target.value)}

@@ -2,10 +2,11 @@ const express =require('express');
 const router=express.Router();
 const {create_article,get_articles,like_article,get_single_article,dislike_article,saved_article,update_article}=require('../controllers/article_controller');
 const { isAuthorize } = require('../middleware/auth');
-const upload=require("../middleware/multer-file")
+
+const uploader=require("../middleware/multer-file")
 router.get('/',get_articles);
-router.patch('/:a_id',isAuthorize,upload.single("file"),update_article);
-router.post('/',isAuthorize,upload.single("file"),create_article);
+router.patch('/:a_id',isAuthorize,update_article);
+router.post('/',isAuthorize,uploader('article_thumnail'),create_article);
 router.patch(`/:a_id/likepost`,isAuthorize,like_article);
 router.patch(`/:a_id/dislikepost`,isAuthorize,dislike_article);
 router.get('/:a_id',get_single_article);

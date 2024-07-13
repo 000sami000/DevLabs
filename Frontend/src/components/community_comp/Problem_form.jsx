@@ -47,7 +47,7 @@ console.log("++++++",ContentHtml)
     
      <div className="flex justify-between ">
   
-   <div className="w-[80%]">
+   <div className="w-[80%] border">
     <Tags_input getter={getter}/> 
     </div>
     <button onClick={ submit_handler} className="bg-[#ff9639] flex items-center rounded-[5px] p-2 text-[white] self-start gap-2 cursor-pointer">Create <IoAddCircle /></button>

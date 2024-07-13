@@ -1,24 +1,51 @@
 import DOMPurify from "dompurify";
-import React from "react";
-import { AiOutlineLike } from "react-icons/ai";
+import React, { useState } from "react";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { BiSolidLike } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNow } from 'date-fns';
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { deleteProblem } from "../../redux_/actions/problem";
+import { deleteProblem, likeProblem } from "../../redux_/actions/problem";
+
 import "../text_editor/Editor.scss";
 import  'react-quill/dist/quill.snow.css';
-function Problem_comp({pdata}) {
+function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
   const dispatch=useDispatch();
   const {title,problem_content,tags,likes,total_sol,creator_username,creator_id,_id,createdAt}=pdata;
+  let user = useSelector((state) => state.userReducer.current_user);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
-  
+  console.log("oiuoiuoioi",location);
+  function Like() {
+    console.log("likkkkyyyy");
+    if (user&&likes?.length > 0) {
+      return (
+        <span>
+          {likes?.find((like) => like === user._id) ? (
+            <span className="text-md ">
+              <AiFillLike />{" "}
+            </span>
+          ) : (
+            <span className="text-md">
+              <AiOutlineLike />
+            </span>
+          )}
+        </span>
+      );
+    }
+    return (
+      <>
+        <span>
+          <AiOutlineLike /> 
+        </span>
+      </>
+    );
+  }
   const handle_del=()=>{
   dispatch(deleteProblem(pdata._id,navigate))
   }
+
   return (
     <>
       <div className="w-[100%] m-auto bg-[#D9D9D9] rounded-md p-3 shadow-md">
@@ -74,16 +101,24 @@ function Problem_comp({pdata}) {
               );
             })}
           </div>
-          <div className="flex justify-end gap-5 w-[20%]">
-            <div className="flex items-center text-[1.2rem] gap-1">
-              <AiOutlineLike className="text-[1.3rem] cursor-pointer" /> 1.3K
+          <div className="flex justify-end gap-5 w-[20%]">{
+
+              location.pathname!== `/problem/${_id}/sols` &&     <div onClick={()=>{dispatch(likeProblem(_id))}} className="flex p-[2px] items-center text-[1.2rem] gap-1 hover:bg-[white] rounded-md">
+             <Like/> {likes.length}
             </div>
-            <button className="text-[#f96666] p-1 rounded-md font-bold hover:bg-[#edededdd]">
+          }
+            {
+           location.pathname=== `/problem/${_id}/sols`?
+            <button onClick={()=>{setcurrent_pdata(pdata);  }} className="text-[#f96666] p-1 rounded-md font-bold hover:bg-[#edededdd]">
               Report
-            </button>
+            </button>:""
+
+            }
           </div>
         </div>
       </div>
+   
+      
     </>
   );
 }

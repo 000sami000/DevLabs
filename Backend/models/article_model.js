@@ -28,7 +28,7 @@ let article_schema=mongoose.Schema({
         type: [String],
         default: [],
       },
-   
+     total_comments:{type:Number,default:0},
     creator_username:{type:String,default:"",require:true},
     creator_id:{type:String,default:"",require:true},
     isApproved: { type: Boolean, default: false },

@@ -26,6 +26,9 @@ export const fetch_single_problem=(id)=>{
 export const delete_problem=(id)=>{
   return API.delete(`/problem/${id}`)
 }
+export const likeproblem=(p_id)=>{
+  return API.patch(`/problem/likeproblem/${p_id}`,{},{withCredentials:true})
+}
 
 //user authentication
  export const signin=(userobj)=>{
@@ -122,8 +125,8 @@ export const delete_problem=(id)=>{
         'Content-Type': 'multipart/form-data'
       }});
    }
-   export const fetchArticle=()=>{
-    return API.get(`/article/`);
+   export const fetchArticle=(selected)=>{
+    return API.get(`/article?page=${selected}`);
    }
    export const fetch_single_article=(a_id)=>{
     return API.get(`/article/${a_id}`);
@@ -149,8 +152,21 @@ export const delete_problem=(id)=>{
 
 //comment
 export const  createComment=(commentobj)=>{
-  return API.post("/comment/",commentobj);
+  return API.post("/comment/",commentobj,{withCredentials:true});
 }
 export const  fetchComment=(type_id_)=>{
   return API.get(`/comment/${type_id_}`);
+}
+export const  updateComment=(c_id,c_obj)=>{
+  console.log("api cobj",c_obj)
+  return API.patch(`/comment/${c_id}`,c_obj,{withCredentials:true});
+}
+
+export const  deleteComment=(c_id)=>{
+  console.log("api cobj",c_id)
+  return API.delete(`/comment/${c_id}`,{withCredentials:true});
+}
+//report
+export const  createReport=(reportobj)=>{
+  return API.post("/report/",reportobj,{withCredentials:true});
 }
