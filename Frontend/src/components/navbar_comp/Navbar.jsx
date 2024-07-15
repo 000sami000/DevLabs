@@ -92,7 +92,9 @@ console.log(current_user?.name)
            <span className="text-[15px] text-[white] block ">{current_user.name}</span>
         }
             <button className="text-[22px] text-[white] block" onClick={()=>{navigate(`/user/${current_user?._id}`);setIsMenuOpen(false)}}>Profile</button>
-            <button className="text-[22px] text-[red] block" onClick={()=>{dispatch(auth_signout()); navigate('/')}}>Logout</button>
+            <button className="text-[22px] text-[red] block" onClick={()=>{dispatch(auth_signout());
+            //  navigate('/')
+             }}>Logout</button>
 
         </div> 
       )}

@@ -92,7 +92,9 @@
 .ce-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
-
+.editorjs-wrapper {
+  border: none; /* Remove border */
+}
 /* Embed Tool */
 .ce-embed {
   text-align: center;

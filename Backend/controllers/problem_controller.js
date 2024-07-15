@@ -35,20 +35,47 @@ const create_problem = async (req, res) => {
   }
 };
 
-const search_problem_by_title=async (req,res)=>{
+const search_problem=async (req,res)=>{
 
-  const page=Number(Number(req.query.page)+1)||1
-  console.log('=====',page)
-  const skip=(page-1)*5;
+  const {q}=req.query;
+  console.log("the query is :",req.query.tags )
+   let  regex;
+  if(q){
+
+     regex = new RegExp(q, 'i');
+  }
+let tags=null;
+let  tagsArray=null;
+ let regexTags=null;
+   if(req.query.tags){
+
+      tags = req.query.tags || [];
+      tagsArray =tags?.split(',').map(tag => tag.trim()); 
+      regexTags = tagsArray.map(tag => new RegExp(tag, 'i'));
+   }
+   
+
   try{
-  const problems=await problem_Model.find({title:req.query.searchterm}).limit(5).skip(skip)
-    let total=problems.length
-  res.status(200).json({problems,total})
+    if(tags){
+      const problems=await problem_Model.find({
+       tags: {$in :regexTags} 
+      } ).sort({ _id: -1 });
+      let total=problems.length
+      // console.log("tags length :",total)
+      res.status(200).json({problems,total})
+    }
+    else{
+      const problems=await problem_Model.find({title:regex}).sort({ _id: -1 });
+      let total=problems.length
+
+      res.status(200).json({problems,total})
+    }
   }catch(err){
       console.log(err)
     res.status(404).json({ message: err });
   }
 }
+
 const single_problem = async (req, res) => {
   const { p_id } = req.params;
   console.log(p_id);
@@ -110,4 +137,4 @@ const like_problem = async (req, res) => {
   }
 };
 
-module.exports = { like_problem, get_problems, create_problem, single_problem,delete_problem };
+module.exports = { search_problem,like_problem, get_problems, create_problem, single_problem,delete_problem };

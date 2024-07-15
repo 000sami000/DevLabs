@@ -6,11 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProblems } from "../../redux_/actions/problem";
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 import { BsArrowRightSquareFill } from "react-icons/bs";
-import { IoMdCloseCircle } from "react-icons/io";
 import Search_input from "../Search_input";
-import Modal from 'react-modal';
-import WordLimitedTextarea from "../WordLimitedTextarea";
-import { createReport } from "../../api";
 function Community() {
   let user = useSelector((state) => state.userReducer.current_user);
   let p = useSelector((state) => state.problemReducer.problems);
@@ -19,6 +15,7 @@ function Community() {
   // console.log("pagecount",pagecount);
 
   const [selected, setselected] = useState(0);
+  
   console.log("[[[", p);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -31,15 +28,7 @@ function Community() {
   };
  
 
-  const submit_report=async(reportobj)=>{
-    console.log("welkjflk",reportobj)
-    try{
-       const {data}=await createReport(reportobj)
-       console.log("the data:",data)
-    }catch(err){
-      console.log("submit_report --- error",err)
-    }
-  }
+
   return (
     <>
       {user ? (
@@ -55,7 +44,7 @@ function Community() {
       <div className="text-[30px] text-center text-[white]">Problems</div>
       <br />
       <div>
-        <Search_input />
+        <Search_input placeholder_val={"Search Problems"} content_type={"problem"}  />
       </div>
       <br />
 

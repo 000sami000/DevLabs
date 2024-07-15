@@ -78,7 +78,7 @@ function Article_comp({ adata }) {
         className="w-[100%] m-auto bg-[#ffffff] rounded-md shadow-md"
       >
         <div className="w-full flex  items-center rounded-[10px] pr-2 ">
-          <div className="bg-cover rounded-tl-[6px] rounded-bl-[6px] p-2  bg-no-repeat bg-center w-[40%] h-[320px] " style={{ backgroundImage: `url(http://localhost:3000/${thumbnail.path.replace(/\\/g, "/")})` }}>
+          <div className="bg-cover rounded-tl-[6px] rounded-bl-[6px] p-2  bg-no-repeat bg-center w-[40%] h-[320px] " style={{ backgroundImage: `url(http://localhost:3000/${thumbnail.destination}/${thumbnail.filename}` }}>
 
             <div className="flex items-center justify-between   p-1">
             <div className="flex items-center gap-2  p-1 rounded-md hover:bg-[#ffffff99] cursor-pointer">

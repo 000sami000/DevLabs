@@ -70,8 +70,8 @@ function Editorpro({ ContentHtml, setContentHtml }) {
 
         header: {
           class: Header,
-          // inlineToolbar: true,
-          // inlineToolbar: ['bold', 'italic', 'marker','link'],
+          inlineToolbar: true,
+          inlineToolbar: ['bold', 'italic', 'marker','link'],
           config: {
             placeholder: "Enter a header",
             levels: [1, 2, 3],

@@ -6,6 +6,7 @@ function uploader(destination) {
     destination: `./public/upload/${destination}`,
     filename: function (req, file, cb) {
       //   let content=  Object.keys(req.body).filter((itm)=>itm=="article_content"||"solution_content"||"problem_content")
+        console.log("MULTER middleware",req.USER_ID)
       const filname = Date.now() + "-" + req.USER_ID + "-" + file.originalname;
       cb(null, filname);
     },

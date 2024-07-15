@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { fetch_single_article,createComment ,fetchComment,like_article,dislike_article,save_article } from "../../api";
+import { fetch_single_article,createComment ,fetchComment,like_article,dislike_article,save_article, delete_article } from "../../api";
 import { AiFillDislike, AiFillLike, AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 import { FaBookmark, FaComments, FaRegBookmark } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
@@ -15,7 +15,7 @@ import Comment from "../Comment";
 import {formatNumber} from "../format_num"
 import Report from "../Report";
 function Single_article() {
-
+  const navigate=useNavigate();
   const [Single_article, setSingle_article] = useState({});
   const [Show_comment,setShow_comment]=useState(false)
  
@@ -167,7 +167,18 @@ function Single_article() {
     }
   }
 
+const del_article=async(_id)=>{
+  try{
+    const {data}=await delete_article(_id);
+    navigate("/articles")
 
+  }catch(err){
+    console.log("del_article-- error", err);
+  }
+
+
+  
+}
 
   
   function convertDataToHtml(blocks) {
@@ -267,7 +278,7 @@ function Single_article() {
               </div>
 
               <div className="flex justify-between w-[8%] text-[1.4rem] text-[#f96666]">
-              <MdDeleteOutline className="cursor-pointer hover:bg-[#edededdd]   rounded-md" />  
+              <MdDeleteOutline onClick={()=>{ del_article(_id)}} className="cursor-pointer hover:bg-[#edededdd]   rounded-md" />  
               <TbEditCircle className="cursor-pointer hover:bg-[#edededdd]   rounded-md" onClick={()=>setisopen(true)}/>
               </div>
               </div>
@@ -314,7 +325,7 @@ function Single_article() {
           }
         </div>
         <div className="w-[25%] bg-[red] self-start">cssc</div>
-        <Update_article Single_article={Single_article}  setSingle_article={setSingle_article} setisopen={setisopen} isopen={isopen}/>
+        <Update_article Edit_articleobj={Single_article}  setEdit_articleobj={setSingle_article} setisopen={setisopen} isopen={isopen}/>
          <Report current_adata={current_adata} setcurrent_adata={setcurrent_adata}/>
       </div>
     }

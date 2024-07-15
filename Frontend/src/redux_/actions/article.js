@@ -1,4 +1,4 @@
-import  {create_article,get_articles,delete_article,update_article} from "../Slices/articleSlice"
+import  {create_article,get_articles,delete_article,update_article,search_article} from "../Slices/articleSlice"
 import * as api from "../../api"
 
 
@@ -36,7 +36,7 @@ export const getArticles=(selected)=>{
 
 }
 
-export const deleteUpdate=(p_id,navigate)=>{
+export const deleteArticle=(p_id,navigate)=>{
 
   return async(dispatch)=>{
       try
@@ -72,4 +72,24 @@ export const updateArticle=(a_id,art_obj)=>{
   }
 
 }
+export const search_article_data = ( inputval) => {
+  return async (dispatch) => {
+    try {
+
+        console.log("???????",inputval)
+        if(typeof(inputval)==="object"){
+          const { data } = await api.search_article(inputval);
+    
+          dispatch(search_article(data));
+        }else{
+          const { data } = await api.search_article(inputval.trim());
+          dispatch(search_article(data));
+
+        }
+      
+    } catch (err) {
+      console.log("search_article_data---err", err);
+    }
+  };
+};
 

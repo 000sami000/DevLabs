@@ -24,6 +24,7 @@ function Admin_articles() {
       setloading(true);
       seterror(false);
       let { data } = await fetch_userArticles();
+      console.log("::::",data)
       if (Array.isArray(data)) {
         setuserarticles(data);
         settoggle('get')
@@ -105,7 +106,7 @@ function Admin_articles() {
     }
   };
   useEffect(() => {
-    if(user._id===id&&Selected==="user_articles"){
+    if(user?._id===id&&Selected==="user_articles"){
 
       get_user_article();
     }

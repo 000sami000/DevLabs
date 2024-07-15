@@ -10,6 +10,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path')
 const http=require('http')
+const { Server } = require('socket.io');
 const cookieParser=require('cookie-parser')
 const morgan=require("morgan")
 //Routes
@@ -36,6 +37,7 @@ app.use("/report",report_routes)
 // app.use('/posts',post_routes)
 // app.use('/users',user_routes)
 app.use('/public/upload', express.static(path.join(__dirname, 'public/upload')));
+//compiler
 app.post('/run', (req, res) => {
     const { language, code, input } = req.body;
     console.log(input)
@@ -95,7 +97,7 @@ app.post('/run', (req, res) => {
 
   //whiteboard
   // const server = http.createServer(app);
-  // const io = socketIo(server);
+  // const io = new Server(server);
 
   // io.on('connection', (socket) => {
   //   console.log('New client connected');

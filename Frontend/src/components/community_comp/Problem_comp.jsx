@@ -8,8 +8,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { deleteProblem, likeProblem } from "../../redux_/actions/problem";
 
-import "../text_editor/Editor.scss";
-import  'react-quill/dist/quill.snow.css';
+// import "../text_editor/Editor.scss";
+// import  'react-quill/dist/quill.snow.css';
 function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
   const dispatch=useDispatch();
   const {title,problem_content,tags,likes,total_sol,creator_username,creator_id,_id,createdAt}=pdata;
@@ -87,7 +87,7 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
         </div>
         <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
         <div className="py-3 px-2 text-pretty text-justify max-h-[400px] overflow-y-auto">
-        <div className=" editor " dangerouslySetInnerHTML={{ __html:  problem_content}} />
+        <div className="editor-container" dangerouslySetInnerHTML={{ __html:  problem_content}} />
       
         </div>
         <hr className="bg-[#595858] h-[4px] rounded-[2px]" />

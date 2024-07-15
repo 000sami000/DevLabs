@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import "./toggle.css"
-function Toggle_button() {
-    const [isToggled, setIsToggled] = useState(false);
+function Toggle_button({Article_obj,setArticle_obj,toggle_val=true}) {
+    const [isToggled, setIsToggled] = useState(toggle_val);
 
     const toggle = () => {
+      setArticle_obj({...Article_obj,isActive:!isToggled})
       setIsToggled((prev)=>!isToggled);
       console.log(isToggled)
     };

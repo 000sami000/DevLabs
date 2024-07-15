@@ -17,6 +17,7 @@ function Article_main() {
   let pagecount = Math.ceil(total / 5);
   console.log("pagecount", pagecount);
   const [selected, setselected] = useState(0);
+ 
   let dispatch = useDispatch();
   useEffect(() => {
     dispatch(getArticles(selected));
@@ -38,7 +39,7 @@ function Article_main() {
       <div className="text-[30px] text-center text-[white]">Articles</div>
 
       <br />
-      <Search_input placeholder_val={"Search Articles "} />
+      <Search_input placeholder_val={"Search Articles"} content_type={"article"}  />
       <br />
       <div className="w-[75%] m-auto  flex flex-col gap-5">
         {a?.map((itm) => (

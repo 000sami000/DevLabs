@@ -17,6 +17,17 @@ export const fetchProblem=(selected)=>{
     return API.get(`/problem?page=${selected}`);
 
 }
+export const search_problem=(query)=>{
+  if(typeof(query)==="object"){
+    // const queryString = query.map(tag => `${tag}`).join('&');
+    // console.log("this is querystring",queryString)
+  return API.get(`/problem/search?tags=${query}`);
+}else{
+    return API.get(`/problem/search?q=${query}`);
+
+  }
+}
+
 export const createProblem=(problemobj)=>{
     return API.post(`/problem`,problemobj,{withCredentials:true});
 }
@@ -48,7 +59,11 @@ export const likeproblem=(p_id)=>{
     return API.post('/user/verifyotp',userobj,{withCredentials:true})
   }
   export const  update_user=(user_obj)=>{
-    return API.patch(`user/changeuser`,user_obj,{withCredentials:true})
+    return API.patch(`user/changeuser`,user_obj,{
+      withCredentials:true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }})
    }
   export const  change_password=(user_obj)=>{
     return API.patch(`user/changepassword`,user_obj,{withCredentials:true})
@@ -125,9 +140,33 @@ export const likeproblem=(p_id)=>{
         'Content-Type': 'multipart/form-data'
       }});
    }
+   export const imgUpload=(formData)=>{
+    return API.post(`/article/img_upload`,formData,{
+      withCredentials:true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }});
+   }
+   export const imgDelete=(filePath)=>{
+    return API.post(`/article/delete_image`,filePath,{
+      withCredentials:true,
+      headers: {
+       'Content-Type': 'application/json'
+      }});
+   }
    export const fetchArticle=(selected)=>{
     return API.get(`/article?page=${selected}`);
    }
+   export const search_article=(query)=>{
+
+    if(typeof(query)==="object"){
+      return API.get(`/article/search?tags=${query}`);
+    }else{
+        return API.get(`/article/search?q=${query}`);
+    
+      }
+
+  }
    export const fetch_single_article=(a_id)=>{
     return API.get(`/article/${a_id}`);
    }
@@ -135,7 +174,11 @@ export const likeproblem=(p_id)=>{
     return API.delete(`/article/${a_id}`)
   }
   export const update_article=(a_id,articleObj)=>{
-    return API.patch(`/article/${a_id}`,articleObj,{withCredentials:true});
+    return API.patch(`/article/${a_id}`,articleObj,{
+      withCredentials:true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }});
    }
    export const like_article=(a_id)=>{
     return API.patch(`/article/${a_id}/likepost`,{},{withCredentials:true})

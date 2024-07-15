@@ -30,6 +30,9 @@ export const articleSlice=createSlice({
             return {...state,articles:state.articles.map((itm)=> (itm._id===action.payload._id?action.payload:itm))}
               
           
+          },
+          search_article:(state,action)=>{
+            return {...state,articles:action.payload.article,total:action.payload.total}
           }
 
 
@@ -38,5 +41,5 @@ export const articleSlice=createSlice({
 
 })
 
-export const {create_article,get_articles,delete_article,update_article}=articleSlice.actions;
+export const {search_article,create_article,get_articles,delete_article,update_article}=articleSlice.actions;
 export default articleSlice.reducer;

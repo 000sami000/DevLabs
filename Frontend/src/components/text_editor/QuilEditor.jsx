@@ -1,28 +1,80 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import interact from 'interactjs';
+import { imgDelete, imgUpload } from '../../api';
 
 // Custom Image Handler
-const imageHandler = function() {
+const detectImageDeletion = (quill) => {
+  quill.on('text-change', async (delta, oldDelta, source) => {
+    // Check for deletions
+    delta.ops.forEach(async(op) => {
+      if (op.delete) {
+        // Find removed images
+        oldDelta.ops.forEach(async(oldOp) => {
+          if (oldOp.insert && oldOp.insert.image) {
+            const oldImage = oldOp.insert.image;
+            console.log("thkjhfkjhkjdfhlkgj+++",oldImage)
+            try {
+              console.log(":::;;;",oldImage)
+              // Send request to delete the old image
+              await imgDelete({ filePath: oldImage });
+            } catch (err) {
+              console.error('Error deleting image:', err);
+            }
+          }
+        });
+      }
+    });
+  });
+};
+function imageHandler() {
   const input = document.createElement('input');
   input.setAttribute('type', 'file');
   input.setAttribute('accept', 'image/*');
   input.click();
 
-  input.onchange = () => {
+  input.onchange = async () => {
     const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const range = this.quill.getSelection();
-      const url = e.target.result;
-      this.quill.insertEmbed(range.index, 'image', url);
-    };
-    reader.readAsDataURL(file);
-  };
-};
+    const formData = new FormData();
+    formData.append('file', file);
 
+    try {
+      console.log("this is img upload-----")
+      // const res = await fetch('http://localhost:3000/article/img_upload', {
+      //   method: 'POST',
+      //   body: formData
+      // });
+      const {data} = await imgUpload(formData)
+      if (!data.filePath) {
+        throw new Error('File path not returned from server');
+      }
+      
+      const range = this.quill.getSelection();
+      
+      // const data = await res.json();
+      console.log("<><><>",data.filePath)
+      this.quill.insertEmbed(range.index, 'image',`http://localhost:3000${data.filePath}`);
+      
+      const oldImage = this.quill.getLeaf(range.index).domNode.src; // Capture the old image URL
+        console.log("}}}",oldImage)
+      // if (oldImage) {
+      //   await fetch('http:/e/localhost:3000/article/delete_image', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify({ filePath: oldImage })
+      //   });
+      // }
+      if (oldImage) {
+        await imgDelete({ filePath: oldImage } );
+      }
+   
+    } catch (err) {
+      console.error('Error uploading image:', err);
+    }
+  };
+}
 // Quill Toolbar Configuration
 const modules = {
   
@@ -83,8 +135,9 @@ height:200px;
 
 const QuilEditor = ({ContentHtml,setContentHtml}) => {
   const [editorContent, setEditorContent] = useState('');
-
+  const quillRef = useRef(null);
   useEffect(() => {
+    const quill = quillRef.current.getEditor()
     // Function to make images resizable using Interact.js
     const makeImagesResizable = () => {
       interact('.ql-editor img').resizable({
@@ -141,8 +194,9 @@ const QuilEditor = ({ContentHtml,setContentHtml}) => {
     };
 
     // Apply resizing functionality
- 
+    
     makeImagesResizable();
+    detectImageDeletion(quill);
     // Cleanup function
     return () => {
       interact('.ql-editor img').unset();
@@ -164,6 +218,7 @@ const QuilEditor = ({ContentHtml,setContentHtml}) => {
         `}
       </style>
        <ReactQuill
+       ref={quillRef}
         value={ContentHtml}
         onChange={setContentHtml}
         modules={modules}

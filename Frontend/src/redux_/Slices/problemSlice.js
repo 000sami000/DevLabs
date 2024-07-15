@@ -27,9 +27,12 @@ export const problemSlice=createSlice({
     },
     delete_problem:(state,action)=>{
       return {...state,problems:state.problems.filter((itm)=>(itm._id!==action.payload._id))};
+    },
+    search_problem:(state,action)=>{
+      return {...state,problems:action.payload.problems,total:action.payload.total}
     }
    }
    
 })
-export const {create_problem,get_problems,get_Single_problem,delete_problem,like_problem}=problemSlice.actions;
+export const {create_problem,get_problems,get_Single_problem,delete_problem,like_problem,search_problem}=problemSlice.actions;
 export default problemSlice.reducer;

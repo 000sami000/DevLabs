@@ -66,7 +66,7 @@ const signin = async (req, res) => {
      if(otp!=req.verify_otp){
       res.status(400).json({message:'Otp in invalid'})
      }
-
+  
 
      res.status(200).json({message:"ok"})
   }
@@ -193,7 +193,7 @@ const signin = async (req, res) => {
   };
 
   const get_user=async(req,res)=>{
-    console.log(req.cookie);
+
     
      try{
    

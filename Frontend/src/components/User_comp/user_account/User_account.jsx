@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { IoCloseCircle } from "react-icons/io5";
 import { deleteUser, updateUser } from "../../../redux_/actions/user";
 import { change_password } from "../../../api";
+import { MdAddPhotoAlternate } from "react-icons/md";
 function User_account() {
   const navigate=useNavigate()
   const [edit,setedit]=useState(false); 
@@ -49,12 +50,12 @@ function User_account() {
 
 
     const handleFileChange = (event) => {
-      const File = event.target.files[0];
-      if (File) {
+      const file = event.target.files[0];
+      if (file) {
         // Handle the selected file (e.g., upload it, display it, etc.)
         console.log(File);
-        setimageUrl(URL.createObjectURL(File))
-       setFile(File)
+        setimageUrl(URL.createObjectURL(file))
+       setFile(file)
       //  settemp_user((prev)=>({...prev,profile_img_:File}))
       }
     };
@@ -67,7 +68,9 @@ function User_account() {
   return (
     <div className='mt-[3%]'>
     <div className='absolute top-[-45px] rounded-[50%]'>
-          <img   onClick={handleImageClick} src={temp_user.profile_img_||imageUrl||`/default_profile.jpg`} width={"14%"} className='rounded-[50%] shadow-[20px] cursor-pointer hover:w-[15%]'/>
+          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-pointer hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${!imageUrl&&`http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`||imageUrl||`/default_profile.jpg`})` }}>
+             <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
+          </div>
           <input
         type="file"
         ref={fileInputRef}

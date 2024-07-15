@@ -80,13 +80,9 @@ function User_profile() {
   loading ?<div className="h-full flex justify-center items-center"> <Loader/></div>: 
     
     <div className="mt-[3%] ">
-      <div className="absolute top-[-45px] rounded-[50%] ">
-        <img
-          src="/default_profile.jpg"
-          width={"14%"}
-          className="rounded-[50%] shadow-[20px] "
-        />
-       </div>
+    <div  className='w-[80px] absolute top-[-45px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`http://localhost:3000/${user?.profile_img_?.destination}/${user?.profile_img_?.filename}`||`/default_profile.jpg`})` }}>
+
+          </div>
        <div>
         <div>
           <strong>{user?.name}</strong>
