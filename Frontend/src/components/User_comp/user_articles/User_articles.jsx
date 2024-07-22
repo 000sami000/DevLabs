@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IoSearchSharp } from "react-icons/io5";
+import { IoBanOutline, IoSearchSharp } from "react-icons/io5";
 import { AiFillLike } from "react-icons/ai";
 import { AiFillDislike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 // import { SiTicktick } from "react-icons/si";s
 import { fetch_savedArticles, fetch_userArticles, search_savedArticles, search_userArticles } from "../../../api";
 import Loader from "../../Loader";
+import { FcApproval } from "react-icons/fc";
 function User_articles() {
   const [Selected,setSelected]=useState("user_articles")
   let navigate=useNavigate();
@@ -26,6 +27,7 @@ function User_articles() {
       let { data } = await fetch_userArticles();
       if (Array.isArray(data)) {
         setuserarticles(data);
+        console.log(">>",data)
         settoggle('get')
       } else {
         setuserarticles([]);
@@ -176,9 +178,9 @@ function User_articles() {
       <div className="flex flex-col gap-2 max-h-[400px] overflow-y-visible">
       {
         loading?<div className="flex justify-center "><Loader/></div>:
-      Selected==="user_articles"? userarticles? userarticles.map((itm)=>(
+      Selected==="user_articles"? userarticles.length>0? userarticles.map((itm)=>(
 
-        <div  onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
+        <div key={itm._id}   onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
         <span className=" w-[70%] break-words">
           {itm.title}
         </span>
@@ -196,15 +198,16 @@ function User_articles() {
           <div className="flex justify-between w-[50%]">
           
             <div>{itm.comments?.length}</div>
-            <div  >{itm.isActive?<span className="bg-[#55d055] p-[3px] rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div>
+            <div  >{itm.isActive?<span className="bg-[#61ea61] p-[3px] px-2 rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div>
+            {itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>}
           </div>
         </div>
       </div>
 
       )):<div>No articles Created</div>:
-      userarticles?
+      userarticles.length>0?
       userarticles.map((itm)=>(
-           <div onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
+           <div key={itm._id} onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
              <span className=" w-[70%] break-words">{itm.title}</span>
             <div className=" flex w-[37%]  justify-between">
              <div className="flex gap-3 w-[50%]">

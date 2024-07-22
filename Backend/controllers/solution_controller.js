@@ -1,6 +1,7 @@
 const { default: mongoose, model } = require("mongoose");
 const solution_Model=require("../models/solution_model");
-const problem_Model=require("../models/problem_model")
+const problem_Model=require("../models/problem_model");
+const user_Model = require("../models/user_model");
 const create_solution = async (req, res) => {
     const { ContentHtml ,creator_username,creator_id} = req.body;
     
@@ -12,14 +13,39 @@ const create_solution = async (req, res) => {
       solution_content: ContentHtml,
       creator_username,
       creator_id:req.USER_ID,
+    
     });
     // console.log("backendooooooo",new_solution)
     try {
       await new_solution.save();
+
       const problem_=await problem_Model.findById(p_id);
       // console.log("not updated---",problem_)
       problem_.total_sol.push(new_solution._id)
       const updated_problem=await problem_Model.findByIdAndUpdate(p_id,problem_)
+      //notification generation
+      const admins_and_user=await user_Model.find({
+        $or: [
+          { role: 'admin' },
+          { _id: updated_problem.creator_id }
+        ]
+      })
+
+      const notification = {
+        notific_id: new_solution.createdAt + Math.floor(Math.random() * 201),
+        notifi_type: "solution_create",
+        content_title: updated_problem.title,
+        solution_id: new_solution._id,
+        creator_username: new_solution.creator_username,
+        creator_id: new_solution.creator_id,
+      
+      };
+      const updatePromises = admins_and_user.map(user => {
+        user.notifications.unshift(notification);
+        return user.save();
+      });
+      
+      await Promise.all(updatePromises);
       // console.log("updated--probelm",updated_problem)
       res.status(200).json(new_solution);
     } catch (err) {
@@ -75,7 +101,25 @@ const create_solution = async (req, res) => {
       
       const updated_sol = await solution_Model.findByIdAndUpdate(s_id,req.body,{new:true});
       
+      
+      //notification
+      const problem=await problem_Model.findById(updated_sol.problem_id)
+      const admins_and_user=await user_Model.find({role:"admin",_id:problem.creator_id})
 
+      const notification = {
+        notific_id: updated_sol.createdAt + Math.floor(Math.random() * 201),
+        notifi_type: "solution_create",
+        content_title: problem.title,
+        solution_id: updated_sol._id,
+        creator_username: updated_sol.creator_username,
+        creator_id: updated_sol.creator_id,
+      
+      };
+      const updatePromises = admins_and_user.map(admin => {
+        admins_and_user.notifications.unshift(notification);
+        return admins_and_user.save();
+      });
+      await Promise.all(updatePromises);
       
       res.status(200).json(updated_sol);
     } catch (err) {

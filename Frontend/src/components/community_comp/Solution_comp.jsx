@@ -16,17 +16,16 @@ import DOMPurify from "dompurify";
 
 import Comment from "../Comment";
 import { formatNumber } from "../format_num";
-function Solution_comp({sol_props,setSol_ed,setcurrent_sdata}) {
+function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, content_creator_username=""}) {
   const user=useSelector((state)=>state.userReducer.current_user)
   const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments }=sol_props;
   // const cleanHTML = DOMPurify.sanitize(solution_content);
   // console.log("solution_content=++++",solution_content)
   // console.log("cleanhtml=++++",cleanHTML)
   console.log("///",sol_props)
-  const [text, setText] = useState('');
-  const [Comments,setComments]=useState([])
+
   const [Show_comment,setShow_comment]=useState(false)
-  const [cloading,setcloading]=useState(false);
+
    const dispatch=useDispatch();
    const handleDelete=()=>{
          dispatch(deleteSolution(_id))
@@ -160,7 +159,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata}) {
               </div>
               </div>
           {
-          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"solution"} />
+          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"solution"} content_title={content_title} content_creator_username={content_creator_username}/>
           }
         
         </div>

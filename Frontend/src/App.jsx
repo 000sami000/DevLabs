@@ -21,6 +21,7 @@ import Whiteboard from './components/whiteboard/Whiteboard'
 import Whiteboardmain from './components/whiteboard/Whiteboardmain'
 import Single_article from './components/articles_comp/Single_article'
 import Cource_create from './components/cources_comp/Cource_create'
+import User_public from './components/User_comp/user_public/User_public'
 
 
 function App() {
@@ -30,7 +31,7 @@ useEffect(()=>{
   dispatch(getUser());
 },[])
 
-  let user=useSelector((state)=>state.userReducer);
+  let user=useSelector((state)=>state.userReducer.current_user);
  
   const location=useLocation();
   //  console.log(location)
@@ -53,10 +54,11 @@ useEffect(()=>{
         <Route path='/job'  exact Component={Job_main }/>
        
         <Route path='/Free_Resources'  exact Component={Resources_main}/>
-        <Route path='/admin'  exact Component={Admin_main}/>
+        <Route path='/admin/:id'  exact Component={()=>{return user?.role==="admin"&&<Admin_main/>}}/>
         <Route path='/auth'  exact Component={Auth_main}/>
         <Route path='/auth/forgotpassword'  exact Component={ForgotPassword}/>
-        <Route path='/user/:id'  exact Component={ ()=>{return user? <User_main />:<Navigate to={'/auth'}/>}}/>
+        <Route path='/user/:id'  exact Component={()=>{return  user?.role==='user'&& <User_main />}}/>
+        <Route path='/user_overview/:id/'  exact Component={ ()=><User_public/>}/>
         <Route path='/problem/:p_id/sols'  exact Component={ ()=><Solutions_main />}/>
         
         <Route path='/courses/:c_id/'  exact Component={ ()=><Cource_read/>}/>

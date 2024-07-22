@@ -13,7 +13,7 @@ function User_account() {
     const user=useSelector((state)=>state.userReducer.current_user)
     const [temp_user,settemp_user]=useState(user);
     const fileInputRef = useRef(null);
-    const [imageUrl,setimageUrl]=useState('')
+    const [imageUrl,setimageUrl]=useState(null)
     // console.log(user)
     const [isopen,setisopen]=useState(false)
     const dispatch=useDispatch();
@@ -53,7 +53,7 @@ function User_account() {
       const file = event.target.files[0];
       if (file) {
         // Handle the selected file (e.g., upload it, display it, etc.)
-        console.log(File);
+        console.log("###",file);
         setimageUrl(URL.createObjectURL(file))
        setFile(file)
       //  settemp_user((prev)=>({...prev,profile_img_:File}))
@@ -68,15 +68,15 @@ function User_account() {
   return (
     <div className='mt-[3%]'>
     <div className='absolute top-[-45px] rounded-[50%]'>
-          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-pointer hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${!imageUrl&&`http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`||imageUrl||`/default_profile.jpg`})` }}>
+          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${!imageUrl&&` http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`||imageUrl||`./default_profile.jpg`})` }}>
              <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
           </div>
           <input
-        type="file"
+        type="file"  
+        onChange={handleFileChange}
         ref={fileInputRef}
         style={{ display: 'none' }}
-        accept="image/*"
-        onChange={handleFileChange}
+        accept="image/*"     
       />
          </div>
          <br />

@@ -14,6 +14,7 @@ import Loader from "../Loader"
 import Comment from "../Comment";
 import {formatNumber} from "../format_num"
 import Report from "../Report";
+import ReadOnlyEditor from "../text_editor/ReadOnlyEditor ";
 function Single_article() {
   const navigate=useNavigate();
   const [Single_article, setSingle_article] = useState({});
@@ -175,12 +176,8 @@ const del_article=async(_id)=>{
   }catch(err){
     console.log("del_article-- error", err);
   }
-
-
-  
 }
 
-  
   function convertDataToHtml(blocks) {
     var convertedHtml = "";
     blocks.map((block) => {
@@ -295,12 +292,17 @@ const del_article=async(_id)=>{
           <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
           <div>
             <div className=" text-[35px] pb-3 pl-5">{title}</div>
+            {
+              typeof(article_content)==='object'?
+              <ReadOnlyEditor data={article_content} />:
+
             <div
               dangerouslySetInnerHTML={{
                  __html: htmlContent 
               }}
               className="editor_article p-5 ce-block__content"
             ></div>
+            }
             <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
             <div className="flex  justify-between p-2 px-4">
             <div className="flex flex-wrap gap-2 "> 
@@ -321,7 +323,7 @@ const del_article=async(_id)=>{
           </div>
           </div>
           {
-          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"article"}/>
+          Show_comment&&<Comment _id={_id} creator_id={creator_id} c_type={"article"}  content_title={title} content_creator_username={creator_username}/>
           }
         </div>
         <div className="w-[25%] bg-[red] self-start">cssc</div>

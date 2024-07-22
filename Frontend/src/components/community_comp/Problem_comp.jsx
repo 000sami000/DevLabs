@@ -51,7 +51,7 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
       <div className="w-[100%] m-auto bg-[#D9D9D9] rounded-md p-3 shadow-md">
         <div className="w-full p-1 flex gap-3 justify-between items-center rounded-[10px]">
           <div className="w-[90%] flex gap-5 items-center justify-between">
-            <span className="   p-1 flex-grow-0 basis-auto cursor-pointer  rounded-md flex items-center gap-1 hover:bg-[#ededed]">
+            <span onClick={()=>{navigate(`/user_overview/${creator_id}`)}} className="   p-1 flex-grow-0 basis-auto cursor-pointer  rounded-md flex items-center gap-1 hover:bg-[#ededed]">
               <img
                 src="/default_profile.jpg"
                 width={`35px`}

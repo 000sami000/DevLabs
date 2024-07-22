@@ -13,9 +13,9 @@ let user_schema = mongoose.Schema(
     password: { type: String, required: true },
     profile: {
       experience: { type: String, default: "" },
-      education: { type: Array },
-      project: { type: Array },
-      skills: { type: Array },
+      education: { type: Array,default:[] },
+      project: { type: Array ,default:[]},
+      skills: { type: Array ,default:[]},
     },
     isblock: { 
         type: Boolean, default: false 

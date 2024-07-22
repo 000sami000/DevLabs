@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const problem_Model = require("../models/problem_model");
-const solution_Model=require("../models/solution_model")
+const solution_Model=require("../models/solution_model");
+const user_Model = require("../models/user_model");
 const get_problems = async (req, res) => {
     
   const page=Number(Number(req.query.page)+1)||1
@@ -24,10 +25,29 @@ const create_problem = async (req, res) => {
     title: title,
     problem_content: ContentHtml,
     tags: tags,
-    creator_id,creator_username
+    creator_id,creator_username,
+
   });
   try {
     await new_problem.save();
+    const admins=await user_Model.find({role:"admin"})
+    const notification = {
+      notific_id: new_problem.createdAt + Math.floor(Math.random() * 201),
+      notifi_type: "problem_create",
+      content_title: new_problem.title,
+      problem_id: new_problem._id,
+      creator_username: new_problem.creator_username,
+      creator_id: new_problem.creator_id,
+      createdAt: new_problem.createdAt,
+    };
+    const updatePromises = admins.map(admin => {
+      admin.notifications.unshift(notification);
+      return admin.save();
+    });
+ 
+    await Promise.all(updatePromises);
+
+
     res.status(200).json(new_problem);
   } catch (err) {
     // console.log(err)

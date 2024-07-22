@@ -7,9 +7,9 @@ import { formatDistanceToNow } from "date-fns";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import Report from './Report';
-function Comment({_id,creator_id,c_type}) {
+function Comment({_id,creator_id,c_type,content_title,content_creator_username}) {
     const user=useSelector((state)=>state.userReducer.current_user)
-    let c_obj={content_creator_id:"",type_id:"",comment_type:"",comment_content:"",commentor_username:"",commentor_id:""}
+    let c_obj={content_creator_id:"",type_id:"",comment_type:"",comment_content:"",commentor_username:"",commentor_id:"",content_title:"",content_creator_username:""}
     const [text, setText] = useState('');
     const [Comments,setComments]=useState([])
     const [cloading,setcloading]=useState(false);
@@ -66,9 +66,9 @@ function Comment({_id,creator_id,c_type}) {
 
      const [current_cdata,setcurrent_cdata]=useState(null)
   const create_comment= async()=>{
-    if(text!=''){
+    if(text!=''&& user){
 
-      c_obj={content_creator_id:creator_id,type_id:_id,comment_type:c_type,comment_content:text,commentor_username:user?.username}
+      c_obj={content_creator_id:creator_id,type_id:_id,comment_type:c_type,comment_content:text,commentor_username:user?.username,content_title:content_title,content_creator_username:content_creator_username}
     }else{
       //error
       return;
@@ -112,7 +112,7 @@ function Comment({_id,creator_id,c_type}) {
             {itm.comment_content}
           </div>
           {
-           user?._id===itm.commentor_id ?  
+           user?._id===itm.commentor_id || user.role==="admin" ?  
           <div className='flex items-center text-[20px] gap-2 text-[orange]'>
          <MdDeleteOutline onClick={()=>{delete_comment(itm._id)}} className='cursor-pointer'/>
          <TbEditCircle onClick={()=>{setupdate_c(itm); setText(itm.comment_content)}} className='cursor-pointer'/>

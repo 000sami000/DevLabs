@@ -12,7 +12,7 @@ import Loader from "../../Loader";
 import { FcApproval } from "react-icons/fc";
 import { formatDistanceToNow } from "date-fns";
 import {formatNumber} from "../../format_num"
-function User_solutions() {
+function Admin_solutions() {
   const { id } = useParams();
   let navigate=useNavigate();
   const [Selected, setSelected] = useState("user_solutions");
@@ -22,6 +22,7 @@ function User_solutions() {
   const [searchterm,setsearchterm]=useState("")
   const [toggle,settoggle]=useState('get');
   let user = useSelector((state) => state.userReducer.current_user);
+  
   const get_user_solution = async () => {
     try {
       setloading(true);
@@ -105,7 +106,7 @@ function User_solutions() {
     }
   };
   useEffect(() => {
-    if(user._id===id&&Selected==="user_solutions"){
+    if(user._id===id){
 
       get_user_solution();
     }
@@ -250,4 +251,4 @@ function User_solutions() {
   );
 }
 
-export default User_solutions;
+export default Admin_solutions;

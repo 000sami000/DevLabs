@@ -3,6 +3,7 @@ const problem_Model = require("../models/problem_model");
 const solution_Model = require("../models/solution_model");
 const article_Model = require("../models/article_model");
 const comment_Model = require("../models/comment_model");
+const user_Model=require("../models/user_model")
 
 const create_comment = async (req, res) => {
 
@@ -27,6 +28,23 @@ const create_comment = async (req, res) => {
     console.log("????",req.body);
     const new_comment = new comment_Model(req.body);
     await new_comment.save();
+
+    //notification generation
+    const user=await user_Model.findById(new_comment.content_creator_id)
+      user.notifications.unshift({
+        notific_id:new_comment.createdAt+Math.floor(Math.random() * 201),
+        notifi_type:"comment",
+        comment_type:new_comment.comment_type,
+        comment_content:new_comment.comment_content,
+        content_title:new_comment.content_title,
+        type_id:new_comment.type_id,
+        commentor_username:new_comment.commentor_username,
+       commentor_id:new_comment.commentor_id,
+       createdAt:new_comment.createdAt
+    })
+    await user.save();
+    
+    console.log("user___",user)
     res.status(200).json(new_comment);
   } catch (err) {
     res.status(404).json({ message: err });
@@ -39,7 +57,7 @@ const update_comment = async (req, res) => {
   try {
   
     const comment=await comment_Model.findByIdAndUpdate(c_id,req.body,{new:true})   
- 
+
   //  console.log( "comment----",comment)
     res.status(200).json(comment);
   } catch (err) {

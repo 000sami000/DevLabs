@@ -20,14 +20,14 @@ const [Otp,setOtp]=useState("");
 
   const otpchangehandler=(val)=>{
     setOtp(val);
-    console.log("pppppp",val)
+    console.log("pppppp",Otp)
   }
   const email_submit_handler =async () => {
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
+    // document.cookie.split(";").forEach((c) => {
+    //   document.cookie = c
+    //     .replace(/^ +/, "")
+    //     .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    // });
     if(Email===''){
         setEmailerror('Email is Required')
         return;
@@ -50,10 +50,11 @@ const [Otp,setOtp]=useState("");
         
   };
   const submit_handler = async()=>{
-  if(Otp===""){
-    setOtperror("Enter Otp");
+  if(Otp===""||Otp.length<6){
+    setOtperror("Please Enter a valid OTP");
     return;
   }
+  setOtperror("");
   try{
    const {data}=await verify_otp({otp:Otp})
   }catch(err){
@@ -109,37 +110,21 @@ const [Otp,setOtp]=useState("");
         
     
     <div className={`${Showotp?"block":"hidden"}`}>
-          {/* <div className={`flex gap-1`}>
-            <div className="flex flex-col w-[80%]">
-              <label
-                className={`text-[${colors.white}] flex justify-between items-center`}
-                htmlFor="otp"
-              >
-                <span>OTP</span>{" "}
-                <span className="text-[red] px-2 text-[12px]">
-                  {Otperror||""}
-                </span>
-              </label>
-              <input
-                className={style}
-                onChange={otpchangehandler}
-                id="otp"
-              />
-            </div>
-            <button
-  onClick={submit_handler}
-              className="bg-[#ff964c] text-[#fffbfb] rounded-md  px-2  py-[2px]  self-end w-[20%]"
-            >
-              Submit
-            </button>
-          </div> */}
+          <div className="text-center text-[red]">{Otperror?Otperror:""}</div>
+          
+        
+          <div className="text-center text-[18px] text-white">Enter Otp</div>
+          <br/>
           <OTPInput  length={6} onChange={otpchangehandler} />
+          <br/>
+          <div className=" flex justify-center">
           <button
   onClick={submit_handler}
-              className="bg-[#ff964c] text-[#fffbfb] rounded-md  px-2  py-[2px]  self-end w-[20%]"
+              className="bg-[#ff964c] text-[#fffbfb]  rounded-md  px-2  py-[2px]  self-end w-[20%]"
             >
               Submit
             </button>
+            </div>
           </div>
     
     </div>

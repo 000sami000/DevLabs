@@ -32,6 +32,24 @@ const create_article = async (req, res) => {
   });
   try {
     await new_article.save();
+        //notification generation
+    const admins=await user_Model.find({role:"admin"})
+    const notification = {
+      notific_id: new_article.createdAt + Math.floor(Math.random() * 201),
+      notifi_type: "article_create",
+      content_title: new_article.title,
+      article_id: new_article._id,
+      creator_username: new_article.creator_username,
+      creator_id: new_article.creator_id,
+      createdAt: new_article.createdAt,
+    };
+    const updatePromises = admins.map(admin => {
+      admin.notifications.unshift(notification);
+      return admin.save();
+    });
+ 
+    await Promise.all(updatePromises);
+
     res.status(200).json(new_article);
   } catch (err) {
     // console.log(err)
@@ -112,6 +130,23 @@ const update_article=async(req,res)=>{
     }
     console.log("~~~~vvv   ~",req.body)
     const updated_art = await article_Model.findByIdAndUpdate(a_id,req.body,{new:true});
+    //notification generation
+    const admins=await user_Model.find({role:"admin"})    
+    const notification = {
+      notific_id: updated_art.updatedAt + Math.floor(Math.random() * 201),
+      notifi_type: "article_update",
+      content_title: updated_art.title,
+      article_id: updated_art._id,
+      creator_username: updated_art.creator_username,
+      creator_id: updated_art.creator_id,
+    
+    };
+    const updatePromises = admins.map(admin => {
+      admin.notifications.unshift(notification);
+      return admin.save();
+    });
+ 
+    await Promise.all(updatePromises);
     res.status(200).json(updated_art);
   } catch (err) {
     res.status(400).json({ error: err });

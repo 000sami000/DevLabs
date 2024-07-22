@@ -8,7 +8,15 @@ const {verify_user_email,signin,signup,get_userprofile,update_userprofile,get_us
     search_usersolution_saved,
     change_name_username,
     delete_user,
-    change_password
+    change_password,get_allarticle,
+    search_allarticle,
+    get_all_users,
+    get_userprofile_public,
+    get_userproblem_public,
+    get_usersolution_public,
+    get_userallproblem,
+    get_user_notification,
+    delete_user_notification
 
 }=require('../controllers/user_controller');
 
@@ -22,22 +30,38 @@ router.patch('/changepassword',isAuthorize,change_password)
 router.delete('/deleteuser',isAuthorize,delete_user)
 
 
-router.get('/userprofile/:u_id',get_userprofile);
-router.patch('/userprofile/:u_id',update_userprofile);
+router.get('/userprofile/:u_id',isAuthorize,get_userprofile);
+router.patch('/userprofile/:u_id',isAuthorize,update_userprofile);
 
-router.get('/userproblems/:u_id',get_userproblem);
+//public
+router.get('/userprofilepublic/:u_id',get_userprofile_public);
+router.get('/userproblemspublic/:u_id',get_userproblem_public);
+router.get('/usersolutionspublic/:u_id',get_usersolution_public);
+
+//private
+router.get('/userproblems/:u_id',isAuthorize,get_userproblem);
 router.get('/searchuserproblems',isAuthorize,search_userproblem);
 
 router.get('/userarticles',isAuthorize,get_userarticle);
 router.get('/searchuserarticles',isAuthorize,search_userarticle);
-
 router.get('/savedarticles',isAuthorize,get_userarticle_saved);
 router.get('/searchsavedarticles',isAuthorize,search_userarticle_saved);
 
 router.get('/usersolution',isAuthorize,get_usersolution);
 router.get('/searchusersolution',isAuthorize,search_usersolution);
-
 router.get('/savedsolution',isAuthorize,get_usersolution_saved);
 router.get('/searchsavedsolution',isAuthorize,search_usersolution_saved);
+
+router.get('/usernotifications',isAuthorize,get_user_notification)
+router.delete('/usernotifications/:notific_id',isAuthorize,delete_user_notification)
+router.delete('/usernotifications',isAuthorize,delete_user_notification)
+
+//admin
+router.get('/allusers',isAuthorize,get_all_users)
+router.get('/userallproblems/',isAuthorize,get_userallproblem);
+router.get('/userallarticles',isAuthorize,get_allarticle);
+router.get('/searchuserallarticles',isAuthorize,search_allarticle);
+
+
 
 module.exports=router;

@@ -29,8 +29,8 @@ console.log(current_user?.name)
     { itm_name: "Compiler", link: "/compiler" },
     { itm_name: "Courses", link: "/courses" },
     { itm_name: "Find Job", link: "/job" },
-    { itm_name: "Resources", link: "/free_Resources" },
-    { itm_name: "Admin Tools", link: "/admin" },
+    // { itm_name: "Resources", link: "/free_Resources" },
+   
     { itm_name: "Whiteboard", link: "/whiteboard" }
   ];
 
@@ -73,7 +73,7 @@ console.log(current_user?.name)
         {
           
          !current_user?  <button className="text-[17px] text-[#eeeeee] px-2 py-1 bg-[#ff933b] rounded-lg" onClick={()=>{navigate('/auth')}}>Login</button>
-         : (location.pathname!=`/user/${current_user._id}`&&
+         : (location.pathname!=`/user/${current_user._id}` &&location.pathname!=`/admin/${current_user._id}`&&
         <div  onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}>
           {false ? (
@@ -91,7 +91,11 @@ console.log(current_user?.name)
           current_user?.name&&
            <span className="text-[15px] text-[white] block ">{current_user.name}</span>
         }
+        {
+           current_user?.role==="user"?
             <button className="text-[22px] text-[white] block" onClick={()=>{navigate(`/user/${current_user?._id}`);setIsMenuOpen(false)}}>Profile</button>
+            :  current_user?.role==="admin"?<button className="text-[22px] text-[white] block" onClick={()=>{navigate(`/admin/${current_user?._id}`);setIsMenuOpen(false)}}>Admin</button>:""
+        }
             <button className="text-[22px] text-[red] block" onClick={()=>{dispatch(auth_signout());
             //  navigate('/')
              }}>Logout</button>

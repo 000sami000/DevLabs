@@ -14,6 +14,7 @@ const jwt= require("jsonwebtoken");
     }
     console.log("auth",decoded)
     req.USER_ID=decoded.id;
+    req.USER_ROLE=decoded.role;
     next();
    } else if(forgot_password_token) {
     decoded=jwt.verify(forgot_password_token,process.env.JWT_SECRET)
@@ -26,7 +27,7 @@ const jwt= require("jsonwebtoken");
      next();
 
   }
-
+  // res.status(200).json({message:"Unauthorize access"})
   }catch(err){
    res.status(401).json({message:"Unauthorize access"})
   }

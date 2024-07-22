@@ -21,9 +21,11 @@ function Cource_read() {
 
   return (
     <>
-      <h1 className=" w-full text-center text-[30px]">
+    <br/>
+      <h1 className=" w-full text-center text-[30px] text-white">
         Data Structures and algorithm
       </h1>
+    <br/>
       <div className="w-[95%] flex  m-auto gap-4">
         <div className="w-[25%] bg-[#545454b7] rounded-md self-start p-2">
           {arr.map((itm) => {

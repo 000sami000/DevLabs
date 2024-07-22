@@ -1,6 +1,6 @@
 let mongoose=require('mongoose')
 let article_schema=mongoose.Schema({
-
+    profile_img_:{type:Object,default:null},
     title:{type:String,default:"",required:true},
     description:{type:String,default:"",required:true},
     article_content:{type:Object,default:null,required:true},
@@ -16,10 +16,7 @@ let article_schema=mongoose.Schema({
         type:[String],
         default:[]
     },
-    // views:{
-    //     type:[String],
-    //     default:[]
-    // },
+
     thumbnail:{
         type:Object,
         require:true

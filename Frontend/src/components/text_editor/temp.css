@@ -2,18 +2,34 @@
     margin:auto;
     width: 92%;
     height: 100%;
-    padding: 10px; /* Adjust as needed */
+    padding: 10px;
     box-sizing: border-box;
-    text-align: left; /* Ensure text alignment is left */
+    text-align: left; 
   }
   
-  .ce-block__content,
+   .ce-block__content,
   .ce-toolbar__content,
   .ce-toolbar__settings-btn,
   .ce-toolbar__actions {
     max-width: 100% !important;
-  }
+  } 
   
   .ce-block__content {
     width: 100%;
   }
+  /* Override Editor.js block border styles */
+.ce-block {
+  border: none !important;
+}
+
+/* Optional: If you want to remove padding or margin as well */
+.ce-block__content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+/* Optional: Additional styling for block spacing */
+.ce-block {
+  margin-bottom: -50px !important; /* Adjust this value as needed */
+}

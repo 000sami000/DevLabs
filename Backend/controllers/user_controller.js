@@ -10,7 +10,7 @@ const generateOTP=require('../utils/otpgenerator.js');
 const solution_Model = require("../models/solution_model.js");
 const { query } = require("express");
 const signin = async (req, res) => {
-  console.log("signin__backend",req.body)
+  // console.log("signin__backend",req.body)
     const { email, password } = req.body;
     // console.log(req.body)
     try {
@@ -35,7 +35,7 @@ const signin = async (req, res) => {
       }
     
       const token = jwt.sign(
-        { email: existingUser.email, id: existingUser._id },
+        { email: existingUser.email, id: existingUser._id,role:existingUser.role },
         "secretpromax",
         { expiresIn: "1h" }
       );
@@ -49,7 +49,7 @@ const signin = async (req, res) => {
         secure:true
        }
 
-     
+      
       res.status(200).cookie('access_token',token,option).json({name:existingUser.name,email:existingUser.email,username:existingUser.username,_id:existingUser._id});
     } catch (err) {
       console.log(err);
@@ -63,12 +63,13 @@ const signin = async (req, res) => {
      console.log( req.forgot_email)
      console.log( req.verifying_otp)
      
-     if(otp!=req.verify_otp){
+     if(otp!=req.verifying_otp){
       res.status(400).json({message:'Otp in invalid'})
+      return;
      }
-  
+    
 
-     res.status(200).json({message:"ok"})
+     res.status(200).json({email:req.forgot_email})
   }
   const change_password=async(req,res)=>{
       const {password}=req.body;
@@ -152,8 +153,6 @@ const signin = async (req, res) => {
   }
 }
 
-
-
   const signup = async (req, res) => {
    console.log("signup__backend",req.body)
     const { name,username, email, password, confirmpassword } = req.body;
@@ -198,8 +197,8 @@ const signin = async (req, res) => {
      try{
    
            const user=await user_Model.findById({_id:req.USER_ID})
-           const {name,username,_id,email,saved_articles,saved_solutions,profile_img_}=user;
-           res.status(200).json({name,username,_id,email,saved_articles,saved_solutions,profile_img_})
+           const {name,username,_id,email,saved_articles,saved_solutions,profile_img_,role}=user;
+           res.status(200).json({name,username,_id,email,saved_articles,saved_solutions,profile_img_,role})
            
          // res.status(401).json({message:"Unauthorize access"})  
      }catch(err){ 
@@ -207,19 +206,35 @@ const signin = async (req, res) => {
        res.status(404).json({message:err})
      } 
     }
+
   const get_userprofile=async(req,res)=>{
      const {u_id}=req.params;
      console.log(u_id);
      try{
         const user=await user_Model.findById(u_id)
-        console.log(user);
-        const {name,email,profile}=user;
-        res.status(200).json(profile);
+        console.log("/////",user);
+        const {name,email,profile,profile_img_}=user;
+        res.status(200).json({name,email,profile,profile_img_});
      }catch(err){
       res.status(400).json({message:err});
      }
 
   }
+
+  const get_userprofile_public=async(req,res)=>{
+    const {u_id}=req.params;
+    console.log(u_id);
+    try{
+       const user=await user_Model.findById(u_id)
+       console.log("/////",user);
+       const {name,email,profile,profile_img_}=user;
+       res.status(200).json({name,email,profile,profile_img_});
+    }catch(err){
+     res.status(400).json({message:err});
+    }
+  }
+
+
   const update_userprofile=async(req,res)=>{
     const {u_id}=req.params;
 console.log("{}{{}{}{****",req.body)
@@ -239,6 +254,46 @@ console.log("{}{{}{}{****",req.body)
  const get_userproblem=async(req,res)=>{
   const {u_id}=req.params;
   console.log("get_userproblemsssss");
+
+  try{
+    let user_problems;
+    if(req.query.searchterm){
+      
+      user_problems=await problem_Model.find({creator_id:req.USER_ID, title: { $regex: req.query.searchterm, $options: 'i' }})
+    }else{
+
+      user_problems=await problem_Model.find({creator_id:req.USER_ID})
+    }
+   
+     res.status(200).json(user_problems);
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+
+ const get_userallproblem=async(req,res)=>{
+  
+  console.log("get_userallproblem");
+
+  try{
+    let user_problems;
+    if(req.query.searchterm){
+       console.log("}}}}",req.query.searchterm)
+      user_problems=await problem_Model.find({ title: { $regex: req.query.searchterm, $options: 'i' }})
+    }else{
+
+      user_problems=await problem_Model.find()
+    }
+   
+     res.status(200).json(user_problems);
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+
+ const get_userproblem_public=async(req,res)=>{
+  const {u_id}=req.params;
+  console.log("get_userproblemsssss");
   try{
      const user_problems=await problem_Model.find({creator_id:u_id})
    
@@ -247,6 +302,8 @@ console.log("{}{{}{}{****",req.body)
    res.status(400).json({message:err});
   }
  }
+
+
  const search_userproblem=async(req,res)=>{
   console.log("}}}",req.query);
   const query = req.query.q ? req.query.q.toLowerCase() : '';
@@ -281,8 +338,63 @@ console.log("{}{{}{}{****",req.body)
       };
     }));
     let final= articlesWithComments.map((itm)=>{
-      const {_id,title,likes,dislikes,comments,createdAt,isApproved}=itm
-      return {_id,title,likes,dislikes,comments,createdAt,isApproved}  })
+      const {_id,title,likes,dislikes,comments,createdAt,isApproved,isActive}=itm
+      return {_id,title,likes:likes.length,dislikes:dislikes.length,comments:comments.length,createdAt,isApproved,isActive}  })
+     res.status(200).json(final);
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+
+ const get_allarticle=async(req,res)=>{
+  
+  console.log("get_allarticle");
+  console.log(req.USER_ROLE)
+  if(req.USER_ROLE!=='admin'){
+   res.status(400).json({message:"The user is not admin"})
+  }
+  try{
+     const user_article=await article_Model.find()
+    //  console.log(">>>>",user_article)
+     const articlesWithComments = await Promise.all(user_article.map(async (article) => {
+      const comments = await comment_Model.find({ type_id: article._id });
+      return {
+        ...article.toObject(),
+        comments: comments
+      };
+    }));
+    let final= articlesWithComments.map((itm)=>{
+      const {_id,title,likes,dislikes,comments,createdAt,isApproved,isActive,creator_id,creator_username,profile_img_}=itm
+      return {_id,title,likes:likes.length,dislikes:dislikes.length,comments:comments.length,createdAt,isApproved,isActive,creator_id,creator_username,profile_img_}  })
+     res.status(200).json(final);
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+ const search_allarticle=async(req,res)=>{
+  
+  console.log("get_allarticle");
+  console.log(req.USER_ROLE)
+  if(req.USER_ROLE!=='admin'){
+   res.status(400).json({message:"The user is not admin"})
+  }
+  console.log("search_userarticle");
+  console.log("}}}",req.query.q);
+  const query = req.query.q ;
+  console.log("????,..,.",query)
+  try{
+     const user_article=await article_Model.find(  { title: { $regex: query, $options: 'i' } })
+    //  console.log(">>>>",user_article)
+     const articlesWithComments = await Promise.all(user_article.map(async (article) => {
+      const comments = await comment_Model.find({ type_id: article._id });
+      return {
+        ...article.toObject(),
+        comments: comments
+      };
+    }));
+    let final= articlesWithComments.map((itm)=>{
+      const {_id,title,likes,dislikes,comments,createdAt,isApproved,isActive,creator_id,creator_username,profile_img_}=itm
+      return {_id,title,likes:likes.length,dislikes:dislikes.length,comments:comments.length,createdAt,isApproved,isActive,creator_id,creator_username,profile_img_}  })
      res.status(200).json(final);
   }catch(err){
    res.status(400).json({message:err});
@@ -336,8 +448,9 @@ console.log("{}{{}{}{****",req.body)
     }));
     // console.log("}}}}",articlesWithComments)
     let final= articlesWithComments.map((itm)=>{
-      const {_id,title,likes,dislikes,comments,createdAt,isApproved}=itm
-      return {_id,title,likes,dislikes,comments,createdAt,isApproved}  })
+      
+      const {_id,title,likes,dislikes,comments,createdAt,isApproved,creator_id,creator_username,profile_img_}=itm
+      return {_id,title,likes:likes.length,dislikes:dislikes.length,comments:comments.length,createdAt,isApproved,creator_id,creator_username,profile_img_}  })
 
      res.status(200).json(final);
   }catch(err){
@@ -366,7 +479,7 @@ console.log("{}{{}{}{****",req.body)
     // console.log("}}}}",articlesWithComments)
     let final= articlesWithComments.map((itm)=>{
       const {_id,title,likes,dislikes,comments,createdAt,isApproved}=itm
-      return {_id,title,likes,dislikes,comments,createdAt,isApproved}  })
+      return {_id,title,likes:likes.length,dislikes:dislikes.length,comments,createdAt,isApproved}  })
 
      res.status(200).json(final);
   }catch(err){
@@ -374,11 +487,12 @@ console.log("{}{{}{}{****",req.body)
   }
  }
 
+ const get_usersolution_public=async (req,res)=>{
 
- const get_usersolution=async(req,res)=>{
+  const {u_id}=req.params;
   console.log("get_usersolution");
   try{
-     const user_solution=await solution_Model.find({creator_id:req.USER_ID})
+     const user_solution=await solution_Model.find({creator_id:u_id})
      console.log("jkjl",user_solution)
      const solutionWithComments = await Promise.all(user_solution.map(async (solution) => {
       const comments = await comment_Model.find({ type_id: solution._id });
@@ -395,8 +509,35 @@ console.log("{}{{}{}{****",req.body)
 
     let final= solutionWithComments.map((itm)=>{
       const {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      return {_id,comments:comments.length,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
      
+      res.status(200).json(final);
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+ const get_usersolution=async(req,res)=>{
+  console.log("get_usersolution");
+  try{
+     const user_solution=await solution_Model.find({creator_id:req.USER_ID})
+     console.log("jkjl",user_solution)
+     const solutionWithProblem = await Promise.all(user_solution.map(async (solution) => {
+ 
+      const problem = await problem_Model.findById({ _id: solution.problem_id });
+      return {
+        ...solution.toObject(),
+        
+        p_title:problem.title,
+        p_creator_username:problem.creator_username,
+        p_createdAt:problem.createdAt,
+        p_id:problem._id
+      };
+    }));
+    // console.log("solutionWithProblem-------",solutionWithProblem)
+
+    let final= solutionWithProblem.map((itm)=>{
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
       res.status(200).json(final);
   }catch(err){
    res.status(400).json({message:err});
@@ -429,7 +570,7 @@ console.log("{}{{}{}{****",req.body)
     })
     let final= searched.map((itm)=>{
       const {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      return {_id,comments:comments.length,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
 
       console.log()
      res.status(200).json(final);
@@ -462,7 +603,7 @@ console.log("{}{{}{}{****",req.body)
     // console.log("}}}}",articlesWithComments)
     let final= solutionWithComments.map((itm)=>{
       const {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      return {_id,comments:comments.length,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
 
      res.status(200).json(final);
   }catch(err){
@@ -501,7 +642,7 @@ console.log("{}{{}{}{****",req.body)
   })
     let final=fuse.search(query).map((itm)=>{
       const {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm.item
-      return {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id} })
+      return {_id,comments:comments.length,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id} })
     // console.log("ppppp",searched)
     // let final=searched.map((itm)=>{
     //   const {_id,comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
@@ -510,6 +651,97 @@ console.log("{}{{}{}{****",req.body)
      res.status(200).json(final);
   }catch(err){
    res.status(400).json({message:err});
+  }
+ }
+
+
+ const get_all_users=async(req,res)=>{
+  
+  console.log("get_all_users");
+  console.log(req.USER_ROLE)
+  if(req.USER_ROLE!=='admin'){
+   res.status(400).json({message:"The user is not admin"})
+  }
+  try{
+    let query={}
+    let users=null;
+    if(req.query.q==="blocked"){
+      if(req.query.searchterm){
+        
+        query.username = { $regex: req.query.searchterm, $options: "i" };
+        query.isblock=true;
+        users=await user_Model.find(query)
+      }else{
+
+        users=await user_Model.find({isblock:true})
+      }
+    }else{
+      if(req.query.searchterm){
+        query.username = { $regex: req.query.searchterm, $options: "i" };
+        query.isblock=false; 
+        console.log("00000",query)
+        users=await user_Model.find(query)
+      }else{
+
+        users=await user_Model.find({isblock:false})
+      }
+    }
+    console.log("---++++",users)
+    console.log("this is q::",req.query.q)
+     const temp = await Promise.all(users.map(async (user) => {
+      const articles = await article_Model.find({ creator_id: user._id });
+      const problems = await user_Model.find({ creator_id: user._id });
+      const solutions = await solution_Model.find({ creator_id: user._id });
+      return { ...user.toObject(),article_count:articles.length,problem_count:problems.length,solution_count:solutions.length };
+    }));
+      
+    // console.log(temp)
+    let final= temp.map((itm)=>{
+      
+      const {_id,name,username,article_count,problem_count,solution_count,profile_img_,createdAt}=itm
+      return {_id,name,username,article_count,problem_count,solution_count,profile_img_,createdAt} })
+
+      res.status(200).json(final)
+  }catch(err){
+   res.status(400).json({message:err});
+  }
+ }
+
+ const get_user_notification=async (req,res)=>{
+
+  try{
+        const user=await user_Model.findById(req.USER_ID)
+   const {notifications}=user;
+  //  console.log("::::::",notifications)
+   res.status(200).json(notifications);
+    
+  }catch(err){
+    res.status(400).json({message:err});
+  }
+ }
+
+ const delete_user_notification=async (req,res)=>{
+      const {notific_id}=req.params;
+      
+      // console.log("////",req.query)
+  try{
+    
+        const user=await user_Model.findById(req.USER_ID)
+
+  //  const {notifications}=user;
+   if(clear){
+     user.notifications=user.notifications=[]
+   }
+   else {
+     
+     user.notifications=user.notifications.filter((itm)=>itm.notific_id!==notific_id)
+   }
+  //  console.log("::::::",notifications)
+  await user.save();
+   res.status(200).json(user.notifications);
+    
+  }catch(err){
+    res.status(400).json({message:err});
   }
  }
   module.exports={
@@ -531,5 +763,14 @@ console.log("{}{{}{}{****",req.body)
     search_usersolution_saved,
     change_name_username,
     delete_user,
-    change_password
+    change_password,
+    get_allarticle,
+    search_allarticle,
+    get_all_users,
+    get_userprofile_public,
+    get_userproblem_public,
+    get_usersolution_public,
+    get_userallproblem,
+    get_user_notification,
+    delete_user_notification
   }

@@ -17,7 +17,7 @@ const detectImageDeletion = (quill) => {
             const oldImage = oldOp.insert.image;
             console.log("thkjhfkjhkjdfhlkgj+++",oldImage)
             try {
-              console.log(":::;;;",oldImage)
+              // console.log(":::;;;",oldImage)
               // Send request to delete the old image
               await imgDelete({ filePath: oldImage });
             } catch (err) {

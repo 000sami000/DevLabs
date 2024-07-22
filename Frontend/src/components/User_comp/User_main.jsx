@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import Left from "./Left";
 import Right from "./Right";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function User_main() {
-
+  const {id}=useParams()
+  console.log("usermain",id)
+  let user = useSelector((state) => state.userReducer.current_user);
 //  console.log("///////",name)
   const [Selected, setSelected] = useState("Profile");
   let leftmenu = [
@@ -17,9 +20,12 @@ function User_main() {
   ];
   console.log(Selected)
   return (
+
     <>   
-     
-     <div className="flex gap-3 w-[95%] m-auto mt-[4%]">
+    
+    {
+      user?._id===id?
+      <div className="flex gap-3 w-[95%] m-auto mt-[4%]">
       
       <div className="w-[22%] bg-[#999999] rounded-[5px] self-start sticky top-5">
         <Left
@@ -31,7 +37,9 @@ function User_main() {
       <div className="w-[78%] bg-[#bcbcbc] rounded-[5px] p-5 px-[40px] relative ">
         <Right Selected={Selected} />
       </div>
-    </div>
+    </div>:<div>Access denied your accessing a private route</div>
+    } 
+   
     </>
 
   );

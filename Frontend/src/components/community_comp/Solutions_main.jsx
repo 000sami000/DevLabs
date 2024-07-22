@@ -77,7 +77,7 @@ function Solutions_main() {
         {
           solutions?.length>0?<> <div className="text-[30px] text-center">Solutions</div>
          {
-           solutions.map((sol)=><div key={sol._id}><Solution_comp setcurrent_sdata={setcurrent_sdata} sol_props={sol} setSol_ed={setSol_ed}/></div>)
+           solutions.map((sol)=><div key={sol._id}><Solution_comp content_title={Single_p[0].title} content_creator_username={Single_p[0].creator_username} setcurrent_sdata={setcurrent_sdata} sol_props={sol} setSol_ed={setSol_ed}/></div>)
          }   
           </>:<div>No Solution Available</div>
         }     

@@ -24,7 +24,7 @@ function User_profile() {
       let {data}=await fetch_userProfile(id)
       console.log("dataaaa",data)
         setProfile_info(data)
-        settemp_data(data);
+        settemp_data(data.profile);
         setloading(false)
          console.log("\|||||",Profile_info)
     }catch(err){
@@ -34,7 +34,7 @@ function User_profile() {
     }
   }
   useEffect(()=>{
-     dispatch(getUser)
+    //  dispatch(getUser)
     fetch_profile(id)
     
   },[id])
@@ -50,7 +50,8 @@ function User_profile() {
       setloading(true)
       let {data}=await update_userProfile(id,profile_obj)
       console.log("dataaaa",data)
-        setProfile_info(data)
+        // setProfile_info(data)
+        setProfile_info({...Profile_info,profile:data})
         setloading(false)
         //  console.log("\|||||",Profile_info)
     }catch(err){
@@ -61,7 +62,7 @@ function User_profile() {
   }
   const update_profileinfo_handler = () => {
     update_profile(user._id,temp_data)
-    setProfile_info(temp_data)
+    setProfile_info({...Profile_info,profile:temp_data})
       
     setEditwindow(false);
   };
@@ -70,7 +71,7 @@ function User_profile() {
      console.log("temp-data",temp_data)
     setEditwindow(false);
   };
-  let obj={edu:"",pro:{name:"",des:""},sk:""}
+  const [obj,setobj]=useState({edu:"",pro:{name:"",des:""},sk:""})
   return (
     <>
     {
@@ -85,31 +86,31 @@ function User_profile() {
           </div>
        <div>
         <div>
-          <strong>{user?.name}</strong>
+          <strong>{Profile_info?.name}</strong>
         </div>
         <div>
           <strong>Email:</strong>
-          { " "+user?.email}
+          { " "+Profile_info?.email}
         </div>
         <br />
         <div>
           <div className="font-bold">Experience</div>
-          {Profile_info.experience?Profile_info.experience : <div>Add Experience</div>} 
+          {Profile_info.profile?.experience?Profile_info.profile?.experience : <div>Add Experience</div>} 
         </div>
         <div>
           <div className="font-bold">Education</div>
-          { Profile_info.education?.length>0 ?
-            Profile_info.education.map((itm) => (
-            <div key={itm}>{itm}</div>
+          { Profile_info.profile?.education?.length>0 ?
+            Profile_info.profile?.education.map((itm,i) => (
+            <div key={itm+i}>{itm}</div>
           )):<div>Add your Education</div>}
         </div>
         <div>
           <div className="font-bold">Projects</div>
           {
-            Profile_info.project?.length>0?
-            Profile_info.project.map((itm) => (
-            <div key={itm.Project_title}>
-              <li>{itm.Project_title}</li>
+            Profile_info.profile?.project?.length>0?
+            Profile_info.profile?.project.map((itm,i) => (
+            <div key={itm.Project_title+i}>
+              <li className=" font-semibold">{itm.Project_title}</li>
               <div>{itm.Project_exp}</div>
             </div>
           )):<div>Add your Project that you build </div>
@@ -119,9 +120,9 @@ function User_profile() {
         <div>
           <div className="font-bold">Skills</div>
           {
-            Profile_info.skills?.length>0?
-            Profile_info.skills.map((itm) => (
-            <li key={itm}>{itm}</li>
+            Profile_info.profile?.skills?.length>0?
+            Profile_info.profile?.skills.map((itm,i) => (
+            <li key={itm+i}>{itm}</li>
           ))
           :<div>Add your Skills that you learned  </div>
           }
@@ -195,8 +196,8 @@ function User_profile() {
               <input
                 className="text-[14px] w-[250px] p-1 rounded-md outline-none"
                 placeholder="Education Info"
-                onChange={(e)=>{obj={...obj,edu:e.target.value}}}
-              // value={temp_data.education}
+                onChange={(e)=>{setobj({...obj,edu:e.target.value})}}
+              value={obj.edu}
                           />
               <span>
                 <MdAddBox
@@ -206,7 +207,8 @@ function User_profile() {
                     if(obj.edu){
 
                     settemp_data((prev)=>({...prev,education:[...prev.education,obj.edu]}));
-                    obj.edu=''
+                  
+                    setobj({...obj,edu:''})
                     }
                   
                   }}
@@ -218,10 +220,10 @@ function User_profile() {
           <div className="w-full ">
             <div className="font-bold py-2">Projects</div>
             <div>
-              {temp_data.project?.map((itm) => (
-                <div key={itm.Project_title}>
+              {temp_data.project?.map((itm,i) => (
+                <div key={itm.Project_title+i}>
                   <li className="flex">
-                    {itm.Project_title} <TiDelete onClick={()=>{settemp_data((prev)=>({...prev,project:prev.project.filter((itm_del)=>itm_del!=itm)}))}} className="text-[orange]" />{" "}
+                    <span className=" font-semibold">{itm.Project_title} </span><TiDelete onClick={()=>{settemp_data((prev)=>({...prev,project:prev.project.filter((itm_del)=>itm_del!=itm)}))}} className="text-[orange]" />{" "}
                   </li>
                   <div>{itm.Project_exp}</div>
                 </div>
@@ -232,17 +234,24 @@ function User_profile() {
                 <input
                   placeholder="Write Project Title"
                   className="text-[14px]  p-1 rounded-md outline-none w-[97%]"
-                  onChange={(e)=>{obj.pro.name=e.target.value}}
-                 
+                  onChange={(e)=>{setobj((prevObj) => ({...prevObj,pro: { ...prevObj.pro, name: e.target.value }}));}}
+                 value={obj.pro.name}
                 />
-                <MdAddBox className="text-[#ff9e37] text-[33px] w-[3%]" onClick={()=>{settemp_data((prev)=>({...prev,project:[...prev.project,{Project_title:obj.pro.name,Project_exp:obj.pro.des}]}))}} />{" "}
+                <MdAddBox className="text-[#ff9e37] text-[33px] w-[3%]" onClick={()=>{
+                  obj.pro.name!=''&& obj.pro.des!=''&& 
+                  settemp_data((prev)=>({...prev,project:[...prev.project,{Project_title:obj.pro.name,Project_exp:obj.pro.des}]}))
+                  
+                  setobj((prevObj) => ({ ...prevObj, pro: { ...prevObj.pro,  des: '' }}));
+                  setobj((prevObj) => ({ ...prevObj, pro: { ...prevObj.pro,  name: '' }}));
+                  }} />{" "}
               </div>
               <div>
                 <textarea
                   placeholder="Write about your Project"
                   rows={2}
                   className="w-full  p-2 rounded-md outline-none"
-                  onChange={(e)=>{obj.pro.des=e.target.value}}
+                  onChange={(e)=>{setobj((prevObj) => ({ ...prevObj, pro: { ...prevObj.pro,  des: e.target.value }}));}}
+                  value={obj.pro.des}
                 />
               </div>
             </div>
@@ -250,8 +259,8 @@ function User_profile() {
           <div className="w-full">
             <div className="font-bold py-2">Skills</div>
             <div>
-              {temp_data.skills?.map((itm) => (
-                <div key={itm} className="flex">
+              {temp_data.skills?.map((itm,i) => (
+                <div key={itm+i} className="flex">
                   {itm} <TiDelete onClick={()=>{settemp_data((prev)=>({...prev,skills:prev.skills.filter((del_itm)=>(del_itm!=itm))}))}} />
                 </div>
               ))}
@@ -261,7 +270,7 @@ function User_profile() {
                 className="text-[14px] w-[250px] p-1 rounded-md outline-none"
                 placeholder="Skill Info"
               
-                onChange={(e)=>{obj={...obj,sk:e.target.value}}}
+                onChange={(e)=>{setobj({...obj,sk:e.target.value})}}
               />
               <span>
                 <MdAddBox

@@ -12,6 +12,7 @@ function Admin_main() {
     { menuitm: "Cources" },
     { menuitm: "Solutions" },
     { menuitm: "Notifications" },
+    { menuitm: "Reports" },
     { menuitm: "Account" },
   ];
   console.log(Selected);

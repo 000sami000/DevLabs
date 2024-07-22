@@ -2,15 +2,6 @@ import axios from "axios";
 
 const API=axios.create({baseURL:"http://localhost:3000"})
 
-API.interceptors.request.use((req)=>{
-  
- 
-    if(localStorage.getItem('profile_info')){
-        req.headers.Authorization=`Bearer ${JSON.parse(localStorage.getItem('profile_'))?.token_}`
-    }
-    return req;
-})
-
 //problems
 export const fetchProblem=(selected)=>{
 
@@ -74,19 +65,64 @@ export const likeproblem=(p_id)=>{
    
  //user
   export const  fetch_userProfile=(id)=>{
-   return API.get(`user/userprofile/${id}`)
+   return API.get(`user/userprofile/${id}`,{withCredentials:true})
+  }
+  export const  fetch_userNotifications=()=>{
+   return API.get(`user/usernotifications`,{withCredentials:true})
+  }
+  export const  delete_userNotifications=(id,clear)=>{
+    if(clear){
+
+      return API.delete(`user/usernotifications?clear=true`,{withCredentials:true})
+    }
+   return API.delete(`user/usernotifications/${id}`,{withCredentials:true})
+  }
+  export const  user_profilepublic=(id)=>{
+   return API.get(`user/userprofilepublic/${id}`)
+  }
+  export const  fetch_userProblemspublic=(id)=>{
+    return API.get(`user/userproblemspublic/${id}`)
+   }
+   export const  fetch_userSolutionspublic=(id)=>{
+    return API.get(`user/usersolutionspublic/${id}`)
+   }
+  export const  fetch_all_users=(users_type,searchterm)=>{
+          if(searchterm!=''){
+
+            return  API.get(`user/allusers?q=${users_type}&searchterm=${searchterm}`,{withCredentials:true})
+          }else{
+            return  API.get(`user/allusers?q=${users_type}`,{withCredentials:true})
+
+          }
   }
   export const  update_userProfile=(id,profile_obj)=>{
     return API.patch(`user/userprofile/${id}`,profile_obj)
    }
-   export const  fetch_userProblems=(id)=>{
-    return API.get(`user/userproblems/${id}`)
+   export const  fetch_userProblems=(id,Searchterm)=>{
+    if(Searchterm!=''){
+      return API.get(`user/userproblems/${id}?searchterm=${Searchterm}`,{withCredentials:true})
+
+    }
+    return API.get(`user/userproblems/${id}`,{withCredentials:true})
+   }
+   export const  fetch_allProblems=(Searchterm)=>{
+    if(Searchterm!=''){
+      return API.get(`user/userallproblems?searchterm=${Searchterm}`,{withCredentials:true})
+
+    }
+    return API.get(`user/userallproblems`,{withCredentials:true})
    }
    export const  search_userProblems=(query)=>{
     return API.get(`user/searchuserproblems?q=${query}`,{withCredentials:true})
    }
    export const  fetch_userArticles=()=>{
     return API.get(`user/userarticles`,{withCredentials:true})
+   }
+   export const  fetch_allArticles=()=>{
+    return API.get(`user/userallarticles`,{withCredentials:true})
+   }
+   export const  search_allArticles=(query)=>{
+    return API.get(`user/searchuserallarticles?q=${query}`,{withCredentials:true})
    }
    export const  fetch_savedArticles=()=>{
     return API.get(`user/savedarticles`,{withCredentials:true})
