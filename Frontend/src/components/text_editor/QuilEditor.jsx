@@ -4,10 +4,13 @@ import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import interact from 'interactjs';
 import { imgDelete, imgUpload } from '../../api';
-
+import './quil_style.css'
 // Custom Image Handler
 const detectImageDeletion = (quill) => {
   quill.on('text-change', async (delta, oldDelta, source) => {
+    if (source === 'api') {
+      return; // Avoid handling changes made by API (like insertEmbed)
+    }
     // Check for deletions
     delta.ops.forEach(async(op) => {
       if (op.delete) {
@@ -67,6 +70,7 @@ function imageHandler() {
       //   });
       // }
       if (oldImage) {
+        console.log("deleting")
         await imgDelete({ filePath: oldImage } );
       }
    
@@ -126,8 +130,8 @@ const customCSS = `
   }
     
 .ql-editor{
-height:200px;
-  max-height:350px;
+min-height:200px;
+ 
   overflow-y:scroll;
 
 }

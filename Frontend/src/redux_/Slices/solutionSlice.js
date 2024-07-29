@@ -30,9 +30,16 @@ export const solutionSlice=createSlice({
         console.log("update_solution action",action)
           return {...state,solutions:state.solutions.map((itm)=> (itm._id===action.payload._id?action.payload:itm))}
             
+        },
+      approve_solution:(state,action )=>{
+        //   let s=state.solutions.filter((itm)=>(itm._id!==action.payload._id));
+        //  state.solutions=s;
+        console.log("approve_solution action",action)
+          return {...state,solutions:state.solutions.map((itm)=> (itm._id===action.payload._id?action.payload:itm))}
+            
         }
    }
 
 })
-export const {create_solution,get_solutions,delete_solution,update_solution}=solutionSlice.actions;
+export const {create_solution,get_solutions,delete_solution,update_solution,approve_solution}=solutionSlice.actions;
 export default solutionSlice.reducer;

@@ -69,7 +69,15 @@ function Solutions_main() {
           <div className="flex justify-center"><Loader/></div>
         )}
       
-       <div  id={"000"}> <Solution_form p_id={p_id} Sol_ed={Sol_ed} setSol_ed={setSol_ed}/></div>
+        <br />
+       <div>
+       {
+          user?
+       <Solution_form p_id={p_id} Sol_ed={Sol_ed} setSol_ed={setSol_ed}/>:
+       <div className="bg-[#f9393963] p-2 rounded-md  text-[#6f1212]"> Login to write a Solution</div>
+       } 
+       
+       </div>
         <br />
         {
         !sol_loading?
@@ -77,7 +85,7 @@ function Solutions_main() {
         {
           solutions?.length>0?<> <div className="text-[30px] text-center">Solutions</div>
          {
-           solutions.map((sol)=><div key={sol._id}><Solution_comp content_title={Single_p[0].title} content_creator_username={Single_p[0].creator_username} setcurrent_sdata={setcurrent_sdata} sol_props={sol} setSol_ed={setSol_ed}/></div>)
+           solutions.map((sol)=><div key={sol._id}><Solution_comp content_title={Single_p[0]?.title} content_creator_username={Single_p[0]?.creator_username} setcurrent_sdata={setcurrent_sdata} sol_props={sol} setSol_ed={setSol_ed}/></div>)
          }   
           </>:<div>No Solution Available</div>
         }     

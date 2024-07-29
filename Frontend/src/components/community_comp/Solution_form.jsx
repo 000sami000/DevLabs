@@ -27,7 +27,7 @@ function Solution_form({p_id,Sol_ed,setSol_ed}) {
         }else{
           if(ContentHtml){
             // console.log(user)
-            dispatch(createSolution(p_id,{ContentHtml,creator_username:user.username}))
+            dispatch(createSolution(p_id,{ContentHtml,creator_username:user.username,profile_img_:user?.profile_img_}))
             setContentHtml('')
           }
           else{

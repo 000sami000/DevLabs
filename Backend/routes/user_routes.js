@@ -16,15 +16,21 @@ const {verify_user_email,signin,signup,get_userprofile,update_userprofile,get_us
     get_usersolution_public,
     get_userallproblem,
     get_user_notification,
-    delete_user_notification
+    delete_user_notification,
+    get_allsolution,
+    reset_forgotten_password,
+    getuser_skills,
+    block_user
 
 }=require('../controllers/user_controller');
 
 router.post('/signin',signin);
 router.post('/signup',signup);
 router.get('/getuser',isAuthorize,get_user)
+router.get('/getuserskills',isAuthorize,getuser_skills)
 router.post('/verifyemail',verify_user_email)
 router.post('/verifyotp',isAuthorize,verify_otp)
+router.post('/resetforgotpassword',reset_forgotten_password)
 router.patch('/changeuser',isAuthorize,uploader('user_profile_img'),change_name_username)
 router.patch('/changepassword',isAuthorize,change_password)
 router.delete('/deleteuser',isAuthorize,delete_user)
@@ -61,6 +67,8 @@ router.get('/allusers',isAuthorize,get_all_users)
 router.get('/userallproblems/',isAuthorize,get_userallproblem);
 router.get('/userallarticles',isAuthorize,get_allarticle);
 router.get('/searchuserallarticles',isAuthorize,search_allarticle);
+router.get('/userallsolutions',isAuthorize,get_allsolution);
+router.patch('/blockuser/:u_id',isAuthorize,block_user);
 
 
 

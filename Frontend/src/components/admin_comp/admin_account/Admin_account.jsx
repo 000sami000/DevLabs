@@ -6,7 +6,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import { deleteUser, updateUser } from "../../../redux_/actions/user";
 import { change_password } from "../../../api";
 import { MdAddPhotoAlternate } from "react-icons/md";
-function User_account() {
+function Admin_account() {
   const navigate=useNavigate()
   const [edit,setedit]=useState(false); 
   // let userlocalstorage = JSON.parse(localStorage.getItem("profile_"));
@@ -66,25 +66,25 @@ function User_account() {
     };
   
   return (
-    <div className='mt-[3%]'>
-    <div className='absolute top-[-45px] rounded-[50%]'>
+    <div className='mt-[3%] relative'>
+    <div className='absolute top-[-50px] rounded-[50%] '>
     {
       
-        ( !imageUrl && temp_user.profile_img_)?
-          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${` http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`})` }}>
-      
-             <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
-          </div>: imageUrl?
-          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${imageUrl})` }}>
-      
-             <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
-          </div>:
-          <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`/default_profile.jpg`})` }}>
-      
-             <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
-          </div>
+      ( !imageUrl && temp_user.profile_img_)?
+        <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${` http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`})` }}>
+       
+           <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
+        </div>: imageUrl?
+        <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${imageUrl})` }}>
+   
+           <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
+        </div>:
+        <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${"/default_profile.jpg"})` }}>
+   
+           <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
+        </div>
 
-    }
+  }
           <input
         type="file"  
         onChange={handleFileChange}
@@ -175,4 +175,4 @@ function User_account() {
   );
 }
 
-export default User_account;
+export default Admin_account;

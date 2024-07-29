@@ -1,6 +1,6 @@
 const multer = require("multer");
 const path = require("path");
-function uploader(destination) {
+function pdf_uploader(destination) {
   // console.log("kljlkjl",destination)
   const storage = multer.diskStorage({
     destination: `./public/upload/${destination}`,
@@ -23,19 +23,13 @@ function uploader(destination) {
   // console.log(upload)
   return upload;
 }
-module.exports = uploader;
+module.exports = pdf_uploader;
 
 function checkFileType(file, cb) {
   // Allowed file types
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check extension
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
+  if (file.mimetype === 'application/pdf') {
+    cb(null, true);
   } else {
-    cb("Error: Images Only!");
+    cb(new Error('Invalid file type. Only PDF files are allowed.'), false);
   }
 }

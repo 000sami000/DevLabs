@@ -39,6 +39,7 @@
     "editorjs-text-color-plugin": "^2.0.4",
     "highlight.js": "^11.9.0",
     "interactjs": "^1.10.27",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",

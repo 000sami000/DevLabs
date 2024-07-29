@@ -9,16 +9,19 @@ import { FaRegBookmark } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { useDispatch,useSelector } from "react-redux";
-import { deleteSolution, updateSolution, voteSolution ,saveSolution} from "../../redux_/actions/solution";
+import { deleteSolution, updateSolution, voteSolution ,saveSolution, approveSolution} from "../../redux_/actions/solution";
+import { FaToggleOn } from "react-icons/fa";
+import { FaToggleOff } from "react-icons/fa6";
 
 import 'react-quill/dist/quill.snow.css';
 import DOMPurify from "dompurify";
-
+import '../text_editor/Editor.scss'
 import Comment from "../Comment";
 import { formatNumber } from "../format_num";
+// import ReadOnlyQuillEditor from "../text_editor/ReadOnlyQuil";
 function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, content_creator_username=""}) {
   const user=useSelector((state)=>state.userReducer.current_user)
-  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments }=sol_props;
+  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments,isApproved }=sol_props;
   // const cleanHTML = DOMPurify.sanitize(solution_content);
   // console.log("solution_content=++++",solution_content)
   // console.log("cleanhtml=++++",cleanHTML)
@@ -107,6 +110,24 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
     }
     return ( <> <span>   <FaRegBookmark />  </span></>);
   }
+
+
+  function Approve() {
+    console.log("Savey");
+    if (!isApproved) {
+      return (
+        <span>
+         
+            <span className="text-[25px]">
+            
+              <FaToggleOff />
+            </span>
+        
+        </span>
+      );
+    }
+    return ( <> <span className="text-[25px]">   <FaToggleOn />  </span></>);
+  }
   return (
       <>
         <div id={_id} className="w-[100%] m-auto bg-[#ffffff] rounded-md p-3 shadow-md">
@@ -129,18 +150,31 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
             </div>
             </div>
             <div className="flex justify-between gap-5 items-center">
-            <span onClick={()=>dispatch(saveSolution(_id))} className="text-[#F99156] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
+              <div className="text-[30px] text-[#F99156]" onClick={()=>{dispatch(approveSolution(_id))}}>
+              {
+               user?.role==='admin'&& <Approve/>
+              }
+            </div>
+            <span onClick={()=>dispatch(saveSolution(_id))} className="text-[#F99156] p-1 cursor-pointer rounded-md flex items-center gap-3  font-bold hover:bg-[#edededdd]">
+            
+              
             <Save/>
             </span>
             
+            {
+              user?._id!==creator_id && user?.role!=='admin'?
             <span onClick={()=>{setcurrent_sdata(sol_props)}} className="text-[#f96666] p-1 cursor-pointer rounded-md font-bold hover:bg-[#edededdd]">
               Report
-            </span>
+            </span>:""
+
+            }
             </div>
           </div>
           <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
-          <div className="flex justify-between gap-4 py-3 px-2 text-pretty text-justify max-h-[400px] overflow-y-auto w-[100%]">
-            <div className=" tiptap " dangerouslySetInnerHTML={{ __html: solution_content }} />
+          <div  className="flex justify-between gap-4 py-3 px-2 text-pretty text-justify max-h-[600px] overflow-y-auto w-[100%]">
+            {/* <ReadOnlyQuillEditor content={solution_content}/> */}
+            <div className=" editor ql-editor" dangerouslySetInnerHTML={{ __html: solution_content }} />
+            <div/>
             <div className="w-[50px] flex flex-col items-center text-[#995731] gap-3 hover:shadow-lg bg-[#F99156] place-self-start p-1 py-2 rounded-lg">
                <span onClick={()=>dispatch(voteSolution(_id,{...sol_props,vote:"upvote"}))}><Upvote/></span>
               <span className="text-[15px]">{vote}</span>

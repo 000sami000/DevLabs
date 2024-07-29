@@ -4,8 +4,9 @@ import Left from "./Left";
 import { colors } from "../..";
 import Right from "./Right";
 function Admin_main() {
-  const [Selected, setSelected] = useState("Articles");
+  const [Selected, setSelected] = useState("Profile");
   let leftmenu = [
+    { menuitm: "Profile" },
     { menuitm: "Articles" },
     { menuitm: "Users" },
     { menuitm: "Problems" },
@@ -25,7 +26,7 @@ function Admin_main() {
           setSelected={setSelected}
         />
       </div>
-      <div className="w-[90%] bg-[#bcbcbc] rounded-[5px] p-5 px-[40px] relative ">
+      <div className="w-[90%] bg-[#bcbcbc] rounded-[5px] p-5 px-[40px] relative  max-h-[600px] overflow-y-auto">
         <Right Selected={Selected} />
       </div>
     </div>

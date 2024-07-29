@@ -1,5 +1,6 @@
 let mongoose = require("mongoose");
 let problem_schema = mongoose.Schema({
+  profile_img_:{type:Object,default:null},
   title: { type: String, required: true },
   problem_content: { type: String, required: true },
   tags: [String],

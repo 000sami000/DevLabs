@@ -15,6 +15,7 @@ export const signIn=(userobj,navigate)=>{
            dispatch(auth_success(data));
         //    console.log("data---:",data)
             navigate("/")
+            window.location.reload()
         }
         catch(err)
         {  

@@ -1,6 +1,6 @@
 import EditorJS from "@editorjs/editorjs";
 import React, { useEffect, useRef } from "react";
-// import ImageTool from '@editorjs/image';
+import ImageTool from '@editorjs/image';
 import Image from "@editorjs/image";
 import Header from "@editorjs/header";
 import Paragraph from "@editorjs/paragraph";
@@ -18,11 +18,14 @@ import Raw from "@editorjs/raw";
 import AlignmentTuneTool from "editorjs-text-alignment-blocktune";
 import InlineCode from '@editorjs/inline-code';
 import Hyperlink from 'editorjs-hyperlink';
+
 // import RedTextInlineTool from "./inlinetool";
 // import "./inlinetool.css"
+import Cookies from 'js-cookie';
 import TextColorPlugin  from 'editorjs-text-color-plugin';
 import "./text_color.css"
 import "./temp.css"
+import { imgUpload } from "../../api";
 
 function Editorpro({ ContentHtml, setContentHtml }) {
   const editorInstance = useRef(null);
@@ -66,8 +69,40 @@ function Editorpro({ ContentHtml, setContentHtml }) {
           },
         },
 
-        image: Image,
+       image: {
+          class: ImageTool,
+          config: {
+            uploader: {
+              async uploadByFile(file) {
+                const formData = new FormData();
+                formData.append('file', file); // Ensure the field name here matches
 
+                // Get the token from the cookie
+                // const token = Cookies.get('access_token'); // Adjust the key to match your cookie name
+
+                try {
+                  const response = await imgUpload(formData)
+
+               console.log("res",response)
+                  const { filePath } = response.data
+                  // const newPath = filePath.replace("/public/", "");;
+                  return {
+                    success: 1,
+                    file: {
+                      url:'http://localhost:3000'+ filePath,
+                    }
+                  };
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                  return {
+                    success: 0,
+                    message: error.message,
+                  };
+                }
+              },
+            },
+          },
+        },
         header: {
           class: Header,
           inlineToolbar: true,

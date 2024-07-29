@@ -68,11 +68,14 @@ function User_notifications() {
 
    function Rander_all_Notification ({usernotifications}){
 
-   return  usernotifications.length>0? usernotifications?.map((itm)=>(
+     
+   return  usernotifications.length>0? usernotifications?.map((itm)=>(<>
+    {
+
+    itm.notifi_type==='comment'&&
       <div  key={itm.notific_id} className='w-full bg-slate-300 rounded-md p-2'>
    
       <div className='flex  justify-between'>
-
       <div>
         <span className=' font-semibold italic'>{itm.commentor_username}</span> {itm.notifi_type==='comment'?`commented on your ${itm.comment_type==='solution'?`${itm.comment_type} of this problem`:`${itm.comment_type}`} `:""}
         <span className='font-bold'>
@@ -85,12 +88,37 @@ function User_notifications() {
         </div>
         </div>
         <br/>
-        <div className='bg-[white] p-1 rounded-md'>
-          {  itm.comment_content }
+        <div className='bg-[white] p-1 rounded-md' dangerouslySetInnerHTML={{ __html:  itm.comment_content}}>
+       
         </div>
       
       </div>
-    
+     }
+{
+  itm.notifi_type==='report_create'&&<div  key={itm.notific_id} className='w-full bg-slate-300 rounded-md p-2'>
+   
+   <div className='flex  justify-between'>
+   <div>
+     <span className=' font-semibold italic'>{itm.reporter_username} reported your {itm.report_type}</span>
+     <span className='font-bold'>
+     &nbsp;{itm.reported_content}
+     </span>
+     </div>
+     <div className='flex items-center gap-2'>
+              {/* <span>{formatDistanceToNow(itm.createdAt)}</span> */}
+              <span><IoCloseOutline  className=' text-[white] text-[20px] cursor-pointer hover:bg-slate-500 rounded-sm ' onClick={()=>delete_user_notifications(itm.notific_id)}/></span>
+     </div>
+     </div>
+     <br/>
+     <div className='bg-[white] p-1 rounded-md'>
+   
+     {itm.report_content}
+     </div>
+   
+   </div>
+}
+
+      </>
     ))  :<div className=' text-center text-[20px] text-[white]'>No notifications</div>
 
 

@@ -64,7 +64,7 @@ const userSlice = createSlice({
 
       console.log("update_user----action",action)
       state.current_user=action.payload;
-      state.error=action.payload;
+      state.error=null;
       state.loading=false;
           
       },

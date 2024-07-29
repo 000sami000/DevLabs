@@ -13,6 +13,7 @@ const http=require('http')
 const { Server } = require('socket.io');
 const cookieParser=require('cookie-parser')
 const morgan=require("morgan")
+
 //Routes
 let problem_routes=require("./routes/problem_routes")
 let user_routes=require("./routes/user_routes")
@@ -20,6 +21,7 @@ let solution_routes=require("./routes/solution_routes");
 let article_routes=require("./routes/article_routes")
 let comment_routes=require("./routes/comment_routes")
 let report_routes=require("./routes/report_routes")
+let cource_routes=require('./routes/cource_routes')
 app.use(morgan("tiny"))
 app.use(cors(  {  origin: 'http://localhost:5173',credentials: true}));
 app.use(bodyParser.urlencoded({limit:"60mb",extended:true}))
@@ -34,9 +36,12 @@ app.use("/solution",solution_routes)
 app.use("/article",article_routes)
 app.use("/comment",comment_routes)
 app.use("/report",report_routes)
+app.use("/cource",cource_routes)
+
+
+app.use('/public/upload', express.static(path.join(__dirname, 'public/upload')));
 // app.use('/posts',post_routes)
 // app.use('/users',user_routes)
-app.use('/public/upload', express.static(path.join(__dirname, 'public/upload')));
 //compiler
 app.post('/run', (req, res) => {
     const { language, code, input } = req.body;
@@ -95,27 +100,7 @@ app.post('/run', (req, res) => {
     });
   });
 
-  //whiteboard
-  // const server = http.createServer(app);
-  // const io = new Server(server);
 
-  // io.on('connection', (socket) => {
-  //   console.log('New client connected');
-  
-  //   // Handle drawing events
-  //   socket.on('drawing', (data) => {
-  //     socket.broadcast.emit('drawing', data);
-  //   });
-  
-  //   // Handle voice events
-  //   socket.on('voice', (data) => {
-  //     socket.broadcast.emit('voice', data);
-  //   });
-  
-  //   socket.on('disconnect', () => {
-  //     console.log('Client disconnected');
-  //   });
-  // });
 
 const connection_URL="mongodb://127.0.0.1:27017/DevLabs";
 const PORT=process.env.PORT || 3000;

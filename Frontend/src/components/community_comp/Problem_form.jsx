@@ -24,7 +24,7 @@ function submit_handler (){
   console.log(Problem_obj)
    if(Problem_obj.title && ContentHtml){
     console.log("problemobj---",Problem_obj)
-    dispatch(createProblem({...Problem_obj,ContentHtml:ContentHtml,creator_id:user?._id,creator_username:user?.username}));
+    dispatch(createProblem({...Problem_obj,ContentHtml:ContentHtml,creator_id:user?._id,creator_username:user?.username,profile_img_:user?.profile_img_}));
     setProblem_obj({title:"",ContentHtml:"",tags:[]})
     setcontent('')
 // setcontent("");

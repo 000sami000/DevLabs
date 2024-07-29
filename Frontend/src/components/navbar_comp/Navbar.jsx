@@ -4,6 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { auth_signout } from "../../redux_/Slices/userSlice";
 import Simpleloader from "../Simpleloader";
+import Loader from "../Loader";
 function Navbar({user}) {
   const current_user =useSelector((state)=>state.userReducer.current_user)
     // const {current_user,loading,error}=user;
@@ -86,6 +87,11 @@ console.log(current_user?.name)
             />
           )}
           {isMenuOpen && (
+            
+           
+
+           
+          !current_user?<Loader/>:
         <div className="bg-[#454444cb] p-4 rounded-[10px] shadow-md absolute top-12 left-[90%] w-[9%] z-10" >
         {
           current_user?.name&&
@@ -101,8 +107,10 @@ console.log(current_user?.name)
              }}>Logout</button>
 
         </div> 
+     
       )}
         </div>)
+            
       }
       </div>
     </nav>

@@ -7,7 +7,7 @@ import Loader from "../../Loader";
 import { fetch_userProfile,update_userProfile } from "../../../api";
 import { getUser } from "../../../redux_/actions/user";
 import { useParams } from "react-router-dom";
-function User_profile() {
+function Admin_profile() {
   const {id}=useParams()
   let dispatch=useDispatch();
   const [temp_data,settemp_data]=useState({});
@@ -80,10 +80,10 @@ function User_profile() {
       {
   loading ?<div className="h-full flex justify-center items-center"> <Loader/></div>: 
     
-    <div className="mt-[2%] ">
+    <div className="mt-[10%] ">
     {
       user?.profile_img_?
-    <div  className='w-[80px] absolute top-[50px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`http://localhost:3000/${user?.profile_img_?.destination}/${user?.profile_img_?.filename}`})` }}>
+    <div  className='w-[80px] absolute top-[0px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`http://localhost:3000/${user?.profile_img_?.destination}/${user?.profile_img_?.filename}`})` }}>
 
           </div>:<div  className='w-[80px] absolute top-[0px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`/default_profile.jpg`})` }}></div>
     }
@@ -189,7 +189,7 @@ function User_profile() {
           <div className="w-full">
             <div className="font-bold py-2">Education</div>
             <div>
-              {temp_data.education?.map((itm,index) => (
+              {temp_data?.education?.map((itm,index) => (
                 <div key={index} className="flex items-center">
                   {itm} <TiDelete   onClick={()=>{settemp_data((prev)=>({...prev,education:prev.education.filter((del_itm)=>(del_itm!=itm))})); }}/>
                 </div>
@@ -223,7 +223,7 @@ function User_profile() {
           <div className="w-full ">
             <div className="font-bold py-2">Projects</div>
             <div>
-              {temp_data.project?.map((itm,i) => (
+              {temp_data?.project?.map((itm,i) => (
                 <div key={itm.Project_title+i}>
                   <li className="flex">
                     <span className=" font-semibold">{itm.Project_title} </span><TiDelete onClick={()=>{settemp_data((prev)=>({...prev,project:prev.project.filter((itm_del)=>itm_del!=itm)}))}} className="text-[orange]" />{" "}
@@ -262,7 +262,7 @@ function User_profile() {
           <div className="w-full">
             <div className="font-bold py-2">Skills</div>
             <div>
-              {temp_data.skills?.map((itm,i) => (
+              {temp_data?.skills?.map((itm,i) => (
                 <div key={itm+i} className="flex">
                   {itm} <TiDelete onClick={()=>{settemp_data((prev)=>({...prev,skills:prev.skills.filter((del_itm)=>(del_itm!=itm))}))}} />
                 </div>
@@ -300,4 +300,4 @@ function User_profile() {
   );
 }
 
-export default User_profile;
+export default Admin_profile;

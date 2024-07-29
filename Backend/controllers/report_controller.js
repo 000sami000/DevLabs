@@ -7,7 +7,9 @@ const create_report = async (req, res) => {
   console.log("this is create_report")
      req.body.reporter_id=req.USER_ID;
     try {
+      console.log("report--body",req.body)
         const newReport = new report_Model(req.body);
+
         const savedReport = await newReport.save();
 
         const user=await user_Model.findById({_id:savedReport.content_creator_id})
@@ -23,7 +25,8 @@ const create_report = async (req, res) => {
           type_id:savedReport.type_id,
           content_creator_id:savedReport.content_creator_id,
           content_creator_username:savedReport.content_creator_username,
-
+          reported_content:savedReport.reported_content,
+          createdAt:savedReport.createdAt
         };
         user.notifications.unshift(notification);
         await user.save();
@@ -35,17 +38,32 @@ const create_report = async (req, res) => {
 };
 const get_reports = async (req, res) => {
     
-    const page=Number(Number(req.query.page)+1)||1
-    console.log('=====',page)
-    const skip=(page-1)*5;
+
     try {
-      const total = await report_Model.countDocuments({});
-      const reports = await report_Model.find().sort({ _id: -1 }).limit(5).skip(skip);
+       console.log("??????",req.query.report_type)
+      const reports = await report_Model.find({report_type:req.query.report_type}).sort({ _id: -1 });
       // console.log(reports)
-      res.status(200).json({reports,total});
+      res.status(200).json(reports);
     } catch (err) {
       // console.log(err)
       res.status(404).json({ message: err });
     }
   };
-module.exports={create_report,get_reports}
+
+
+  const delete_report = async (req, res) => {
+       
+    const {r_id}=req.params;
+  console.log("?????",r_id);
+    try {
+       console.log("??????",req.query.report_type)
+      const deletedreport = await report_Model.deleteOne({_id:r_id}).sort({ _id: -1 });
+      const reports = await report_Model.find({report_type:req.query.report_type}).sort({ _id: -1 });
+      // console.log(reports)
+      res.status(200).json(reports);
+    } catch (err) {
+      // console.log(err)
+      res.status(404).json({ message: err });
+    }
+  };
+module.exports={create_report,get_reports,delete_report}

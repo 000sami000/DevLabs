@@ -228,3 +228,228 @@
         display: block;
       }
     }
+
+    .custom-quill-container .ql-container {
+      border: none !important;
+    }
+    
+    .custom-quill-container .ql-editor {
+      border: none !important;
+      padding: 0 !important; /* Optional: Remove padding if needed */
+    }
+    
+    .custom-quill-container {
+      border: none !important;
+    }
+
+
+
+    /* quillStyles.css */
+.ql-editor {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.ql-editor .ql-size-small {
+  font-size: 0.75em;
+}
+
+.ql-editor .ql-size-large {
+  font-size: 1.5em;
+}
+
+.ql-editor .ql-size-huge {
+  font-size: 2.5em;
+}
+
+.ql-editor .ql-font-serif {
+  font-family: 'Georgia', 'Times New Roman', 'serif';
+}
+
+.ql-editor .ql-font-monospace {
+  font-family: 'Monaco', 'Courier New', 'monospace';
+}
+
+.ql-editor .ql-align-center {
+  text-align: center;
+}
+
+.ql-editor .ql-align-right {
+  text-align: right;
+}
+
+.ql-editor .ql-align-justify {
+  text-align: justify;
+}
+
+.ql-editor .ql-direction-rtl {
+  direction: rtl;
+  text-align: inherit;
+}
+
+.ql-editor a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.ql-editor a:hover {
+  text-decoration: underline;
+}
+
+.ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 16px;
+  color: #6a737d;
+}
+
+.ql-editor code {
+  background-color: #3f3f3f;
+  border-radius: 3px;
+  font-size: 85%;
+  padding: 2px 4px;
+  margin: 0 2px;
+}
+
+.ql-editor pre {
+  background-color: #494949;
+  border-radius: 3px;
+  font-size: 85%;
+  overflow: auto;
+  padding: 16px;
+}
+
+.ql-editor pre code {
+  background-color: inherit;
+  padding: 0;
+}
+
+.ql-editor img {
+  max-width: 100%;
+}
+
+.ql-editor ul, .ql-editor ol {
+  padding-left: 1.5em;
+}
+
+.ql-editor ul li {
+  list-style-type: disc;
+}
+
+.ql-editor ol li {
+  list-style-type: decimal;
+}
+
+.ql-editor .ql-indent-1 {
+  padding-left: 3em;
+}
+
+.ql-editor .ql-indent-2 {
+  padding-left: 6em;
+}
+
+.ql-editor .ql-indent-3 {
+  padding-left: 9em;
+}
+
+.ql-editor .ql-indent-4 {
+  padding-left: 12em;
+}
+
+.ql-editor .ql-indent-5 {
+  padding-left: 15em;
+}
+
+.ql-editor .ql-indent-6 {
+  padding-left: 18em;
+}
+
+.ql-editor .ql-indent-7 {
+  padding-left: 21em;
+}
+
+.ql-editor .ql-indent-8 {
+  padding-left: 24em;
+}
+
+.ql-editor .ql-indent-9 {
+  padding-left: 27em;
+}
+
+.ql-editor .ql-underline {
+  text-decoration: underline;
+}
+
+.ql-editor .ql-strike {
+  text-decoration: line-through;
+}
+
+.ql-editor .ql-header-1 {
+  font-size: 2em;
+}
+
+.ql-editor .ql-header-2 {
+  font-size: 1.5em;
+}
+
+.ql-editor .ql-background-red {
+  background-color: #f28b82;
+}
+
+.ql-editor .ql-background-orange {
+  background-color: #fbbc04;
+}
+
+.ql-editor .ql-background-yellow {
+  background-color: #fff475;
+}
+
+.ql-editor .ql-background-green {
+  background-color: #ccff90;
+}
+
+.ql-editor .ql-background-blue {
+  background-color: #a7ffeb;
+}
+
+.ql-editor .ql-background-purple {
+  background-color: #d7aefb;
+}
+
+.ql-editor .ql-color-red {
+  color: #e60000;
+}
+
+.ql-editor .ql-color-orange {
+  color: #f7941d;
+}
+
+.ql-editor .ql-color-yellow {
+  color: #ffeb3b;
+}
+
+.ql-editor .ql-color-green {
+  color: #00c853;
+}
+
+.ql-editor .ql-color-blue {
+  color: #03a9f4;
+}
+
+.ql-editor .ql-color-purple {
+  color: #8e24aa;
+}
+
+.ql-editor .ql-script {
+  vertical-align: sub;
+}
+
+.ql-editor .ql-script.ql-super {
+  vertical-align: super;
+}
+
+.ql-editor .ql-video {
+  max-width: 100%;
+}

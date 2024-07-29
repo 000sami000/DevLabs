@@ -164,7 +164,7 @@ function Admin_articles() {
         <div className="flex gap-2">
           <button onClick={()=>{setSelected("user_articles");get_user_article()}} className={`flex items-center gap-2   justify-center rounded-[5px] p-2 text-[13px] text-[white] ${Selected==="user_articles"?"bg-[#d17635]":"bg-[#ff964c]"}`}>Your Articles</button>
           <button onClick={()=>{setSelected("saved"); get_user_article_saved()}} className={`flex items-center gap-2  justify-center rounded-[5px] text-[13px] p-2 text-[white] ${Selected==="saved"?"bg-[#d17635]":"bg-[#ff964c]"}`}>Saved <FaBookmark  className="text-[13px]"/> </button>
-          <button onClick={()=>{setSelected("total_articles"); get_total_article()}} className={`flex items-center gap-2  justify-center rounded-[5px] text-[13px] p-2 text-[white] ${Selected==="total_articles"?"bg-[#d17635]":"bg-[#ff964c]"}`}>Total Articles <FaBookmark  className="text-[13px]"/> </button>
+          <button onClick={()=>{setSelected("total_articles"); get_total_article()}} className={`flex items-center gap-2  justify-center rounded-[5px] text-[13px] p-2 text-[white] ${Selected==="total_articles"?"bg-[#d17635]":"bg-[#ff964c]"}`}>Total Articles </button>
         </div>
         <div className="w-[40%] flex gap-2 items-center bg-[white]  rounded-md px-2 ">
           <input
@@ -233,10 +233,13 @@ function Admin_articles() {
       <div className="flex flex-col gap-2 max-h-[400px] overflow-y-visible">
       {
         loading?<div className="flex justify-center "><Loader/></div>:
-        Selected==="total_articles"? Adminarticles?.length>0?
+      
       Adminarticles.map((itm)=>(
            <div onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] w-full p-2 flex justify-between gap-2 items-center rounded-[10px] cursor-pointer">
-           <div className="flex items-center gap-[2px]  p-1 w-[13%] rounded-md hover:bg-[#ffffff99] cursor-pointer">
+
+           {
+
+          Selected!=="user_articles"&& <div className="flex items-center gap-[2px]  p-1 w-[13%] rounded-md hover:bg-[#ffffff99] cursor-pointer">
               <img
               loading="lazy"
                 // src={`http://localhost:3000/${itm?.profile_img_?.destination}/${itm?.profile_img_?.filename}`||"/default_profile.jpg"}
@@ -253,6 +256,7 @@ function Admin_articles() {
                 </div>
               </div>
               </div>
+            }
              <span className=" w-[70%] break-words ">{itm.title}</span>
             <div className=" flex w-[37%]  justify-between ">
             <div className="flex gap-5 w-[50%]">
@@ -260,67 +264,14 @@ function Admin_articles() {
              <span className="flex items-center gap-2"><AiFillDislike /> <span>{itm.dislikes}</span></span>
              </div>
             <div className=" w-[38%] text-center flex  gap-6">
-            <div>{itm.comments}</div>
+            <div>{itm.total_comments}</div>
             <div  >{itm.isActive?<span className="bg-[#61ea61] p-[3px] px-2 rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div>
             {itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>}
                </div>
             </div>
           </div>
-)):<div>No Articles</div>:
-      Selected==="user_articles"? Adminarticles?.length>0? Adminarticles.map((itm)=>(
-
-        <div  onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
-        <span className=" w-[70%] break-words">
-          {itm.title}
-        </span>
-        <div className=" flex w-[37%] justify-between">
-        <div className="flex gap-5 w-[50%]">
-             <span className="flex items-center gap-2"><AiFillLike /> <span >{itm.likes}</span></span>
-             <span className="flex items-center gap-2"><AiFillDislike /> <span>{itm.dislikes}</span></span>
-             </div>
-          <div className="flex justify-between w-[50%]">
-          
-            <div>{itm.comments}</div>
-            <div  >{itm.isActive?<span className="bg-[#55d055] p-[3px] px-2 rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div>
-            {itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>}
-          </div>
-        </div>
-      </div>
-
-      )):<div>No articles Created</div>:Selected==="saved"?
-      Adminarticles?.length>0?
-      Adminarticles.map((itm)=>(
-           <div onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] p-2 flex justify-between items-center rounded-[10px] cursor-pointer">
-           <div className="flex items-center gap-[2px]  p-1 w-[13%] rounded-md hover:bg-[#ffffff99] cursor-pointer">
-              <img
-              loading="lazy"
-                // src={`http://localhost:3000/${itm?.profile_img_?.destination}/${itm?.profile_img_?.filename}`||"/default_profile.jpg"}
-                src={"/default_profile.jpg"}
-                width={`30px`}
-                className="rounded-[50%]"
-              />
-              <div className="flex flex-col text-nowrap text-[12px] text-[white]">
-                <div className="text-[11px]   pt-0 px-1">
-                  {itm?.creator_username}
-                </div>
-                <div className="text-[10px] pt-0 px-1">
-                  {formatDistanceToNow(itm.createdAt)}
-                </div>
-              </div>
-              </div>
-             <span className=" w-[70%] break-words ">{itm.title}</span>
-            <div className=" flex w-[37%]  justify-between ">
-             <div className="flex gap-5 w-[50%]">
-             <span className="flex items-center gap-2"><AiFillLike /> <span >{itm.likes}</span></span>
-             <span className="flex items-center gap-2"><AiFillDislike /> <span>{itm.dislikes}</span></span>
-             </div>
-            <div className=" w-[38%] text-center flex  justify-center">
-            <div>{itm.comments}</div>
-            
-               </div>
-            </div>
-          </div>
-)):<div>No Saved Articles</div>:""
+))
+     
       }
       </div>
     </div>

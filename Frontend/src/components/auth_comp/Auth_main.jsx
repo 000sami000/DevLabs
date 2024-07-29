@@ -43,6 +43,8 @@ function Auth_main() {
         if(IsSignup){
           console.log(data);
           dispatch(signUp(data,setIsSignup))
+          dispatch(erase_error())
+          reset()
           }else{
             
             dispatch(signIn(data,navigate))
@@ -92,8 +94,8 @@ function Auth_main() {
                 <input   {...register("email", {
             required: "Email is required",
             pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email address"
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Invalid email address"
             }
           })} className={style}  id='email' onChange={handlechange} type={'email'} name={'email'} placeholder={'Enter your Email'}  label={"Email"}/>
                 <label className={`text-[${colors.white}] flex justify-between items-center`} htmlFor='password'><span >Password</span> <span className='text-[red] px-2 text-[12px]'>{errors.password?.message}</span></label>
@@ -120,7 +122,7 @@ function Auth_main() {
                 <br/>
                 <div className='flex justify-center'>
   
-                <button type='submit' disabled={loading} className='bg-[#ff964c] text-[#fffbfb] rounded-md py-1 px-2 '>{IsSignup?"Sign up":"Sign in" }</button>
+                <button type='submit'  disabled={loading} className='bg-[#ff964c] text-[#fffbfb] rounded-md py-1 px-2 '>{IsSignup?"Sign up":"Sign in" }</button>
                 </div>
                 </form>
          

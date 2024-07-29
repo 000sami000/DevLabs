@@ -2,6 +2,10 @@ import axios from "axios";
 
 const API=axios.create({baseURL:"http://localhost:3000"})
 
+
+
+
+
 //problems
 export const fetchProblem=(selected)=>{
 
@@ -31,7 +35,9 @@ export const delete_problem=(id)=>{
 export const likeproblem=(p_id)=>{
   return API.patch(`/problem/likeproblem/${p_id}`,{},{withCredentials:true})
 }
-
+export const approve_problem=(p_id)=>{
+  return API.patch(`/problem/approve/${p_id}`,{},{withCredentials:true});
+ }
 //user authentication
  export const signin=(userobj)=>{
    return API.post('/user/signin',userobj,{withCredentials:true})
@@ -49,6 +55,10 @@ export const likeproblem=(p_id)=>{
   export const verify_otp=(userobj)=>{
     return API.post('/user/verifyotp',userobj,{withCredentials:true})
   }
+  export const reset_forgot_password=(userobj)=>{
+    console.log("??????????",userobj)
+    return API.post('/user/resetforgotpassword',userobj)
+  }
   export const  update_user=(user_obj)=>{
     return API.patch(`user/changeuser`,user_obj,{
       withCredentials:true,
@@ -64,6 +74,16 @@ export const likeproblem=(p_id)=>{
    }
    
  //user
+ export const fetch_userskills=()=>{
+
+  return API.get(`user/getuserskills`,{withCredentials:true});
+
+}
+ export const block_user=(id)=>{
+
+  return API.patch(`user/blockuser/${id}`,{},{withCredentials:true});
+
+}
   export const  fetch_userProfile=(id)=>{
    return API.get(`user/userprofile/${id}`,{withCredentials:true})
   }
@@ -96,7 +116,7 @@ export const likeproblem=(p_id)=>{
           }
   }
   export const  update_userProfile=(id,profile_obj)=>{
-    return API.patch(`user/userprofile/${id}`,profile_obj)
+    return API.patch(`user/userprofile/${id}`,profile_obj,{withCredentials:true})
    }
    export const  fetch_userProblems=(id,Searchterm)=>{
     if(Searchterm!=''){
@@ -137,6 +157,14 @@ export const likeproblem=(p_id)=>{
    export const  fetch_userSolutions=()=>{
     return API.get(`user/usersolution`,{withCredentials:true})
    }
+   export const  fetch_allSolutions=(Searchterm)=>{
+    if(Searchterm!=''){
+      return API.get(`user/userallsolutions?searchterm=${Searchterm}`,{withCredentials:true})
+
+    }
+    return API.get(`user/userallsolutions`,{withCredentials:true})
+ 
+   }
    export const  fetch_savedSolutions=()=>{
     return API.get(`user/savedsolution`,{withCredentials:true})
    }
@@ -158,6 +186,7 @@ export const likeproblem=(p_id)=>{
    export const updateSolution=(id,solutionObj)=>{
     return API.patch(`/solution/${id}`,solutionObj,{withCredentials:true});
    }
+
    export const deleteSolution=(id)=>{
     return API.delete(`/solution/${id}`);
    }
@@ -167,6 +196,9 @@ export const likeproblem=(p_id)=>{
     
    export const save_solution=(s_id)=>{
     return API.patch(`/solution/save/${s_id}`,{},{withCredentials:true});
+   }
+   export const approve_solution=(s_id)=>{
+    return API.patch(`/solution/approve/${s_id}`,{},{withCredentials:true});
    }
    //articles
    export const createArticle=(articleobj)=>{
@@ -227,7 +259,9 @@ export const likeproblem=(p_id)=>{
     return API.patch(`article/save/${a_id}`,{},{withCredentials:true})
    } 
 
-  
+   export const approve_article=(a_id)=>{
+    return API.patch(`/article/approve/${a_id}`,{},{withCredentials:true});
+   }
 
 //comment
 export const  createComment=(commentobj)=>{
@@ -248,4 +282,12 @@ export const  deleteComment=(c_id)=>{
 //report
 export const  createReport=(reportobj)=>{
   return API.post("/report/",reportobj,{withCredentials:true});
+}
+export const  fetch_reports=(report_type)=>{
+  console.log(">>>>>",report_type)
+  return API.get(`/report?report_type=${report_type}`,{withCredentials:true});
+}
+export const  delete_reports=(id,report_type)=>{
+  console.log(">>>>>",id)
+  return API.delete(`/report/${id}?report_type=${report_type}`,{withCredentials:true});
 }

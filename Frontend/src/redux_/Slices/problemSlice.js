@@ -30,9 +30,16 @@ export const problemSlice=createSlice({
     },
     search_problem:(state,action)=>{
       return {...state,problems:action.payload.problems,total:action.payload.total}
-    }
+    },
+    approve_problem:(state,action )=>{
+      //   let s=state.solutions.filter((itm)=>(itm._id!==action.payload._id));
+      //  state.solutions=s;
+      console.log("approve_solution action",action)
+        return {...state,single_recent_post:action.payload}
+          
+      }
    }
    
 })
-export const {create_problem,get_problems,get_Single_problem,delete_problem,like_problem,search_problem}=problemSlice.actions;
+export const {create_problem,get_problems,get_Single_problem,delete_problem,like_problem,search_problem,approve_problem}=problemSlice.actions;
 export default problemSlice.reducer;

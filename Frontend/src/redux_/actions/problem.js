@@ -4,7 +4,8 @@ import {
   get_Single_problem,
   delete_problem,
   like_problem,
-  search_problem
+  search_problem,
+  approve_problem
 } from "../Slices/problemSlice";
 import * as api from "../../api";
 
@@ -88,3 +89,21 @@ export const search_problem_data = ( inputval) => {
     }
   };
 };
+
+export const approveProblem=(s_id)=>{
+
+  return async(dispatch)=>{
+      try
+      {
+         const {data}=await api.approve_problem(s_id);
+      //    console.log("data---:",data)
+         dispatch(approve_problem(data))
+         window.location.reload() 
+      }
+      catch(err)
+      {
+          console.log("updateSolution err---",err)
+      }
+  }
+
+}

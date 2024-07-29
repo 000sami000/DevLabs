@@ -18,6 +18,9 @@ function Report({current_adata=null,setcurrent_adata,current_pdata=null,setcurre
         }
       }
       // console.log("lkljllk",current_pdata)
+      function removeHtmlTags(str) {
+        return str.replace(/<\/?[^>]+(>|$)/g, "");
+    }
   return (
     <Modal
    isOpen={current_adata!=null||current_pdata!=null||current_sdata!=null||current_cdata!=null}
@@ -70,6 +73,7 @@ function Report({current_adata=null,setcurrent_adata,current_pdata=null,setcurre
     <div className="mt-4 flex justify-end px-4"> <button onClick={()=>{submit_report(current_adata?{
       content_creator_id:current_adata?.creator_id,
       content_creator_username:current_adata?.creator_username,
+      reported_content:current_adata?.title,
       report_content:Text,
       report_type:"article",
       type_id:current_adata?._id,
@@ -78,6 +82,7 @@ function Report({current_adata=null,setcurrent_adata,current_pdata=null,setcurre
        }:current_pdata?{
       content_creator_id:current_pdata?.creator_id,
       content_creator_username:current_pdata?.creator_username,
+      reported_content:current_pdata?.title,
       report_content:Text,
       report_type:"problem",
       type_id:current_pdata?._id,
@@ -86,6 +91,7 @@ function Report({current_adata=null,setcurrent_adata,current_pdata=null,setcurre
       }:current_sdata?{
       content_creator_id:current_sdata?.creator_id,
       content_creator_username:current_sdata?.creator_username,
+      reported_content:removeHtmlTags(current_sdata.solution_content.substring(0,50)+"..."),
       report_content:Text,
       report_type:"solution",
       type_id:current_sdata?._id,
@@ -94,6 +100,7 @@ function Report({current_adata=null,setcurrent_adata,current_pdata=null,setcurre
     }:current_cdata?{
       content_creator_id:current_cdata?.creator_id,
       content_creator_username:current_cdata?.creator_username,
+      reported_content:current_cdata?.comment_content,
       report_content:Text,
       report_type:"comment",
       type_id:current_cdata?._id,

@@ -9,7 +9,7 @@ const get_problems = async (req, res) => {
   const skip=(page-1)*5;
   try {
     const total = await problem_Model.countDocuments({});
-    const problems = await problem_Model.find().sort({ _id: -1 }).limit(5).skip(skip);
+    const problems = await problem_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);
     // console.log(problems)
     res.status(200).json({problems,total});
   } catch (err) {
@@ -20,13 +20,13 @@ const get_problems = async (req, res) => {
 const create_problem = async (req, res) => {
   const { title, ContentHtml, tags,creator_id,creator_username } = req.body;
   console.log("*****",req.body);
-
+  //  const user=user_Model.findOne({_id:creator_id});
   const new_problem = new problem_Model({
     title: title,
     problem_content: ContentHtml,
     tags: tags,
     creator_id,creator_username,
-
+  
   });
   try {
     await new_problem.save();
@@ -157,4 +157,22 @@ const like_problem = async (req, res) => {
   }
 };
 
-module.exports = { search_problem,like_problem, get_problems, create_problem, single_problem,delete_problem };
+const approve_problem = async (req,res) => {
+  const { p_id } = req.params;
+  console.log("ljlkjlk",p_id)
+  if (!mongoose.Types.ObjectId.isValid(p_id))
+    return res.status(404).send("No Article with this id");
+  if ( req.USER_ROLE!=='admin')
+    return res.status(401).send("Only admin can approve the problem");
+  try {
+    // console.log(s_id)
+    const problem = await problem_Model.findById(p_id);
+    problem.isApproved=!problem.isApproved
+    const updatedproblem = await problem_Model.findByIdAndUpdate(p_id, problem, {  new: true,});
+    console.log("updatedproblem",updatedproblem)
+    res.status(200).json(updatedproblem);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+module.exports = { search_problem,like_problem, get_problems, create_problem, single_problem,delete_problem ,approve_problem};

@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import OTPInput from "./OTPInput";
 import { colors } from "../..";
 import { verifyemail ,verify_otp} from "../../api";
-
+import { useNavigate } from "react-router-dom";
+import Change_password from "./Change_password";
 function ForgotPassword() {
-  
+  const navigate=useNavigate();
 const [Showotp,setShowotp]=useState(false);
 const [Email,setEmail]=useState("");
 const [Otp,setOtp]=useState("");
  const [Emailerror,setEmailerror]=useState(""); 
  const [Otperror,setOtperror]=useState(""); 
-
-
+ const [loader,setloader]=useState(false)
+const [reset_email,setreset_email]=useState("")
  const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -37,14 +38,18 @@ const [Otp,setOtp]=useState("");
         return;
     }
         setEmailerror('');
+
+        setloader(true)
       try{
 
         const {data}= await verifyemail({email:Email})
         console.log("forgot res :",data);
+        setloader(false)
         setShowotp(true);   
       }catch(err){
         setEmailerror(err?.response?.data.message)
-         console.log(err)
+          setloader(false)
+        console.log(err)
       }
     //Code
         
@@ -57,12 +62,16 @@ const [Otp,setOtp]=useState("");
   setOtperror("");
   try{
    const {data}=await verify_otp({otp:Otp})
+   console.log(data)
+      //  navigate(`/resetpassword/${data.email}`)
+      setreset_email(data.email)
   }catch(err){
+    setOtperror(err.response.data.message)
     console.log("otp verifying err",err)
   }
   console.log("////?",Otp)
 
-  setOtperror("");
+  // setOtperror("");
   //code
   }
   let style =
@@ -111,20 +120,24 @@ const [Otp,setOtp]=useState("");
     
     <div className={`${Showotp?"block":"hidden"}`}>
           <div className="text-center text-[red]">{Otperror?Otperror:""}</div>
-          
-        
+          {
+            reset_email===''?
+          <>
           <div className="text-center text-[18px] text-white">Enter Otp</div>
+   
           <br/>
           <OTPInput  length={6} onChange={otpchangehandler} />
           <br/>
           <div className=" flex justify-center">
           <button
-  onClick={submit_handler}
+            onClick={submit_handler}
               className="bg-[#ff964c] text-[#fffbfb]  rounded-md  px-2  py-[2px]  self-end w-[20%]"
             >
               Submit
             </button>
             </div>
+            </>:<Change_password reset_email_={reset_email}/>
+          }
           </div>
     
     </div>

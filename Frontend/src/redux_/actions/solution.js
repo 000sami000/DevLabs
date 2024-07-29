@@ -1,4 +1,4 @@
-import { create_solution,get_solutions ,delete_solution,update_solution} from "../Slices/solutionSlice";
+import { create_solution,get_solutions ,delete_solution,update_solution,approve_solution} from "../Slices/solutionSlice";
 import * as api from "../../api"
 export const createSolution=(id,solutionObj)=>{
 
@@ -92,6 +92,22 @@ export const saveSolution=(s_id)=>{
            const {data}=await api.save_solution(s_id);
         //    console.log("data---:",data)
            dispatch(update_solution(data)) 
+        }
+        catch(err)
+        {
+            console.log("updateSolution err---",err)
+        }
+    }
+
+}
+export const approveSolution=(s_id)=>{
+
+    return async(dispatch)=>{
+        try
+        {
+           const {data}=await api.approve_solution(s_id);
+        //    console.log("data---:",data)
+           dispatch(approve_solution(data)) 
         }
         catch(err)
         {

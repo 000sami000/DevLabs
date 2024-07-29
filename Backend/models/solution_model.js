@@ -1,7 +1,7 @@
 let mongoose=require('mongoose')
 let solution_schema=mongoose.Schema({
 
-  
+  profile_img_:{type:Object,default:null},
    problem_id:{type:String,require:true},
     solution_content:{type:String,required:true},
     

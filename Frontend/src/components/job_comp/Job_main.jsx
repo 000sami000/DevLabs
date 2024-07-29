@@ -7,9 +7,15 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Map from "./Map";
 import { IoSearch } from "react-icons/io5";
+import Loader from "../Loader";
+import { fetch_userskills } from "../../api";
+import { useSelector } from "react-redux";
 function Job_main() {
   // console.log(data)
+  const user=useSelector((state)=>state.userReducer.current_user)
   const [Search, setSearch] = useState("");
+  const [loader,setloader]=useState(false);
+  const [Skills,setSkills]=useState(null);
   const options = {
     method: "GET",
     url: "https://jsearch.p.rapidapi.com/search",
@@ -27,22 +33,61 @@ function Job_main() {
   const [Data, setData] = useState(null);
   let Res = null;
   const fetchdata = async () => {
+    setloader(true);
     try {
-      // const {data} =  await axios.request(options)
-      // Res = data.data;
-      //  setData(Res)
-      setData(data);
+      const {data} =  await axios.request(options)
+      Res = data.data;
+      setData(Res)
+      setloader(false);
+      // setData(data);
 
-      //  console.log("ppp",Res)
+       console.log("ppp",Res)
       // return await data.data;
-      return;
+      // return;
     } catch (err) {
-      // console.log("555",err)
-      return;
+      setloader(false);
+      console.log(err)
+      // return;
     }
   };
+ async function recommend (itm){
+    const options = {
+      method: "GET",
+      url: "https://jsearch.p.rapidapi.com/search",
+      params: {
+        query: `${itm}`,
+        page: "1",
+        num_pages: "1",
+        date_posted: "all",
+      },
+      headers: {
+        "x-rapidapi-key": "b535e48d44mshcd757ea4a20ede9p15d6d5jsn8b12d7c1b81a",
+        "x-rapidapi-host": "jsearch.p.rapidapi.com",
+      },
+    };
+    const {data} =  await axios.request(options)
+    console.log("???//",data)
+    let Res = data.data;
+    return Res
+  }
+
+  const get_user_skill=async()=>{
+    try{
+         const {data}=await fetch_userskills();
+         setSkills(data);
+         console.log(data)
+         const skillsString = data.join('-');
+         console.log(skillsString,":::")
+       setData(await recommend(skillsString))
+    }catch(err){
+      console.log(err)
+    }
+  }
   useEffect(() => {
-    fetchdata();
+    if(user){
+      get_user_skill()
+    }
+    // fetchdata();
   }, []);
 
   const [Selected_job, setSelected_job] = useState({});
@@ -50,6 +95,8 @@ function Job_main() {
 
   return (
     <>
+    {
+      loader?<div className="flex justify-center items-center mt-4"><Loader/></div>:<>
       <div className="flex justify-center mt-8 p-2  items-center gap-4">
         <input
           onChange={(e) => {
@@ -61,7 +108,7 @@ function Job_main() {
           placeholder="Search Jobs Here"
         />
         <IoSearch className="cursor-pointer text-[40px] text-[orange] hover:bg-[#c0c0c09e] rounded-lg  p-1"  onClick={()=>{
-          // fetchdata()
+          fetchdata()
           }}/>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-2.5   w-full p-5">
@@ -158,7 +205,8 @@ function Job_main() {
             </div>
           </div>
         </Modal>
-      )}
+      )}</>
+    }
     </>
   );
 }

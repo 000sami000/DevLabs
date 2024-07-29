@@ -34,7 +34,7 @@ function Article_main() {
           <Article_form user={user} />
         </div>
       ) : (
-        <div>Sign in to create problem</div>
+        <div className="bg-[#f9393963] p-2 rounded-md  text-[#6f1212] w-[75%] m-auto  mt-[2%]"> Login to Create Article</div>
       )}
       <div className="text-[30px] text-center text-[white]">Articles</div>
 

@@ -115,6 +115,7 @@ const update_article=async(req,res)=>{
     }
     if (req.file) {
       // Delete the existing thumbnail file
+      console.log("deleting")
       const existingThumbnailPath = path.join('D:/Devlabs/Code/Backend/public/upload/article_thumbnail', article.thumbnail.filename);
       console.log(":::::::",existingThumbnailPath)
       fs.unlink(existingThumbnailPath, (err) => {
@@ -162,7 +163,7 @@ const get_articles = async (req, res) => {
   const skip=(page-1)*5;
   try {
     const total = await article_Model.countDocuments({});
-    const articles = await article_Model.find().sort({ _id: -1 }).limit(5).skip(skip);;
+    const articles = await article_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);;
     // console.log(problems)
 //  console.log(articles)
     res.status(200).json({articles,total});
@@ -348,7 +349,24 @@ const delete_article_image = (req, res) => {
     res.status(200).json({ message: 'File deleted successfully' });
   });
 };
-
+const approve_article = async (req,res) => {
+  const { a_id } = req.params;
+  console.log("ljlkjlk",a_id)
+  if (!mongoose.Types.ObjectId.isValid(a_id))
+    return res.status(404).send("No Article with this id");
+  if ( req.USER_ROLE!=='admin')
+    return res.status(401).send("Only admin can approve the article");
+  try {
+    // console.log(s_id)
+    const article = await article_Model.findById(a_id);
+    article.isApproved=!article.isApproved
+    const updatedarticle = await article_Model.findByIdAndUpdate(a_id, article, {  new: true,});
+    console.log("updatedarticle",updatedarticle)
+    res.status(200).json(updatedarticle);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
 module.exports = {
   create_article,
   get_articles,
@@ -360,5 +378,6 @@ module.exports = {
   delete_article,
   upload_article_image,
   delete_article_image,
-  search_article
+  search_article,
+  approve_article
 };

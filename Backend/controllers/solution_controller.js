@@ -38,7 +38,7 @@ const create_solution = async (req, res) => {
         solution_id: new_solution._id,
         creator_username: new_solution.creator_username,
         creator_id: new_solution.creator_id,
-      
+        createdAt:new_solution.createdAt
       };
       const updatePromises = admins_and_user.map(user => {
         user.notifications.unshift(notification);
@@ -59,7 +59,7 @@ const create_solution = async (req, res) => {
     // console.log(req.body);
   
     try {
-    const solutions =await solution_Model.find({problem_id:p_id}).sort({ _id: -1 }) 
+    const solutions =await solution_Model.find({problem_id:p_id,isApproved:true}).sort({ _id: -1 }) 
       res.status(200).json(solutions);
       if(!solutions){
         res.status(404).json({message:"No Solution for this problem"});
@@ -213,7 +213,7 @@ const create_solution = async (req, res) => {
   const saved_solution = async (req,res) => {
     const { s_id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(s_id))
-      return res.status(404).send("No Article with this id");
+      return res.status(404).send("No Solution with this id");
     try {
       const solution = await solution_Model.findById(s_id);
       const saveindex = solution.saved_sol_by.findIndex(
@@ -233,4 +233,22 @@ const create_solution = async (req, res) => {
       res.status(400).json({ error: err });
     }
   };
-  module.exports={create_solution,get_solutions,delete_solution,update_solution,solution_voting,saved_solution};
+  const approve_solution = async (req,res) => {
+    const { s_id } = req.params;
+    console.log("ljlkjlk")
+    if (!mongoose.Types.ObjectId.isValid(s_id))
+      return res.status(404).send("No Article with this id");
+    if ( req.USER_ROLE!=='admin')
+      return res.status(401).send("Only admin can approve the solution");
+    try {
+      console.log(s_id)
+      const solution = await solution_Model.findById(s_id);
+      solution.isApproved=!solution.isApproved
+      const updatedsolution = await solution_Model.findByIdAndUpdate(s_id, solution, {  new: true,});
+      console.log("updatedsolution",updatedsolution)
+      res.status(200).json(updatedsolution);
+    } catch (err) {
+      res.status(400).json({ error: err });
+    }
+  };
+  module.exports={create_solution,get_solutions,approve_solution,delete_solution,update_solution,solution_voting,saved_solution};

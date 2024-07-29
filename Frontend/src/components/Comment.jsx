@@ -120,14 +120,18 @@ function Comment({_id,creator_id,c_type,content_title,content_creator_username})
           }
           
         </div>
+        {
+user._id!==itm.commentor_id && user.role!=='admin'&&
         <div onClick={()=>{setcurrent_cdata({
           creator_id:itm.commentor_id,
          creator_username:itm.commentor_username,
+         comment_content:itm.comment_content,
          _id:itm._id,
 
         })}} className="text-[#f96666] p-1  cursor-pointer rounded-md font-semibold hover:bg-[#ededed88]">
           Report
         </div>
+        }
       </div> ) ) 
      }
      <div className="flex gap-2 w-full items-center">
