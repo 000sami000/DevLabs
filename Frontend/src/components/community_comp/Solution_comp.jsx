@@ -21,7 +21,7 @@ import { formatNumber } from "../format_num";
 // import ReadOnlyQuillEditor from "../text_editor/ReadOnlyQuil";
 function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, content_creator_username=""}) {
   const user=useSelector((state)=>state.userReducer.current_user)
-  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments,isApproved }=sol_props;
+  const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments,isApproved,profile_img_ }=sol_props;
   // const cleanHTML = DOMPurify.sanitize(solution_content);
   // console.log("solution_content=++++",solution_content)
   // console.log("cleanhtml=++++",cleanHTML)
@@ -134,11 +134,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
           <div className="w-full p-1 flex justify-between items-center rounded-[10px] pr-2">
             <div className="w-[88%] flex gap-5 items-center">
               <div className=" cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">
-                <img
-                  src="/default_profile.jpg"
-                  width={`35px`}
-                  className="rounded-[50%]"
-                />
+              <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${profile_img_?`http://localhost:3000/${profile_img_?.destination}/${profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
                 <div className="flex flex-col text-[12px]">
                   <div>{creator_username}</div>
                   <div className="self-start">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</div>

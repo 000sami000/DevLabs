@@ -11,7 +11,7 @@ const create_article = async (req, res) => {
     creator_id,
     creator_username,
     article_content,
-    isActive,
+    isActive,profile_img_
   } = req.body;
 //  console.log( multer(req,"article_thumnail"))
   console.log("*****", req.body);
@@ -29,6 +29,7 @@ const create_article = async (req, res) => {
     creator_username,
     isActive,
     thumbnail: req.file,
+    profile_img_
   });
   try {
     await new_article.save();
@@ -162,8 +163,8 @@ const get_articles = async (req, res) => {
   console.log('=====aaa',page)
   const skip=(page-1)*5;
   try {
-    const total = await article_Model.countDocuments({});
     const articles = await article_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);;
+    const total = articles.length;
     // console.log(problems)
 //  console.log(articles)
     res.status(200).json({articles,total});

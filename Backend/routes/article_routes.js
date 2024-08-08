@@ -10,7 +10,7 @@ const uploader=require("../middleware/multer-file")
 router.get('/',get_articles);
 router.get('/search',search_article);
 router.patch('/:a_id',isAuthorize,uploader('article_thumbnail'),update_article);
-router.post('/',isAuthorize,uploader('article_thumnail'),create_article);
+router.post('/',isAuthorize,uploader('article_thumbnail'),create_article);
 router.patch(`/:a_id/likepost`,isAuthorize,like_article);
 router.patch(`/:a_id/dislikepost`,isAuthorize,dislike_article);
 router.get('/:a_id',get_single_article);

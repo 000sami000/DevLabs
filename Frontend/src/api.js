@@ -181,7 +181,7 @@ export const approve_problem=(p_id)=>{
    return API.post(`/solution/${id}`,solutionobj,{withCredentials:true});
   }
   export const fetchSolution=(id)=>{
-    return API.get(`/solution/${id}`);
+    return API.get(`/solution/${id}`,{withCredentials:true});
    }
    export const updateSolution=(id,solutionObj)=>{
     return API.patch(`/solution/${id}`,solutionObj,{withCredentials:true});
@@ -290,4 +290,15 @@ export const  fetch_reports=(report_type)=>{
 export const  delete_reports=(id,report_type)=>{
   console.log(">>>>>",id)
   return API.delete(`/report/${id}?report_type=${report_type}`,{withCredentials:true});
+}
+
+
+export const  get_all_cources=()=>{
+  return API.get('/cource')
+}
+export const  fetch_single_cource=(c_id)=>{
+  return API.get(`/cource/${c_id}`)
+}
+export const  delete_single_cource=(c_id)=>{
+  return API.delete(`/cource/${c_id}`)
 }

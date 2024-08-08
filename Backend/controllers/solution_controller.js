@@ -2,8 +2,9 @@ const { default: mongoose, model } = require("mongoose");
 const solution_Model=require("../models/solution_model");
 const problem_Model=require("../models/problem_model");
 const user_Model = require("../models/user_model");
+const jwt= require("jsonwebtoken");
 const create_solution = async (req, res) => {
-    const { ContentHtml ,creator_username,creator_id} = req.body;
+    const { ContentHtml ,creator_username,creator_id,profile_img_} = req.body;
     
     const {p_id}=req.params;
     console.log(req.body);
@@ -13,7 +14,7 @@ const create_solution = async (req, res) => {
       solution_content: ContentHtml,
       creator_username,
       creator_id:req.USER_ID,
-    
+      profile_img_
     });
     // console.log("backendooooooo",new_solution)
     try {
@@ -54,12 +55,22 @@ const create_solution = async (req, res) => {
     }
   };
   const get_solutions = async (req, res) => {
-    
+    const {access_token}=req.cookies
     const {p_id}=req.params;
     // console.log(req.body);
-  
+   let solutions;
+   let decoded = jwt.verify(access_token, process.env.JWT_SECRET)
     try {
-    const solutions =await solution_Model.find({problem_id:p_id,isApproved:true}).sort({ _id: -1 }) 
+      if(!access_token|| decoded.role==='user')
+      {
+
+         solutions =await solution_Model.find({problem_id:p_id,isApproved:true}).sort({ _id: -1 }) 
+        }
+        else{
+          
+          solutions =await solution_Model.find({problem_id:p_id}).sort({ _id: -1 }) 
+        
+      }
       res.status(200).json(solutions);
       if(!solutions){
         res.status(404).json({message:"No Solution for this problem"});

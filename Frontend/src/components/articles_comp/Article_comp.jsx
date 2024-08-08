@@ -33,7 +33,7 @@ function Article_comp({ adata }) {
     creator_username,
     creator_id,
     createdAt,
-  thumbnail} = adata;
+  thumbnail,profile_img_} = adata;
 
 
   return (
@@ -49,11 +49,7 @@ function Article_comp({ adata }) {
 
             <div className="flex items-center justify-between   p-1">
             <div className="flex items-center gap-2  p-1 rounded-md hover:bg-[#ffffff99] cursor-pointer">
-              <img
-                src="/default_profile.jpg"
-                width={`35px`}
-                className="rounded-[50%]"
-              />
+            <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${profile_img_?`http://localhost:3000/${profile_img_?.destination}/${profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
               <div className="flex flex-col text-nowrap text-[12px] text-[white]">
                 <div className="text-[13px]   pt-0 px-1">
                   {creator_username}

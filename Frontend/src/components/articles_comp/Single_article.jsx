@@ -91,6 +91,7 @@ function Single_article() {
     isApproved,
     isActive,
     createdAt,
+    profile_img_,
     total_comments,
   } = Single_article;
   useEffect(() => {
@@ -280,11 +281,7 @@ console.log(":::::", Single_article);
               <div className="w-full p-1 flex justify-between items-center rounded-[10px] pr-2">
                 <div className="w-[88%] flex gap-8 items-center">
                   <div className=" cursor-pointer p-1 rounded-md flex items-center gap-2 hover:bg-[#ededed]">
-                    <img
-                      src="/default_profile.jpg"
-                      width={`35px`}
-                      className="rounded-[50%]"
-                    />
+                  <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${profile_img_?`http://localhost:3000/${profile_img_?.destination}/${profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
                     <div className="flex flex-col text-nowrap text-[12px]">
                       <div className="text-[13px]   pt-0 px-1">
                         {creator_username}

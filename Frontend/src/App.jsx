@@ -22,6 +22,8 @@ import Whiteboardmain from './components/whiteboard/Whiteboardmain'
 import Single_article from './components/articles_comp/Single_article'
 import Cource_create from './components/cources_comp/Cource_create'
 import User_public from './components/User_comp/user_public/User_public'
+import Single_cource from './components/cources_comp/Single_cource'
+import Cource_update from './components/cources_comp/Cource_update'
 
 
 function App() {
@@ -51,6 +53,8 @@ useEffect(()=>{
         <Route path="/article/:a_id" exact Component={Single_article}/>
         <Route path='/compiler' exact Component={Compiler}/>
         <Route path='/courses'  exact Component={Cources_main}/>
+        <Route path='/course/:c_id'  exact Component={Single_cource}/>
+        <Route path='/update-cource/:c_id'  exact Component={Cource_update}/>
         <Route path='/job'  exact Component={Job_main }/>
        
         <Route path='/Free_Resources'  exact Component={Resources_main}/>

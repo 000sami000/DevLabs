@@ -77,8 +77,8 @@ console.log(current_user?.name)
          : (location.pathname!=`/user/${current_user._id}` &&location.pathname!=`/admin/${current_user._id}`&&
         <div  onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}>
-          {false ? (
-            <img />
+          {user && user?.profile_img_? (
+            <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${user.profile_img_?`http://localhost:3000/${user.profile_img_?.destination}/${user.profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
           ) : (
             <img
               src="/default_profile.jpg"

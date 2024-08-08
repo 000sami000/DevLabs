@@ -240,13 +240,7 @@ function Admin_articles() {
            {
 
           Selected!=="user_articles"&& <div className="flex items-center gap-[2px]  p-1 w-[13%] rounded-md hover:bg-[#ffffff99] cursor-pointer">
-              <img
-              loading="lazy"
-                // src={`http://localhost:3000/${itm?.profile_img_?.destination}/${itm?.profile_img_?.filename}`||"/default_profile.jpg"}
-                src={"/default_profile.jpg"}
-                width={`30px`}
-                className="rounded-[50%]"
-              />
+          <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${itm.profile_img_?`http://localhost:3000/${itm.profile_img_?.destination}/${itm.profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
               <div className="flex flex-col text-nowrap text-[12px] text-[white]">
                 <div className="text-[11px]   pt-0 px-1">
                   {itm?.creator_username}

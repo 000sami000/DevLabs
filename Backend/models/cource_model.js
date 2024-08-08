@@ -9,5 +9,5 @@ let cource_schema=mongoose.Schema({
     cource_data:{type:Object,defaulr:null,required:true}
 
 },{timestamps: true})
-const cource_Model=mongoose.model('articles_',cource_schema)
+const cource_Model=mongoose.model('cource_',cource_schema)
 module.exports=cource_Model;

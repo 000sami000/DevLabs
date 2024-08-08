@@ -66,12 +66,12 @@ function Admin_account() {
     };
   
   return (
-    <div className='mt-[3%] relative'>
-    <div className='absolute top-[-50px] rounded-[50%] '>
+    <div className='mt-[5%] relative'>
+    <div className='absolute top-[-40px] rounded-[50%] '>
     {
       
       ( !imageUrl && temp_user.profile_img_)?
-        <div onClick={handleImageClick} className='w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${` http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`})` }}>
+        <div onClick={handleImageClick} className='  w-[80px] h-[80px] rounded-[100%] shadow-[20px] cursor-point er hover:w-[85px]  hover:h-[85px]  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${` http://localhost:3000/${temp_user?.profile_img_?.destination}/${temp_user?.profile_img_?.filename}`})` }}>
        
            <span className="w-full h-full hover:bg-[#7979792b] flex justify-center items-center rounded-[100%]"><MdAddPhotoAlternate  className="text-[25px] block text-[#ffffffc6]   "/></span>   
         </div>: imageUrl?

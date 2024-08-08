@@ -111,6 +111,7 @@ function Admin_solutions() {
       setloading(true);
       seterror(false);
       let { data } = await fetch_allSolutions(searchterm);
+      // console.log(data)
       if (Array.isArray(data)) {
         setusersolutions(data);
         settoggle('get');
@@ -224,11 +225,7 @@ function Admin_solutions() {
       <div  onClick={()=>{navigate(`/problem/${itm.p_id}/sols?s_id=${itm._id}`)}} className="bg-[#888888e6] p-2 flex gap-2 justify-between items-center rounded-[10px] cursor-pointer">
         <div className="flex gap-7 w-[76%] items-center">
       <span className="   p-1 flex-grow-0 basis-auto   rounded-md flex items-center gap-1 ">
-              <img
-                src="/default_profile.jpg"
-                width={`34px`}
-                className="rounded-[50%]"
-              />
+      <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${itm?.profile_img_?`http://localhost:3000/${itm?.profile_img_?.destination}/${itm.profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
              <div className="flex flex-col text-nowrap ">
                 <span className="text-[10px]   pt-0 px-1">@{itm.p_creator_username} </span>
                 <span className="text-[10px]   pt-0 px-1">{formatDistanceToNow(new Date(itm.p_createdAt), { addSuffix: true })}</span>

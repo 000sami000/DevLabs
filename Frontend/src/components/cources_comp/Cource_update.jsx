@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdModeEdit } from "react-icons/md";
 import { MdDone } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { HiDocumentArrowUp } from "react-icons/hi2";
 import { FcDocument } from "react-icons/fc";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoAddCircleSharp } from "react-icons/io5";
-function Cource_create() {
+import { fetch_single_cource } from "../../api";
+function Cource_update() {
+ const {c_id}=useParams()
   let navigate=useNavigate();
   let cource_obj={toc:null,title:"",des:"",file:null}
   const [File,setFile]=useState(null)
@@ -17,13 +19,33 @@ function Cource_create() {
   let titleRef=useRef("")
   let desRef=useRef("")
   let imageRef=useRef(null)
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [editIndex, setEditIndex] = useState(null);
-  const [editValue, setEditValue] = useState("");
-  const [toc, settoc] = useState([]);
-  const [Selected,setSelected]=useState(null);
-  const [imageUrl,setimageUrl]=useState(null)
+//   const [cource,setcource]=useState(null)
+  const [title,settitle]=useState("")
+  const [description,setdescription]=useState("")
+  const single_cource=async ()=>{
+      try{
+          const {data}=await  fetch_single_cource(c_id);
+          //   console.log(">>>",data)
+        //   setcource(data);
+          console.log(data)
+          settoc(data.cource_data)
+          settitle(data.title)
+          setdescription(data.description)
 
+          setSelected(data.cource_data[0])
+        } catch(err){
+            console.log("fetch_single_cource--err  :",err)
+        }
+    }
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [editIndex, setEditIndex] = useState(null);
+    const [editValue, setEditValue] = useState("");
+    const [toc, settoc] = useState([]);
+    const [Selected,setSelected]=useState(null);
+    const [imageUrl,setimageUrl]=useState(null)
+    useEffect(()=>{ 
+    single_cource()
+      },[])
   const handleMouseEnter = (index) => {
     setHoveredIndex(index);
   };
@@ -80,17 +102,14 @@ async function submit_handler (){
   // console.log("...",titleRef.current.value)  
   // console.log("...",desRef.current.value)  
 
-  cource_obj.title=titleRef.current.value;
-  cource_obj.des=desRef.current.value;
+  cource_obj.title=title;
+  cource_obj.des=description;
   cource_obj.file=File
   console.log(">>>>>>..",cource_obj)
    let is_null=toc.some((itm)=>itm.pdf===null)
-  if(cource_obj.title.trim()===""||cource_obj.des.trim()===""||cource_obj.file===null||toc.length===0||is_null===true){
-    alert("Please fill all the Fields")
-   return;
-  }
+ 
   try{
-    const {data} = await axios.post("http://localhost:3000/cource", cource_obj,{
+    const {data} = await axios.patch(`http://localhost:3000/cource/${c_id}`, cource_obj,{
       withCredentials:true,
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -144,8 +163,9 @@ function title_selector(itm){
 }
 const handleFileClick = () => {
   if(Selected!=null){
-
-    if (pdfInputRef.current) {
+    console.log(pdfInputRef.current)
+      if (pdfInputRef.current) {
+        console.log("LLLLL")
       pdfInputRef.current.click();
     }
   }else{
@@ -172,13 +192,14 @@ const handleImageClick = () => {
   return (
     <>
 
-<div className='flex justify-end p-2'><button  onClick={submit_handler} className='bg-[#25b839] p-1 text-[20px] flex items-center gap-2 text-[white] rounded-md'>Create <IoMdAddCircleOutline className='text-[22px] '/></button></div>
+<div className='flex justify-end p-2'><button  onClick={submit_handler} className='bg-[#25b839] p-1 text-[20px] flex items-center gap-2 text-[white] rounded-md'>Update <MdModeEdit className='text-[20px] '/></button></div>
       <div className="flex justify-center mt-[4%]">
         <input
           placeholder="Title for the Cource"
           className="w-[45%] p-1   rounded-md  outline-none "
           ref={titleRef}
-
+           value={title}
+           onChange={(e)=>{settitle(e.target.value)}}
         />
       </div>
       <br />
@@ -186,10 +207,14 @@ const handleImageClick = () => {
         <textarea
           placeholder="Write a small Description"
           className="w-[45%] text-[15px] p-1   rounded-md  outline-none  resize-none"
-       ref={desRef} />
+       ref={desRef} 
+       value={description}
+       onChange={(e)=>{setdescription(e.target.value)}}
+       />
+       
       </div>
       <br />
-
+<div className="flex justify-between px-3">
       <div onClick={handleImageClick} className='bg-[#b0b0b0] w-[10%] h-[85px] flex justify-center items-center rounded-md cursor-pointer bg-no-repeat bg-center bg-clip bg-cover'  style={{ backgroundImage: `url(${imageUrl})` }}>
   
   {
@@ -198,7 +223,10 @@ const handleImageClick = () => {
   }  
   <input type='file' style={{ display: 'none' }}  onChange={handleFileChange} ref={imageRef}/>
     </div>
-
+   
+   <div className=" self-end"><button  onClick={handleFileClick} className="bg-[orange] p-1 text-white rounded-md">Update Pdf</button></div>
+   <input type="file" className="w-[100px] "   style={{ display: 'none' }} onChange={handlePDFUpload} ref={pdfInputRef} />
+</div>
       <div className="flex gap-2 p-2">
         <div className=" w-[24%] rounded-md">
           {
@@ -266,6 +294,7 @@ const handleImageClick = () => {
           }
           
         </div>
+        <input type="file" className="w-[100px] "   style={{ display: 'none' }} onChange={handlePDFUpload} ref={pdfInputRef} />
         {
        Selected===null ||Selected.pdf===null?
         <div className="flex justify-center items-center p-3 w-[76%] bg-[#3c3c3c] h-[400px] rounded-md">
@@ -275,7 +304,6 @@ const handleImageClick = () => {
         Selected==null && <p className="text-[white] "> Please Select a Title to add a Document </p>
       }
         </div>
-        <input type="file" className="w-[100px] "   style={{ display: 'none' }} onChange={handlePDFUpload} ref={pdfInputRef} />
        </div>:   <div className="flex justify-center  w-[76%]">
       
           <embed
@@ -292,4 +320,4 @@ const handleImageClick = () => {
   );
 }
 
-export default Cource_create;
+export default Cource_update;

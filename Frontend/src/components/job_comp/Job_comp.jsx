@@ -54,7 +54,7 @@ const handleError = (e) => {
     job_longitude,Qualifications,Responsibilities
     
     })
-        setis_window(is_window=>!is_window)}} className="bg-[gray] p-4 shadow-lg rounded-lg  overflow-hidden  cursor-pointer">
+        setis_window(is_window=>!is_window)}} className="bg-[#ededed] p-4 shadow-lg rounded-lg  overflow-hidden  cursor-pointer">
         <div className="text-[12px] justify-between text-wrap flex items-center gap-3">
           <div className=" w-[95%] flex items-center gap-2">
           <div className="w-[14%]">
@@ -67,7 +67,7 @@ const handleError = (e) => {
 
             />
           </div>
-          <div className="text-wrap text-[white] w-[86%] text-[12px] h-[40px] overflow-hidden flex items-start pt-1 ">
+          <div className="text-wrap text-[#444444] w-[86%] text-[12px] h-[40px] overflow-hidden flex items-start pt-1 ">
          <div> {job_title}
          </div>
           </div>

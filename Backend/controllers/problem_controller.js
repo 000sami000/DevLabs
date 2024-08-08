@@ -8,8 +8,8 @@ const get_problems = async (req, res) => {
   console.log('=====',page)
   const skip=(page-1)*5;
   try {
-    const total = await problem_Model.countDocuments({});
     const problems = await problem_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);
+    const total =problems.length;
     // console.log(problems)
     res.status(200).json({problems,total});
   } catch (err) {
@@ -18,14 +18,14 @@ const get_problems = async (req, res) => {
   }
 };
 const create_problem = async (req, res) => {
-  const { title, ContentHtml, tags,creator_id,creator_username } = req.body;
+  const { title, ContentHtml, tags,creator_id,creator_username,profile_img_ } = req.body;
   console.log("*****",req.body);
   //  const user=user_Model.findOne({_id:creator_id});
   const new_problem = new problem_Model({
     title: title,
     problem_content: ContentHtml,
     tags: tags,
-    creator_id,creator_username,
+    creator_id,creator_username,profile_img_
   
   });
   try {

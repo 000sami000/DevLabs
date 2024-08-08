@@ -161,15 +161,15 @@ const signin = async (req, res) => {
       req.body.profile_img_=req.file
       const updateFields = {
         creator_username: req.body.username,
-       profile_img_: req.file // Assuming the field in other models is named `creator_profile_img`
+       profile_img_: req.file 
     };
     try{
       const user=await user_Model.findByIdAndUpdate(req.USER_ID,req.body,{new:true})
-      await problem_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
-      await solution_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username } });
-      await article_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
-      await comment_Model.updateMany({ creator_id:req.USER_ID}, { $set: { creator_username: req.body.username} });
-      const {name,username,_id,email,saved_articles,saved_solutions,profile_img_}=user;
+      await problem_Model.updateMany({ creator_id:req.USER_ID}, { $set:  updateFields});
+      await solution_Model.updateMany({ creator_id:req.USER_ID}, { $set:  updateFields  });
+      await article_Model.updateMany({ creator_id:req.USER_ID}, { $set:  updateFields });
+      await comment_Model.updateMany({ creator_id:req.USER_ID}, { $set:  updateFields });
+      const {name,username,_id,email,profile_img_}=user;
       res.status(200).json({name,username,_id,email,profile_img_})
       
     }catch(err){
@@ -283,10 +283,15 @@ const signin = async (req, res) => {
     console.log(u_id);
     try{
        const user=await user_Model.findById(u_id)
+       if(!user){
+        res.status(404).json({message:"user does not exist"})
+        return;
+       }
        console.log("/////",user);
        const {_id,name,email,profile,profile_img_,isblock}=user;
        res.status(200).json({_id,name,email,profile,profile_img_,isblock});
     }catch(err){
+      console.log("---er",err)
      res.status(400).json({message:err});
     }
   }
@@ -592,8 +597,8 @@ console.log("{}{{}{}{****",req.body)
     // console.log("solutionWithProblem-------",solutionWithProblem)
 
     let final= solutionWithProblem.map((itm)=>{
-      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}  })
       res.status(200).json(final);
   }catch(err){
    res.status(400).json({message:err});
@@ -602,12 +607,7 @@ console.log("{}{{}{}{****",req.body)
  
  const get_allsolution=async(req,res)=>{
   console.log("get_allsolution");
-
-  
-
   try{
-
-      
      const  user_solution =await solution_Model.find()
     
  
@@ -630,8 +630,8 @@ console.log("{}{{}{}{****",req.body)
         return  itm.p_title.toLowerCase().includes(req.query.searchterm.toLowerCase())
     })
       let final= searched.map((itm)=>{
-        const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-        return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+        const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm
+        return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}  })
         console.log("::::",final.length)
         res.status(200).json(final);
         return
@@ -639,8 +639,8 @@ console.log("{}{{}{}{****",req.body)
 
 
      let final= solutionWithProblem.map((itm)=>{
-      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}  })
       console.log("::::",final.length)
       res.status(200).json(final);
   }catch(err){
@@ -671,8 +671,8 @@ console.log("{}{{}{}{****",req.body)
         return  itm.p_title.toLowerCase().includes(query.toLowerCase())
     })
     let final= searched.map((itm)=>{
-      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}  })
 
       console.log()
      res.status(200).json(final);
@@ -703,8 +703,8 @@ console.log("{}{{}{}{****",req.body)
     }));
     // console.log("}}}}",articlesWithComments)
     let final= solutionWithComments.map((itm)=>{
-      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm
-      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}  })
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}  })
 
      res.status(200).json(final);
   }catch(err){
@@ -742,8 +742,8 @@ console.log("{}{{}{}{****",req.body)
       return  itm.p_title.toLowerCase().includes(query.toLowerCase())
   })
     let final=fuse.search(query).map((itm)=>{
-      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id}=itm.item
-      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id} })
+      const {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_}=itm.item
+      return {_id,total_comments,createdAt,vote,isApproved,p_title,p_creator_username,p_createdAt,p_id,profile_img_} })
       console.log("lllll",final)
      res.status(200).json(final);
   }catch(err){

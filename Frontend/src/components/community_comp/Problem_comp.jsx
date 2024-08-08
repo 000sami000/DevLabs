@@ -13,7 +13,7 @@ import '../text_editor/Editor.scss'
 // import  'react-quill/dist/quill.snow.css';
 function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
   const dispatch=useDispatch();
-  const {title,problem_content,tags,likes,total_sol,creator_username,creator_id,_id,createdAt,isApproved}=pdata;
+  const {title,problem_content,tags,likes,total_sol,creator_username,creator_id,_id,createdAt,isApproved,profile_img_}=pdata;
   let user = useSelector((state) => state.userReducer.current_user);
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,11 +69,12 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
         <div className="w-full p-1 flex gap-3 justify-between items-center rounded-[10px]">
           <div className="w-[90%] flex gap-5 items-center justify-between">
             <span onClick={()=>{navigate(`/user_overview/${creator_id}`)}} className="   p-1 flex-grow-0 basis-auto cursor-pointer  rounded-md flex items-center gap-1 hover:bg-[#ededed]">
-              <img
+              {/* <img
                 src="/default_profile.jpg"
                 width={`35px`}
                 className="rounded-[50%]"
-              />
+              /> */}
+                <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${profile_img_?`http://localhost:3000/${profile_img_?.destination}/${profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
              <div className="flex flex-col text-nowrap ">
                 <span className="text-[13px]   pt-0 px-1">@{creator_username} </span>
                 <span className="text-[13px]   pt-0 px-1">{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>

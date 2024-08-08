@@ -83,9 +83,9 @@ function User_profile() {
     <div className="mt-[2%] ">
     {
       user?.profile_img_?
-    <div  className='w-[80px] absolute top-[50px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`http://localhost:3000/${user?.profile_img_?.destination}/${user?.profile_img_?.filename}`})` }}>
+    <div  className='w-[80px] absolute top-[-45px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`http://localhost:3000/${user?.profile_img_?.destination}/${user?.profile_img_?.filename}`})` }}>
 
-          </div>:<div  className='w-[80px] absolute top-[0px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`/default_profile.jpg`})` }}></div>
+          </div>:<div  className='w-[80px] absolute top-[-45px]  h-[80px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${`/default_profile.jpg`})` }}></div>
     }
        <div>
         <div>

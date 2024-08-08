@@ -76,7 +76,7 @@ function Auth_main() {
              
             </div>
         </div>
-        <div className='text-center text-[red] flex justify-center'>{error?error:""}{loading&&<Simpleloader/>}</div>
+        {/* <div className='text-center text-[red] flex justify-center'>{error?error:""}{loading&&<Simpleloader/>}</div> */}
            <div className='flex flex-col w-full h-[80%]  '>
              <form onSubmit={handleSubmit(submit_handler)} noValidate>
                {
