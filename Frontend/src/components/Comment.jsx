@@ -21,7 +21,6 @@ function Comment({_id,creator_id,c_type,content_title,content_creator_username})
           setcloading(true);
           const {data}=await fetchComment(type_id)
           setcloading(false);
-          console.log("comments====",data)
         setComments(data)
         }catch(err){
           setcloading(false);
@@ -33,7 +32,6 @@ function Comment({_id,creator_id,c_type,content_title,content_creator_username})
             if(text){
 
                 const {data}=await updateComment(c_obj._id,{comment_content:text})
-                console.log("comment--data",data)
                 setComments((prev) =>
                     prev.map((itm) =>
                         itm._id === data?._id
@@ -70,7 +68,6 @@ function Comment({_id,creator_id,c_type,content_title,content_creator_username})
 
       c_obj={content_creator_id:creator_id,type_id:_id,comment_type:c_type,comment_content:text,commentor_username:user?.username,content_title:content_title,content_creator_username:content_creator_username,profile_img_:user?.profile_img_}
     }else{
-      //error
       return;
     }
 
@@ -92,11 +89,11 @@ function Comment({_id,creator_id,c_type,content_title,content_creator_username})
       Comments
     </div>
     <hr className="bg-[#dadada] h-[2px] rounded-[2px] mb-2" />
-     { cloading?<div className="flex justify-center p-2"><Loader/></div>: !Comments?.length>0?<div>No Comments</div>: Comments.map((itm)=>(   
+     { cloading?<div className="flex justify-center p-2"><Loader/></div>: !Comments?.length>0?<div className='text-[red] text-center m-3'>No Comments</div>: Comments.map((itm)=>(   
       <div key={itm._id} className="w-full p-1 flex justify-between items-center rounded-[10px]">
         <div className="w-[88%] flex gap-5 items-center">
           <div className=" w-[13%] overflow-x-hidden  cursor-pointer p-1 rounded-md flex items-center place-self-start gap-2 hover:bg-[#ededed56]">
-          <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${itm.profile_img_?`http://localhost:3000/${itm.profile_img_?.destination}/${itm.profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
+          <div  className='w-[35px] h-[35px] rounded-[100%] self-center shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${itm.profile_img_?`http://localhost:3000/${itm.profile_img_?.destination}/${itm.profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
             <div className=" text-[#eaeaea]">
               <div className="text-wrap text-[11px] inline-block ">
                 {itm.commentor_username }

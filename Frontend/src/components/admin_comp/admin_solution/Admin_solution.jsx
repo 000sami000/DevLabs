@@ -35,8 +35,7 @@ function Admin_solutions() {
         setusersolutions([]);
       }
       setloading(false);
-      
-      console.log("jkljlkjlk",data);
+
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -96,8 +95,7 @@ function Admin_solutions() {
         setusersolutions([]);
       }
       setloading(false);
-      
-      console.log("///////",usersolutions);
+
      
     } catch (err) {
       setloading(false);
@@ -205,10 +203,13 @@ function Admin_solutions() {
         <div className=" w-[37%]">
          
         </div>
-        <div className={Selected==="user_solutions"?`flex justify-start gap-[50px] w-[100%]`:`text-center  pr-5`}>
+        <div className={Selected==="user_solutions"?`flex justify-start gap-[20%]  w-[100%]`:`flex text-center gap-[50px] pr-5`}>
         
-          <div className="ml-2">Comments</div>
-          <div>Score</div>
+          <div className={`ml-2 ${Selected!=="user_solutions"&&'mr-9'}`}>Comments</div>
+          {
+            Selected==="user_solutions"&&
+            <div>Score</div>
+          }
           {/* <div>{Selected==="user_solutions"&&"Status"}</div> */}
         </div>
       </div>
@@ -237,12 +238,19 @@ function Admin_solutions() {
       </div>
       <div className=" flex w-[23%] ">
        
-        <div className="flex justify-around gap-3 items-center w-[100%]">
+        <div className="flex justify-around gap-3 items-center  w-full">
         
           <div className="ml-[30px]">{formatNumber(itm.total_comments)}</div>
+          {
+            Selected==="user_solutions"&&(<>
           <div className="ml-[60px] bg-[#393939] text-[#00fa00] px-6 rounded-md"> {formatNumber(itm.vote)}</div>
+{
+
+           itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>
+}
+          </>)
+          }
           
-          {itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>}
         </div>
       </div>
     </div>

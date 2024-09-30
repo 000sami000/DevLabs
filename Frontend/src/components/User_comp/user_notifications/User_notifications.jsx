@@ -11,7 +11,7 @@ function User_notifications() {
   
   let navigate=useNavigate();
   const { id } = useParams();
-  console.log("iddd", id);
+
   let user = useSelector((state) => state.userReducer.current_user);
   const [Searchterm,setSearchterm]=useState('')
   const [loading, setloading] = useState(false);
@@ -68,15 +68,15 @@ function User_notifications() {
 
    function Rander_all_Notification ({usernotifications}){
 
-     
+      // console.log(usernotifications,"???")     
    return  usernotifications.length>0? usernotifications?.map((itm)=>(<>
     {
 
     itm.notifi_type==='comment'&&
-      <div  key={itm.notific_id} className='w-full bg-slate-300 rounded-md p-2'>
+      <div  key={itm.notific_id} className='w-full bg-[#454545] rounded-md p-2'>
    
       <div className='flex  justify-between'>
-      <div>
+      <div className='text-[white]'>
         <span className=' font-semibold italic'>{itm.commentor_username}</span> {itm.notifi_type==='comment'?`commented on your ${itm.comment_type==='solution'?`${itm.comment_type} of this problem`:`${itm.comment_type}`} `:""}
         <span className='font-bold'>
           {itm.content_title}
@@ -88,7 +88,7 @@ function User_notifications() {
         </div>
         </div>
         <br/>
-        <div className='bg-[white] p-1 rounded-md' dangerouslySetInnerHTML={{ __html:  itm.comment_content}}>
+        <div o className='bg-[white] p-1 rounded-md' dangerouslySetInnerHTML={{ __html:  itm.comment_content}}>
        
         </div>
       

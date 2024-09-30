@@ -83,7 +83,7 @@ function Solutions_main() {
         !sol_loading?
         (<div className=" bg-[#3a3a3a] p-3 flex flex-col rounded-lg gap-3">
         {
-          solutions?.length>0?<> <div className="text-[30px] text-center">Solutions</div>
+          solutions?.length>0?<> <div className="text-[30px] text-center text-[white]">Solutions</div>
          {
            solutions.map((sol)=><div key={sol._id}><Solution_comp content_title={Single_p[0]?.title} content_creator_username={Single_p[0]?.creator_username} setcurrent_sdata={setcurrent_sdata} sol_props={sol} setSol_ed={setSol_ed}/></div>)
          }   

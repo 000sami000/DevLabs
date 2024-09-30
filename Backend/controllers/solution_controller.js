@@ -4,11 +4,9 @@ const problem_Model=require("../models/problem_model");
 const user_Model = require("../models/user_model");
 const jwt= require("jsonwebtoken");
 const create_solution = async (req, res) => {
-    const { ContentHtml ,creator_username,creator_id,profile_img_} = req.body;
-    
+    const { ContentHtml ,creator_username,profile_img_} = req.body;
     const {p_id}=req.params;
     console.log(req.body);
-  
     const new_solution = new solution_Model({
      problem_id:p_id,
       solution_content: ContentHtml,
@@ -16,12 +14,11 @@ const create_solution = async (req, res) => {
       creator_id:req.USER_ID,
       profile_img_
     });
-    // console.log("backendooooooo",new_solution)
     try {
       await new_solution.save();
 
       const problem_=await problem_Model.findById(p_id);
-      // console.log("not updated---",problem_)
+
       problem_.total_sol.push(new_solution._id)
       const updated_problem=await problem_Model.findByIdAndUpdate(p_id,problem_)
       //notification generation
@@ -47,35 +44,33 @@ const create_solution = async (req, res) => {
       });
       
       await Promise.all(updatePromises);
-      // console.log("updated--probelm",updated_problem)
       res.status(200).json(new_solution);
     } catch (err) {
-      // console.log(err) 
       res.status(404).json({ message: err });
     }
   };
   const get_solutions = async (req, res) => {
     const {access_token}=req.cookies
     const {p_id}=req.params;
-    // console.log(req.body);
-   let solutions;
-   let decoded = jwt.verify(access_token, process.env.JWT_SECRET)
+    let solutions=null;
     try {
-      if(!access_token|| decoded.role==='user')
-      {
+    if(!access_token){
+
+      solutions =await solution_Model.find({problem_id:p_id,isApproved:true}).sort({ _id: -1 }) 
+    return   res.status(200).json(solutions);
+     }
+   let decoded = jwt.verify(access_token, process.env.JWT_SECRET)
+      if( decoded.role==='user'){
 
          solutions =await solution_Model.find({problem_id:p_id,isApproved:true}).sort({ _id: -1 }) 
         }
         else{
-          
-          solutions =await solution_Model.find({problem_id:p_id}).sort({ _id: -1 }) 
-        
+          solutions =await solution_Model.find({problem_id:p_id}).sort({ _id: -1 })    
+      }
+      if(!solutions){
+       return  res.status(404).json({message:"No Solution for this problem"});
       }
       res.status(200).json(solutions);
-      if(!solutions){
-        res.status(404).json({message:"No Solution for this problem"});
-
-      }
     } catch (err) {
       // console.log(err)
       res.status(404).json({ message: err });
@@ -88,35 +83,23 @@ const create_solution = async (req, res) => {
 
     try {
       const deleted_sol = await solution_Model.findByIdAndDelete(s_id);
-      //  console.log("deleted_sol====",deleted_sol)
       const problem_=await problem_Model.findById(deleted_sol.problem_id);
-      // console.log("problem_=====",problem_)
       problem_.total_sol= problem_.total_sol.filter((itm)=>itm!==s_id);
-      // console.log("problem_total_sol=====",problem_)
-      
       const updated_problem=await problem_Model.findByIdAndUpdate(problem_._id,problem_)
-      // console.log("updated_problem=====",problem_)
       res.status(200).json(deleted_sol);
-      // res.status(200).json({"message":"deleted successfully"});
     } catch (err) {
       res.status(400).json({ error: err });
     }
   }
   const update_solution =async (req,res)=>{
     const { s_id } = req.params;
-    //  console.log("+++++",req.body)
     if (!mongoose.Types.ObjectId.isValid(s_id))
-      return res.status(404).send("No solution with that id");
-    
+      return res.status(404).send("No solution with that id");   
     try {
-      
       const updated_sol = await solution_Model.findByIdAndUpdate(s_id,req.body,{new:true});
-      
-      
       //notification
       const problem=await problem_Model.findById(updated_sol.problem_id)
       const admins_and_user=await user_Model.find({role:"admin",_id:problem.creator_id})
-
       const notification = {
         notific_id: updated_sol.createdAt + Math.floor(Math.random() * 201),
         notifi_type: "solution_create",
@@ -140,7 +123,6 @@ const create_solution = async (req, res) => {
 
   const solution_voting = async (req, res) => {
     const { s_id } = req.params;
-    console.log("votinggggg");
     if (!req.USER_ID) {
       return res.json({ message: "Unauthenticated" });
     }
@@ -148,7 +130,6 @@ const create_solution = async (req, res) => {
       return res.status(404).send("No Solution with this id");
     }
       const voting_type=req.body.vote;
-      console.log("????",voting_type)
       if(voting_type==="upvote"){
     try {
       const solution = await solution_Model.findById(s_id);
@@ -175,7 +156,6 @@ const create_solution = async (req, res) => {
         solution,
         { new: true }
       );
-      console.log("000000",updatedsolution)
       res.status(200).json(updatedsolution);
     } catch (err) {
       res.status(400).json({ error: err });
@@ -204,7 +184,6 @@ const create_solution = async (req, res) => {
           (id) => id !== String(req.USER_ID)
         );
       }
-    
       const updatedsolution = await solution_Model.findByIdAndUpdate(
         s_id,
         solution,
@@ -217,7 +196,6 @@ const create_solution = async (req, res) => {
   }else{
     res.status(400).json({message:"in valid parameter"})
   }
-
   };
 
 
@@ -230,15 +208,12 @@ const create_solution = async (req, res) => {
       const saveindex = solution.saved_sol_by.findIndex(
         (id) => id === String(req.USER_ID)
       );
-     
       if (saveindex === -1) {
         solution.saved_sol_by.push(req.USER_ID);
       } else {
         solution.saved_sol_by =  solution.saved_sol_by.filter((id) => id !== req.USER_ID);
       }
-  
       const updatedsolution = await solution_Model.findByIdAndUpdate(s_id, solution, {  new: true,});
-      console.log("updatedsolution",updatedsolution)
       res.status(200).json(updatedsolution);
     } catch (err) {
       res.status(400).json({ error: err });
@@ -246,17 +221,14 @@ const create_solution = async (req, res) => {
   };
   const approve_solution = async (req,res) => {
     const { s_id } = req.params;
-    console.log("ljlkjlk")
     if (!mongoose.Types.ObjectId.isValid(s_id))
       return res.status(404).send("No Article with this id");
     if ( req.USER_ROLE!=='admin')
       return res.status(401).send("Only admin can approve the solution");
     try {
-      console.log(s_id)
       const solution = await solution_Model.findById(s_id);
       solution.isApproved=!solution.isApproved
       const updatedsolution = await solution_Model.findByIdAndUpdate(s_id, solution, {  new: true,});
-      console.log("updatedsolution",updatedsolution)
       res.status(200).json(updatedsolution);
     } catch (err) {
       res.status(400).json({ error: err });

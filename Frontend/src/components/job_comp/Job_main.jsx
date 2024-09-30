@@ -22,7 +22,7 @@ function Job_main() {
     params: {
       query: `${Search}`,
       page: "1",
-      num_pages: "1",
+      num_pages: "3",
       date_posted: "all",
     },
     headers: {
@@ -34,6 +34,7 @@ function Job_main() {
   let Res = null;
   const fetchdata = async () => {
     setloader(true);
+    setData(null)
     try {
       const {data} =  await axios.request(options)
       Res = data.data;
@@ -84,9 +85,9 @@ function Job_main() {
     }
   }
   useEffect(() => {
-    if(user){
-      get_user_skill()
-    }
+    // if(user){
+    //   get_user_skill()
+    // }
     // fetchdata();
   }, []);
 
@@ -96,7 +97,7 @@ function Job_main() {
   return (
     <>
     {
-      loader?<div className="flex justify-center items-center mt-4"><Loader/></div>:<>
+   <>
       <div className="flex justify-center mt-8 p-2  items-center gap-4">
         <input
           onChange={(e) => {
@@ -110,6 +111,8 @@ function Job_main() {
         <IoSearch className="cursor-pointer text-[40px] text-[orange] hover:bg-[#c0c0c09e] rounded-lg  p-1"  onClick={()=>{
           fetchdata()
           }}/>
+
+          
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-2.5   w-full p-5">
         {Data?.map((itm, index) => {
@@ -125,11 +128,13 @@ function Job_main() {
             </div>
           );
         })}
-
         {/* <Job_comp data={data[2]} setSelected_job={setSelected_job} Selected_job={Selected_job} setis_window={setis_window} is_window={is_window}/> */}
         {/* <Job_comp data={data[3]} setSelected_job={setSelected_job} Selected_job={Selected_job} setis_window={setis_window} is_window={is_window}/> */}
         {/* <Job_comp data={data[4]} setSelected_job={setSelected_job} Selected_job={Selected_job} setis_window={setis_window} is_window={is_window}/> */}
       </div>
+        {
+!loader? !Data&&<div className="flex justify-center w-[100%] text-[30px] text-[white]">Search job  by title</div>:<div className="flex justify-center items-center mt-4"><Loader/></div>
+        }
       {Selected_job && (
         <Modal
           isOpen={is_window}

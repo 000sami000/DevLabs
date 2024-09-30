@@ -1,4 +1,3 @@
-const { default: mongoose } = require("mongoose");
 const cource_Model = require("../models/cource_model");
 const fs = require('fs');
 const path = require('path');
@@ -21,8 +20,6 @@ const create_cource=async (req,res)=>{
     res.status(401).json({message:"your not authorize"})
     return
   }
- console.log(req.body)
- console.log(req.file)
  const {des,toc,title}=req.body;
  const new_cource=new cource_Model({
 
@@ -33,8 +30,6 @@ const create_cource=async (req,res)=>{
  })
    try{
        await new_cource.save();
-
-
     res.status(200).json({ message:"OKK" });
    }catch(err){
     res.status(404).json({ message: err });
@@ -42,7 +37,6 @@ const create_cource=async (req,res)=>{
 }
 const get_cources=async (req,res)=>{
   try{
-    console.log("cources")
       const cources=await cource_Model.find();
       let final=cources.map((itm)=>{
   const {_id,title,description,thumbnail}=itm;
@@ -138,13 +132,11 @@ const update_single_cource=async(req,res)=>{
 
 
 const delete_single_cource=async(req,res)=>{
-  // if(req.USER_ROLE!='admin'){
-  //   res.status(401).json({message:"your not authorize"})
-  //   return
-  // }
+  if(req.USER_ROLE!='admin'){
+    res.status(401).json({message:"your not authorize"})
+    return
+  }
   const {c_id}=req.params;
-    
-
   try{
     const cource = await cource_Model.findById(c_id);
     if (!cource) {
@@ -161,13 +153,10 @@ const delete_single_cource=async(req,res)=>{
         }
       });
     }
-
     // Delete the article from the database
     await cource_Model.findByIdAndDelete(c_id);
- 
-          res.status(200).json({message:"Deleted Successfully"})
+   res.status(200).json({message:"Deleted Successfully"})
   }catch(err){
-     
     res.status(404).json({ message: err });
   }
 }

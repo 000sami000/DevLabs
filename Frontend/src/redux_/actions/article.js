@@ -25,7 +25,7 @@ export const getArticles=(selected)=>{
       try
       {
          const {data}=await api.fetchArticle(selected);
-      //    console.log("data---:",data)
+         console.log("data---:",data)
          dispatch(get_articles(data)) 
       }
       catch(err)

@@ -1,15 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-function removeCookie(cookieName) {
-  // Create a date in the past to set the expiration
-  const pastDate = 'Thu, 01 Jan 1970 00:00:00 UTC';
-  
-  // Set the cookie with a past expiration date for different paths and domains
-  document.cookie = cookieName + '=; expires=' + pastDate + '; path=/;';
-  document.cookie = cookieName + '=; expires=' + pastDate + '; path=/; domain=' + document.domain + ';';
-  document.cookie = cookieName + '=; expires=' + pastDate + '; path=/; secure;';
-  document.cookie = cookieName + '=; expires=' + pastDate + '; path=/; SameSite=Lax;';
-  document.cookie = cookieName + '=; expires=' + pastDate + '; path=/; SameSite=Strict;';
-}
+
 const initialState = {
   current_user: null,
   error: null,
@@ -40,7 +30,7 @@ const userSlice = createSlice({
     },
     auth_signout: (state) => {
       console.log("signout");
-      document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+     
       state.current_user = null;
     },
     erase_error:(state)=>{

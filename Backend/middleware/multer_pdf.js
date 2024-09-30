@@ -5,8 +5,7 @@ function pdf_uploader(destination) {
   const storage = multer.diskStorage({
     destination: `./public/upload/${destination}`,
     filename: function (req, file, cb) {
-      //   let content=  Object.keys(req.body).filter((itm)=>itm=="article_content"||"solution_content"||"problem_content")
-        // console.log("MULTER middleware",req.USER_ID)
+
       const filname = Date.now() + "-" + "-" + file.originalname;
       cb(null, filname);
     },
@@ -14,13 +13,12 @@ function pdf_uploader(destination) {
 
   const upload = multer({
     storage: storage,
-    // limits: { fileSize: 1000000 }, // Limit file size to 1MB
+
     fileFilter: (req, file, cb) => {
       checkFileType(file, cb);
     },
   }).single("file");
-  // console.log("dflkjdlkfjdfoidfoi")
-  // console.log(upload)
+
   return upload;
 }
 module.exports = pdf_uploader;

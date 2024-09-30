@@ -12,20 +12,16 @@ import { useDispatch,useSelector } from "react-redux";
 import { deleteSolution, updateSolution, voteSolution ,saveSolution, approveSolution} from "../../redux_/actions/solution";
 import { FaToggleOn } from "react-icons/fa";
 import { FaToggleOff } from "react-icons/fa6";
-
 import 'react-quill/dist/quill.snow.css';
-import DOMPurify from "dompurify";
+
 import '../text_editor/Editor.scss'
 import Comment from "../Comment";
 import { formatNumber } from "../format_num";
-// import ReadOnlyQuillEditor from "../text_editor/ReadOnlyQuil";
+
 function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, content_creator_username=""}) {
   const user=useSelector((state)=>state.userReducer.current_user)
   const {solution_content ,saved_sol_by,vote,up_vote,down_vote,createdAt,_id,creator_username,creator_id,total_comments,isApproved,profile_img_ }=sol_props;
-  // const cleanHTML = DOMPurify.sanitize(solution_content);
-  // console.log("solution_content=++++",solution_content)
-  // console.log("cleanhtml=++++",cleanHTML)
-  console.log("///",sol_props)
+
 
   const [Show_comment,setShow_comment]=useState(false)
 
@@ -35,7 +31,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
    }
    const handleUpdate=()=>{
     setSol_ed(sol_props)
-    //  dispatch(updateSolution())
+    
    }
 
    
@@ -65,7 +61,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
     );
   }
   function Downvote(voting_type) {
-    console.log("Downvote");
+   
     if (user&&down_vote?.length > 0) {
       return (
         <span>
@@ -90,7 +86,6 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
     );
   }
   function Save() {
-    console.log("Savey");
     if (user&&saved_sol_by?.length > 0) {
       return (
         <span>
@@ -113,7 +108,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
 
 
   function Approve() {
-    console.log("Savey");
+
     if (!isApproved) {
       return (
         <span>
@@ -168,7 +163,7 @@ function Solution_comp({sol_props,setSol_ed,setcurrent_sdata,content_title, cont
           </div>
           <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
           <div  className="flex justify-between gap-4 py-3 px-2 text-pretty text-justify max-h-[600px] overflow-y-auto w-[100%]">
-            {/* <ReadOnlyQuillEditor content={solution_content}/> */}
+            
             <div className=" editor ql-editor" dangerouslySetInnerHTML={{ __html: solution_content }} />
             <div/>
             <div className="w-[50px] flex flex-col items-center text-[#995731] gap-3 hover:shadow-lg bg-[#F99156] place-self-start p-1 py-2 rounded-lg">

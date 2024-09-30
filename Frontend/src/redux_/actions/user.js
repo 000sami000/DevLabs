@@ -1,5 +1,5 @@
 import axios from "axios"
-import {auth_start,auth_success,auth_failure,get_user,get_user_unauth, update_user, deleteuser} from "../Slices/userSlice";
+import {auth_start,auth_success,auth_failure,get_user,get_user_unauth, update_user, deleteuser,auth_signout} from "../Slices/userSlice";
 import * as api from "../../api"
 // import { useNavigate } from "react-router-dom";
 // const navigate=useNavigate();
@@ -27,21 +27,35 @@ export const signIn=(userobj,navigate)=>{
     }
 
 }
+export const signOut=(navigate)=>{
+    return async(dispatch)=>{
+        try
+        {
+           
+           const {data}=await api.signout()
+           console.log(data,"signoutttt")
+           dispatch(auth_signout());
+      navigate("/")
+        }
+        catch(err)
+        {
+        dispatch(auth_failure(  err.response.data.message))
+          console.log("signUp err---",err)
+        }
+    }
+}
 export const signUp=(userobj,setIsSignup)=>{
-
- 
     return async(dispatch)=>{
         try
         {
               dispatch(auth_start())
            const {data}=await api.signup(userobj)
            dispatch(auth_success(data));
-        //    console.log("data---:",data)
+
             setIsSignup(false)
         }
         catch(err)
         {
-        //    if(err.response.data.message) 
         dispatch(auth_failure(
             err.response.data.message
         ))

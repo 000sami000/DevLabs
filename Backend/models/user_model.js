@@ -1,9 +1,4 @@
 let mongoose = require("mongoose");
-let single_notif={
-  content_creator_id:"",
-  
-
-}
 let user_schema = mongoose.Schema(
   {
     profile_img_:{type:Object,default:null},

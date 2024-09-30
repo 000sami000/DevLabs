@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-import { AiFillLike } from "react-icons/ai";
-import { AiFillDislike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-// import { SiTicktick } from "react-icons/si";s
-import { fetch_all_users, fetch_savedArticles, fetch_userArticles, search_savedArticles, search_userArticles } from "../../../api";
+import { fetch_all_users } from "../../../api";
 import Loader from "../../Loader";
 import { formatDistanceToNow } from "date-fns";
 function Admin_user
@@ -14,8 +10,7 @@ function Admin_user
   const [Selected,setSelected]=useState("users")
   let navigate=useNavigate();
   const { id } = useParams();
-  console.log("iddd", id);
-  let user = useSelector((state) => state.userReducer.current_user);
+
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(null);
   const [Users, setUsers] = useState([]);
@@ -26,7 +21,7 @@ function Admin_user
       setloading(true);
       seterror(false);
       let { data } = await fetch_all_users(users_type,searchterm);
-      console.log("::::",data)
+
       if (Array.isArray(data)) {
         setUsers(data);
         settoggle('get')
@@ -34,8 +29,7 @@ function Admin_user
         setUsers([]);
       }
       setloading(false);
-      
-      // console.log(data);
+
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -84,10 +78,13 @@ function Admin_user
       
       { Selected==="users"?<span>{toggle==="get"?"Total Users:":"Total User founded"} ({Users.length})</span>:<span>{toggle==="get"?"Total Blocked Users:":"Total Founded Blocked USers:"} ({Users.length})</span> }
         </span>
-        <div className=" flex w-[30%] justify-between ">
-          
-          
+        <div className=" flex w-[25%] justify-between ">
+          <div>Articles</div>
+          <div>Problems</div>
+          <div>Solutions</div>
+        
         </div>
+      
       </div>
       }
       <hr className="h-[4px] bg-[white] rounded-[2px]" />
@@ -110,16 +107,16 @@ function Admin_user
                 </div>
               </div>
               </div>
-        <div className=" flex w-[37%] justify-between">
+        
          
-          <div className="flex justify-between w-[50%]">
+          <div className="flex justify-between w-[25%] px-4">
           
             <div>{itm.article_count}</div>
             <div>{itm.problem_count}</div>
             <div>{itm.solution_count}</div>
             {/* <div  >{itm.isActive?<span className="bg-[#55d055] p-[3px] rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div> */}
           </div>
-        </div>
+        
       </div>
 
       )):<div>No User </div>

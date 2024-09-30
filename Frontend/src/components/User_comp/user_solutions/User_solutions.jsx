@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
 import { IoSearchSharp } from "react-icons/io5";
-import { AiFillLike } from "react-icons/ai";
-import { AiFillDislike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa6";
 import { fetch_savedSolutions, fetch_userSolutions, search_savedSolution, search_userSolution } from "../../../api";
 import { useSelector } from "react-redux";
@@ -10,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IoBanOutline } from "react-icons/io5";
 import Loader from "../../Loader";
 import { FcApproval } from "react-icons/fc";
-import { formatDistanceToNow } from "date-fns";
 import {formatNumber} from "../../format_num"
 function User_solutions() {
   const { id } = useParams();
@@ -34,8 +30,7 @@ function User_solutions() {
         setusersolutions([]);
       }
       setloading(false);
-      
-      console.log("jkljlkjlk",data);
+ 
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -53,8 +48,6 @@ function User_solutions() {
         setusersolutions([]);
       }
       setloading(false);
-      
-      // console.log(data);
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -62,20 +55,18 @@ function User_solutions() {
     }
   };
   const get_user_solution_saved = async () => {
-    console.log("poipopoi;")
+
     try {
       setloading(true);
       seterror(false);
       let { data } = await fetch_savedSolutions();
       if (Array.isArray(data)) {
+
         setusersolutions(data);
       } else {
         setusersolutions([]);
       }
       setloading(false);
-      
-      console.log("///////",usersolutions);
-     
     } catch (err) {
       setloading(false);
       seterror(err.massage)
@@ -84,20 +75,18 @@ function User_solutions() {
   };
 
   const search_user_solution_saved = async (query) => {
-    console.log("poipopoi;")
+   
     try {
       setloading(true);
       seterror(false);
       let { data } = await search_savedSolution(query);
       if (Array.isArray(data)) {
+    
         setusersolutions(data);
       } else {
         setusersolutions([]);
       }
       setloading(false);
-      
-      console.log("///////",usersolutions);
-     
     } catch (err) {
       setloading(false);
       seterror(err.massage)
@@ -168,10 +157,13 @@ function User_solutions() {
         <div className=" w-[37%]">
          
         </div>
-        <div className={Selected==="user_solutions"?`flex justify-start gap-[50px] w-[100%]`:`text-center  pr-5`}>
+        <div className={Selected==="user_solutions"?`flex justify-start gap-[50px] w-[100%]`:`text-center w-[100%]  pr-5`}>
         
+        {
+  Selected==="user_solutions"&&
           <div className="ml-2">Comments</div>
-          <div>Score</div>
+        }
+          <div className={`${Selected!=="user_solutions"&&'ml-[50%]'}`}>Score</div>
           {/* <div>{Selected==="user_solutions"&&"Status"}</div> */}
         </div>
       </div>
@@ -237,7 +229,7 @@ function User_solutions() {
        
         <div className="flex justify-around gap-3 items-center w-[100%]">
         
-          <div className="ml-[30px]">{formatNumber(itm.comments)}</div>
+       
           <div className="ml-[60px] bg-[#393939] text-[#00fa00] px-6 rounded-md"> {formatNumber(itm.vote)}</div>
           
         </div>

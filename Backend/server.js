@@ -9,8 +9,6 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path')
-const http=require('http')
-const { Server } = require('socket.io');
 const cookieParser=require('cookie-parser')
 const morgan=require("morgan")
 
@@ -23,7 +21,7 @@ let comment_routes=require("./routes/comment_routes")
 let report_routes=require("./routes/report_routes")
 let cource_routes=require('./routes/cource_routes')
 app.use(morgan("tiny"))
-app.use(cors(  {  origin: 'http://localhost:5173',credentials: true}));
+app.use(cors(  {  origin: process.env.ORIGIN,credentials: true}));
 app.use(bodyParser.urlencoded({limit:"60mb",extended:true}))
 app.use(bodyParser.json())
 
@@ -40,18 +38,16 @@ app.use("/cource",cource_routes)
 
 
 app.use('/public/upload', express.static(path.join(__dirname, 'public/upload')));
-// app.use('/posts',post_routes)
-// app.use('/users',user_routes)
+
 //compiler
 app.post('/run', (req, res) => {
     const { language, code, input } = req.body;
-    console.log(input)
-//   console.log(language,code)
-    const fileName = `temp.${language === 'c_cpp' ? 'cpp' : language}`;
-    const inputFileName = 'temp_input.txt';
+
+    const fileName = `${Math.floor(Math.random() * 550)}_temp.${language === 'c_cpp' ? 'cpp' : language}`;
+    const inputFileName = `${Math.floor(Math.random() * 550)}_temp_input.txt`;
     fs.writeFileSync(fileName, code);
     fs.writeFileSync(inputFileName, input);
-    const outputFileName = 'temp.out';
+    const outputFileName = `${Math.floor(Math.random() * 550)}_temp.out`;
     const isWindows = os.platform() === 'win32';
     const commandMap = {
       c_cpp:  isWindows

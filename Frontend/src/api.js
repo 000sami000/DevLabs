@@ -8,14 +8,11 @@ const API=axios.create({baseURL:"http://localhost:3000"})
 
 //problems
 export const fetchProblem=(selected)=>{
-
-    return API.get(`/problem?page=${selected}`);
-
+    return API.get(`/problem?page=${selected}`,{withCredentials:true});
 }
 export const search_problem=(query)=>{
   if(typeof(query)==="object"){
-    // const queryString = query.map(tag => `${tag}`).join('&');
-    // console.log("this is querystring",queryString)
+
   return API.get(`/problem/search?tags=${query}`);
 }else{
     return API.get(`/problem/search?q=${query}`);
@@ -27,7 +24,7 @@ export const createProblem=(problemobj)=>{
     return API.post(`/problem`,problemobj,{withCredentials:true});
 }
 export const fetch_single_problem=(id)=>{
-    return API.get(`/problem/${id}`)
+    return API.get(`/problem/${id}`,{withCredentials:true})
 }
 export const delete_problem=(id)=>{
   return API.delete(`/problem/${id}`)
@@ -41,6 +38,9 @@ export const approve_problem=(p_id)=>{
 //user authentication
  export const signin=(userobj)=>{
    return API.post('/user/signin',userobj,{withCredentials:true})
+ }
+ export const signout=()=>{
+   return API.post('/user/signout',{},{withCredentials:true})
  }
  
  export const signup=(userobj)=>{
@@ -56,7 +56,7 @@ export const approve_problem=(p_id)=>{
     return API.post('/user/verifyotp',userobj,{withCredentials:true})
   }
   export const reset_forgot_password=(userobj)=>{
-    console.log("??????????",userobj)
+ 
     return API.post('/user/resetforgotpassword',userobj)
   }
   export const  update_user=(user_obj)=>{
@@ -119,7 +119,7 @@ export const approve_problem=(p_id)=>{
     return API.patch(`user/userprofile/${id}`,profile_obj,{withCredentials:true})
    }
    export const  fetch_userProblems=(id,Searchterm)=>{
-    if(Searchterm!=''){
+    if(Searchterm!=''&&Searchterm!=undefined){
       return API.get(`user/userproblems/${id}?searchterm=${Searchterm}`,{withCredentials:true})
 
     }
@@ -223,7 +223,7 @@ export const approve_problem=(p_id)=>{
       }});
    }
    export const fetchArticle=(selected)=>{
-    return API.get(`/article?page=${selected}`);
+    return API.get(`/article?page=${selected}`,{withCredentials:true});
    }
    export const search_article=(query)=>{
 
@@ -236,7 +236,7 @@ export const approve_problem=(p_id)=>{
 
   }
    export const fetch_single_article=(a_id)=>{
-    return API.get(`/article/${a_id}`);
+    return API.get(`/article/${a_id}`,{withCredentials:true});
    }
    export const delete_article=(a_id)=>{
     return API.delete(`/article/${a_id}`)
@@ -271,12 +271,12 @@ export const  fetchComment=(type_id_)=>{
   return API.get(`/comment/${type_id_}`);
 }
 export const  updateComment=(c_id,c_obj)=>{
-  console.log("api cobj",c_obj)
+
   return API.patch(`/comment/${c_id}`,c_obj,{withCredentials:true});
 }
 
 export const  deleteComment=(c_id)=>{
-  console.log("api cobj",c_id)
+
   return API.delete(`/comment/${c_id}`,{withCredentials:true});
 }
 //report
@@ -284,11 +284,11 @@ export const  createReport=(reportobj)=>{
   return API.post("/report/",reportobj,{withCredentials:true});
 }
 export const  fetch_reports=(report_type)=>{
-  console.log(">>>>>",report_type)
+ 
   return API.get(`/report?report_type=${report_type}`,{withCredentials:true});
 }
 export const  delete_reports=(id,report_type)=>{
-  console.log(">>>>>",id)
+
   return API.delete(`/report/${id}?report_type=${report_type}`,{withCredentials:true});
 }
 

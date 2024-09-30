@@ -30,13 +30,10 @@ function Admin_report() {
       let { data } = await fetch_reports(report_type);
       if (Array.isArray(data)) {
         setReports(data);
-        
       } else {
         setReports([]);
       }
       setloading(false);
-      
-      console.log("jkljlkjlk",data);
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -55,8 +52,6 @@ const delete_report=async(id,report_type)=>{
       setReports([]);
     }
     setloading(false);
-    
-    console.log("jkljlkjlk",data);
   } catch (err) {
     setloading(false);
      seterror(err.massage)
@@ -114,7 +109,7 @@ const delete_report=async(id,report_type)=>{
      
    </div>
 
-   )):<div>No reports to show for {Selected}</div>
+   )):<div className="text-center text-[white] text-[20px]">No reports to show for {Selected}</div>
     }
     </div>
   </div>

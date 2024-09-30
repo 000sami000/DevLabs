@@ -163,7 +163,7 @@ itm.notifi_type==='comment'&&
  }
  
        </>
-     ))  :<div className=' text-center text-[20px] text-[white]'>No notifications</div>
+     ))  :<div className=' text-center text-[20px] text-[white]'>No Updates</div>
  
  
     }

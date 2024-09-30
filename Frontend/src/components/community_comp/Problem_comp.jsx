@@ -1,25 +1,21 @@
-import DOMPurify from "dompurify";
-import React, { useState } from "react";
+import React from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { BiSolidLike } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNow } from 'date-fns';
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { approveProblem, deleteProblem, likeProblem } from "../../redux_/actions/problem";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 import '../text_editor/Editor.scss'
-// import "../text_editor/Editor.scss";
-// import  'react-quill/dist/quill.snow.css';
-function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
+function Problem_comp({pdata , setcurrent_pdata}) {
   const dispatch=useDispatch();
   const {title,problem_content,tags,likes,total_sol,creator_username,creator_id,_id,createdAt,isApproved,profile_img_}=pdata;
   let user = useSelector((state) => state.userReducer.current_user);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("oiuoiuoioi",location);
+ 
   function Like() {
-    console.log("likkkkyyyy");
+
     if (user&&likes?.length > 0) {
       return (
         <span>
@@ -65,15 +61,11 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
   }
   return (
     <>
-      <div className="w-[100%] m-auto bg-[#ffffff] rounded-md p-3 shadow-md">
+      <div className="w-[100%] m-auto bg-[#ffffff] rounded-md p-3 shadow-md mb-3">
         <div className="w-full p-1 flex gap-3 justify-between items-center rounded-[10px]">
           <div className="w-[90%] flex gap-5 items-center justify-between">
             <span onClick={()=>{navigate(`/user_overview/${creator_id}`)}} className="   p-1 flex-grow-0 basis-auto cursor-pointer  rounded-md flex items-center gap-1 hover:bg-[#ededed]">
-              {/* <img
-                src="/default_profile.jpg"
-                width={`35px`}
-                className="rounded-[50%]"
-              /> */}
+              
                 <div  className='w-[35px] h-[35px] rounded-[100%] shadow-[20px] cursor-pointer  bg-no-repeat bg-center bg-clip bg-cover  ' style={{ backgroundImage: `url(${profile_img_?`http://localhost:3000/${profile_img_?.destination}/${profile_img_?.filename}`:`/default_profile.jpg`})` }}> </div>
              <div className="flex flex-col text-nowrap ">
                 <span className="text-[13px]   pt-0 px-1">@{creator_username} </span>
@@ -111,7 +103,8 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
         <div className="py-3 px-2 text-pretty text-justify max-h-[400px] overflow-y-auto">
         <div className="editor ql-editor" dangerouslySetInnerHTML={{ __html:  problem_content}} />
       
-        </div>
+      
+        </div> 
         <hr className="bg-[#595858] h-[4px] rounded-[2px]" />
         <div className="flex justify-between items-center gap-2 pl-5 pt-2 pr-2">
           <div className="flex flex-wrap w-[80%] gap-2">
@@ -125,7 +118,7 @@ function Problem_comp({pdata ,current_pdata, setcurrent_pdata}) {
           </div>
           <div className="flex justify-end gap-5 w-[20%]">{
 
-              location.pathname!== `/problem/${_id}/sols` &&     <div onClick={()=>{dispatch(likeProblem(_id))}} className="flex p-[2px] items-center text-[1.2rem] gap-1 hover:bg-[white] rounded-md">
+              location.pathname!== `/problem/${_id}/sols` &&     <div onClick={()=>{dispatch(likeProblem(_id))}} className="flex p-[2px] items-center text-[1.2rem] gap-1 hover:bg-[#6e6e6e5a] rounded-md cursor-pointer">
              <Like/> {likes.length}
             </div>
           }

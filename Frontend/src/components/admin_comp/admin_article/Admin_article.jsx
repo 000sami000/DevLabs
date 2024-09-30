@@ -27,7 +27,7 @@ function Admin_articles() {
       setloading(true);
       seterror(false);
       let { data } = await fetch_userArticles();
-      console.log("::::",data)
+   
       if (Array.isArray(data)) {
         setAdminarticles(data);
         settoggle('get')
@@ -35,8 +35,6 @@ function Admin_articles() {
         setAdminarticles([]);
       }
       setloading(false);
-      
-      // console.log(data);
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -56,8 +54,7 @@ function Admin_articles() {
         setAdminarticles([]);
       }
       setloading(false);
-      
-      console.log("?????//",data);
+
     } catch (err) {
       setloading(false);
        seterror(err.massage)
@@ -65,7 +62,7 @@ function Admin_articles() {
     }
   };
   const get_user_article_saved = async () => {
-    console.log("poipopoi;")
+
     try {
       setloading(true);
       seterror(false);
@@ -78,7 +75,7 @@ function Admin_articles() {
       }
       setloading(false);
       
-      console.log("///////",Adminarticles);
+
      
     } catch (err) {
       setloading(false);
@@ -235,7 +232,7 @@ function Admin_articles() {
         loading?<div className="flex justify-center "><Loader/></div>:
       
       Adminarticles.map((itm)=>(
-           <div onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] w-full p-2 flex justify-between gap-2 items-center rounded-[10px] cursor-pointer">
+           <div onClick={()=>{navigate(`/article/${itm._id}`)}} className="bg-[#888888e6] shadow-md w-full p-2 flex justify-between gap-2 items-center rounded-[10px] cursor-pointer">
 
            {
 
@@ -253,12 +250,12 @@ function Admin_articles() {
             }
              <span className=" w-[70%] break-words ">{itm.title}</span>
             <div className=" flex w-[37%]  justify-between ">
-            <div className="flex gap-5 w-[50%]">
+            <div className="flex gap-5 w-[25%] ">
              <span className="flex items-center gap-2"><AiFillLike /> <span >{itm.likes}</span></span>
              <span className="flex items-center gap-2"><AiFillDislike /> <span>{itm.dislikes}</span></span>
              </div>
-            <div className=" w-[38%] text-center flex  gap-6">
-            <div>{itm.total_comments}</div>
+            <div className=" w-[55%] text-center  flex justify-between gap-6">
+            <div className=" text-center ">{itm.total_comments}</div>
             <div  >{itm.isActive?<span className="bg-[#61ea61] p-[3px] px-2 rounded-md text-[#fcfcfc]">Active</span>:<span className="bg-[#fc8a51] p-[3px] rounded-md text-[#fcfcfc]">Inactive</span>}</div>
             {itm.isApproved?<span className=" p-[3px] rounded-md text-[#fcfcfc]"><FcApproval/></span>:<span className=" p-[3px] rounded-md  text-[#b03a3a]"><IoBanOutline className="text-[18px] "/></span>}
                </div>

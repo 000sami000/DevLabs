@@ -20,12 +20,14 @@ const {verify_user_email,signin,signup,get_userprofile,update_userprofile,get_us
     get_allsolution,
     reset_forgotten_password,
     getuser_skills,
-    block_user
+    block_user,
+    signout
 
 }=require('../controllers/user_controller');
 
 router.post('/signin',signin);
 router.post('/signup',signup);
+router.post('/signout',signout);
 router.get('/getuser',isAuthorize,get_user)
 router.get('/getuserskills',isAuthorize,getuser_skills)
 router.post('/verifyemail',verify_user_email)

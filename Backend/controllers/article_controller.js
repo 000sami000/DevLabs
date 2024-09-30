@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const article_Model = require("../models/article_model");
 const user_Model = require("../models/user_model");
+const jwt= require("jsonwebtoken");
 const fs = require('fs');
 const path = require('path');
 const create_article = async (req, res) => {
@@ -13,13 +14,11 @@ const create_article = async (req, res) => {
     article_content,
     isActive,profile_img_
   } = req.body;
-//  console.log( multer(req,"article_thumnail"))
-  console.log("*****", req.body);
-  console.log("likeeyyy");
+
   if (!req.file) {
     return res.status(400).json({ message: "No file selected" });
   }
-  // console.log("the file :", req.file);
+
   const new_article = new article_Model({
     title: title,
     article_content,
@@ -61,8 +60,6 @@ const create_article = async (req, res) => {
 const search_article=async (req,res)=>{
 
   const {q}=req.query;
-  console.log("qqq",q)
-  console.log("the query is :",req.query.tags )
    let  regex;
   if(q){
 
@@ -72,25 +69,21 @@ let tags=null;
 let  tagsArray=null;
  let regexTags=null;
    if(req.query.tags){
-
       tags = req.query.tags || [];
       tagsArray =tags?.split(',').map(tag => tag.trim()); 
       regexTags = tagsArray.map(tag => new RegExp(tag, 'i'));
    }
-   
-
   try{
     if(tags){
       const article=await article_Model.find({
        tags: {$in :regexTags} 
       } ).sort({ _id: -1 });
       let total=article.length
-      // console.log("tags length :",total)
       res.status(200).json({article,total})
     }
     else{
       const article=await article_Model.find({title:regex}).sort({ _id: -1 });
-      // console.log(">>>????",article)
+
       let total=article.length
 
       res.status(200).json({article,total})
@@ -104,21 +97,18 @@ const update_article=async(req,res)=>{
   const {a_id}=req.params
   if (!mongoose.Types.ObjectId.isValid(a_id))
     return res.status(404).send("No article with that id");
-  // console.log(req.body);
-  // console.log(req.file);
+
   if(req.file)
-  console.log("??????",req.file)
+
   try {
     const article = await article_Model.findById(a_id);
-    // console.log("??????//////+++",article)
+
     if (!article) {
       return res.status(404).json({ message: "Article not found" });
     }
     if (req.file) {
       // Delete the existing thumbnail file
-      console.log("deleting")
       const existingThumbnailPath = path.join('D:/Devlabs/Code/Backend/public/upload/article_thumbnail', article.thumbnail.filename);
-      console.log(":::::::",existingThumbnailPath)
       fs.unlink(existingThumbnailPath, (err) => {
         if (err) {
           console.error("Error deleting the existing thumbnail:", err);
@@ -130,7 +120,6 @@ const update_article=async(req,res)=>{
       // Update the article with the new thumbnail
       req.body.thumbnail = req.file;
     }
-    console.log("~~~~vvv   ~",req.body)
     const updated_art = await article_Model.findByIdAndUpdate(a_id,req.body,{new:true});
     //notification generation
     const admins=await user_Model.find({role:"admin"})    
@@ -140,8 +129,7 @@ const update_article=async(req,res)=>{
       content_title: updated_art.title,
       article_id: updated_art._id,
       creator_username: updated_art.creator_username,
-      creator_id: updated_art.creator_id,
-    
+      creator_id: updated_art.creator_id,  
     };
     const updatePromises = admins.map(admin => {
       admin.notifications.unshift(notification);
@@ -157,44 +145,56 @@ const update_article=async(req,res)=>{
 }
 
 const get_articles = async (req, res) => {
-
-
+  const {access_token}=req.cookies;
+  let articles=null;
+  console.log("[[[[[]---",access_token)
   const page=Number(Number(req.query.page)+1)||1
-  console.log('=====aaa',page)
   const skip=(page-1)*5;
+  let total=0;
   try {
-    const articles = await article_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);;
-    const total = articles.length;
-    // console.log(problems)
-//  console.log(articles)
+    console.log(articles,";lklk;")
+    if(!access_token){
+      articles = await article_Model.find({isApproved:true}).sort({ _id: -1 }).limit(5).skip(skip);
+      total =articles.length;
+      return   res.status(200).json({articles,total});
+    }
+    let decoded = jwt.verify(access_token, process.env.JWT_SECRET);
+    console.log(decoded.role,">>>><<")
+    if( decoded.role==='user'){
+
+      articles =await article_Model.find({isApproved:true}).sort({ _id: -1 }) 
+      total =articles.length;
+    }else{
+      articles =await article_Model.find({}).sort({ _id: -1 })    
+      total =articles.length;
+      console.log(articles,";;;;")
+    }
+    if(!articles){
+      return  res.status(404).json({message:"No  problem founded"});
+     }
     res.status(200).json({articles,total});
   } catch (err) {
-    // console.log(err)
+    console.log(err,";;';';'")
     res.status(404).json({ message: err });
   }
 };
 
 const get_single_article = async (req, res) => {
   const { a_id } = req.params;
-
   try {
-    const article = await article_Model.find({ _id: a_id });
-
-    // console.log(article);
-
+    const article = await article_Model.find({ _id: a_id,isApproved:true });
     res.status(200).json(article);
   } catch (err) {
-    // console.log(err)
     res.status(404).json({ message: err });
   }
 };
 
 const like_article = async (req, res) => {
-  console.log("likeessssyy");
+
   const { a_id } = req.params;
-  // if (!req.userID) {
-  //   return res.json({ message: "Unauthenticated" });
-  // }
+  if (!req.userID) {
+    return res.json({ message: "Unauthenticated" });
+  }
   if (!mongoose.Types.ObjectId.isValid(a_id))
     return res.status(404).send("No Article with this id");
   try {
@@ -227,11 +227,10 @@ const like_article = async (req, res) => {
   }
 };
 const dislike_article = async (req, res) => {
-  console.log("dislikeessssyy");
   const { a_id } = req.params;
-  // if (!req.userID) {
-  //   return res.json({ message: "Unauthenticated" });
-  // }
+  if (!req.userID) {
+    return res.json({ message: "Unauthenticated" });
+  }
   if (!mongoose.Types.ObjectId.isValid(a_id))
     return res.status(404).send("No Article with this id");
   try {
@@ -255,13 +254,7 @@ const dislike_article = async (req, res) => {
       );
     }
 
-    const updatedarticle = await article_Model.findByIdAndUpdate(
-      a_id,
-      article,
-      {
-        new: true,
-      }
-    );
+    const updatedarticle = await article_Model.findByIdAndUpdate(a_id,article,{new: true});
     res.status(200).json(updatedarticle);
   } catch (err) {
     res.status(400).json({ error: err });
@@ -322,8 +315,6 @@ const delete_article = async (req, res) => {
 };
 
 const upload_article_image=(req,res)=>{
-
-
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
@@ -335,14 +326,13 @@ const upload_article_image=(req,res)=>{
 
 const delete_article_image = (req, res) => {
   const { filePath } = req.body;
-  console.log("???/////=====",filePath)
+
   if (!filePath) {
     return res.status(400).json({ message: 'No file path provided' });
   }
   const normalizedPath = path.normalize(filePath);
-  // console.log(";;;;;;",normalizedPath)
   const fullPath = path.join('D:/Devlabs/Code/Backend/public/upload/upload_images',path.basename(normalizedPath));
-  console.log(">>>>>__",fullPath)
+ 
   fs.unlink(fullPath, (err) => {
     if (err) {
       return res.status(500).json({ message: 'Error deleting file', error: err });
@@ -352,17 +342,17 @@ const delete_article_image = (req, res) => {
 };
 const approve_article = async (req,res) => {
   const { a_id } = req.params;
-  console.log("ljlkjlk",a_id)
+
   if (!mongoose.Types.ObjectId.isValid(a_id))
     return res.status(404).send("No Article with this id");
   if ( req.USER_ROLE!=='admin')
     return res.status(401).send("Only admin can approve the article");
   try {
-    // console.log(s_id)
+   
     const article = await article_Model.findById(a_id);
     article.isApproved=!article.isApproved
     const updatedarticle = await article_Model.findByIdAndUpdate(a_id, article, {  new: true,});
-    console.log("updatedarticle",updatedarticle)
+ 
     res.status(200).json(updatedarticle);
   } catch (err) {
     res.status(400).json({ error: err });

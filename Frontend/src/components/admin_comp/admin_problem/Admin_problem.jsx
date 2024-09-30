@@ -120,8 +120,8 @@ function Admin_problems() {
       <br />
 
       <div className="  flex justify-between items-center p-2">
-       {toggle==="get"? <span>Your Problems : {userproblems?.length}</span>:<span> Founded Problems :{userproblems?.length}</span>}
-        <div className="flex w-[30%] justify-between">
+       {toggle==="get"? <span>{Selected==="user_problems"?"Your Problems":"Total Problems"} : {userproblems?.length}</span>:<span> Founded Problems :{userproblems?.length}</span>}
+        <div className="flex w-[20%]   justify-between">
         <div className=" flex  whitespace-nowrap justify-end">Posted On</div>
         <div className=" flex  justify-end">Solutions</div>
         </div>
@@ -136,7 +136,7 @@ function Admin_problems() {
            
               <div className=" w-[70%] break-words font-semibold">{itm.title}</div>
               <div className="w-[10%] flex items-center gap-2"><AiFillLike/>{itm.likes.length}</div>
-              <div className="flex w-[25%] justify-between">
+              <div className="flex w-[25%] gap-3 justify-between">
               <div className="bg-[orange] text-center  px-2 whitespace-nowrap  rounded-[4px]">
               {formatDate(itm.createdAt)}
               </div>

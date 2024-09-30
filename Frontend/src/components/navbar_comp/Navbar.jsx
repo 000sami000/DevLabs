@@ -2,7 +2,7 @@ import { isAction } from "@reduxjs/toolkit";
 import React, { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { auth_signout } from "../../redux_/Slices/userSlice";
+import { signOut } from "../../redux_/actions/user";
 import Simpleloader from "../Simpleloader";
 import Loader from "../Loader";
 function Navbar({user}) {
@@ -87,10 +87,6 @@ console.log(current_user?.name)
             />
           )}
           {isMenuOpen && (
-            
-           
-
-           
           !current_user?<Loader/>:
         <div className="bg-[#454444cb] p-4 rounded-[10px] shadow-md absolute top-12 left-[90%] w-[9%] z-10" >
         {
@@ -102,8 +98,7 @@ console.log(current_user?.name)
             <button className="text-[22px] text-[white] block" onClick={()=>{navigate(`/user/${current_user?._id}`);setIsMenuOpen(false)}}>Profile</button>
             :  current_user?.role==="admin"?<button className="text-[22px] text-[white] block" onClick={()=>{navigate(`/admin/${current_user?._id}`);setIsMenuOpen(false)}}>Admin</button>:""
         }
-            <button className="text-[22px] text-[red] block" onClick={()=>{dispatch(auth_signout());
-            //  navigate('/')
+            <button className="text-[22px] text-[red] block" onClick={()=>{dispatch(signOut(navigate));
              }}>Logout</button>
 
         </div> 

@@ -12,11 +12,9 @@ function Community() {
   let p = useSelector((state) => state.problemReducer.problems);
   let total = useSelector((state) => state.problemReducer.total);
   let pagecount = Math.ceil(total / 5);
-  // console.log("pagecount",pagecount);
 
   const [selected, setselected] = useState(0);
-  
-  console.log("[[[", p);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProblems(selected));
@@ -26,8 +24,6 @@ function Community() {
     console.log(e);
     setselected(e.selected);
   };
- 
-
 
   return (
     <>
@@ -36,7 +32,10 @@ function Community() {
           <Problem_form user={user} />
         </div>
       ) : (
-        <div className="bg-[#f9393963] p-2 rounded-md  text-[#6f1212] w-[75%] m-auto  mt-[2%]"> Login to post Problems</div>
+        <div className="bg-[#f9393963] p-2 rounded-md  text-[#6f1212] w-[75%] m-auto  mt-[2%]">
+          {" "}
+          Login to post Problems
+        </div>
       )}
       <br />
       <br />
@@ -44,14 +43,17 @@ function Community() {
       <div className="text-[30px] text-center text-[white]">Problems</div>
       <br />
       <div>
-        <Search_input placeholder_val={"Search Problems"} content_type={"problem"}  />
+        <Search_input
+          placeholder_val={"Search Problems"}
+          content_type={"problem"}
+        />
       </div>
       <br />
 
       <div className="w-[75%] m-auto  flex flex-col gap-5">
         {p?.map((itm, i) => (
           <div key={i}>
-            <Problem_comp  pdata={itm} />
+            <Problem_comp pdata={itm} />
           </div>
         ))}
       </div>
@@ -76,7 +78,6 @@ function Community() {
           />
         </div>
       )}
-   
     </>
   );
 }
