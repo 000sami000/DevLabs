@@ -1,0 +1,112 @@
+﻿import {auth_start,auth_success,auth_failure,start_getuser,get_user,get_user_unauth, update_user, deleteuser,auth_signout} from "../Slices/userSlice";
+import * as api from "../../api"
+// import { useNavigate } from "react-router-dom";
+// const navigate=useNavigate();
+
+const getErrorMessage = (err, fallbackMessage) => {
+    return (
+        err?.response?.data?.message ||
+        err?.message ||
+        fallbackMessage
+    );
+};
+
+export const signIn=(userobj,navigate)=>{
+
+ 
+    return async(dispatch)=>{
+        try
+        {
+              dispatch(auth_start())
+           const {data}=await api.signin(userobj)
+           dispatch(auth_success(data));
+        //    console.log("data---:",data)
+            navigate("/")
+            window.location.reload()
+        }
+        catch(err)
+        {  
+            const message = getErrorMessage(err, "Failed to sign in");
+            dispatch(auth_failure(message))
+            console.log(">>>>>",message)
+          console.log("signIn err---",err)
+        }
+    }
+
+}
+export const signOut=(navigate)=>{
+    return async(dispatch)=>{
+        try
+        {
+           
+           const {data}=await api.signout()
+           console.log(data,"signoutttt")
+           dispatch(auth_signout());
+      navigate("/")
+        }
+        catch(err)
+        {
+        dispatch(auth_failure(getErrorMessage(err, "Failed to sign out")))
+          console.log("signUp err---",err)
+        }
+    }
+}
+export const signUp=(userobj,setIsSignup)=>{
+    return async(dispatch)=>{
+        try
+        {
+              dispatch(auth_start())
+           const {data}=await api.signup(userobj)
+           dispatch(auth_success(data));
+
+            setIsSignup(false)
+        }
+        catch(err)
+        {
+        dispatch(auth_failure(getErrorMessage(err, "Failed to sign up")))
+          console.log("signUp err---",err)
+        }
+    }
+}
+export const getUser=()=>{
+    return async(dispatch)=>{
+        try{
+         const {data}=await api.get_authentic_user()
+         console.log("get_data}}",data)
+         dispatch(get_user(data))
+        }catch(err){
+            dispatch(get_user_unauth(err.code))
+            console.log("get_user err---",err)
+
+        }
+    }
+}
+
+export const updateUser=(user_obj)=>{
+    console.log("/////////++",user_obj)
+    return async(dispatch)=>{
+        try{
+         const {data}=await api.update_user(user_obj)
+         console.log("get_data}}",data)
+         dispatch(update_user(data))
+        }catch(err){
+            dispatch(get_user_unauth(err.code))
+            console.log("get_user err---",err)
+
+        }
+    }
+}
+export const deleteUser=(navigate)=>{
+    return async(dispatch)=>{
+        try{
+         const {data}=await api.delete_user()
+         console.log("get_data}}",data)
+         dispatch(deleteuser(data))
+         navigate('/')
+        }catch(err){
+            dispatch(get_user_unauth(err.code))
+            console.log("get_user err---",err)
+
+        }
+    }
+}

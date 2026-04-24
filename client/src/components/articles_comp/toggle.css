@@ -1,0 +1,30 @@
+.toggle-switch {
+    width: 45px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+  
+   .switch {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: left 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+ .toggled {
+    background-color: #4caf50;
+    left: 25px;
+  }
+  
+  .toggle-switch.toggled .switch {
+    left: 25px;
+  }

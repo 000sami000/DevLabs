@@ -1,0 +1,52 @@
+.custom-quill-container .ql-container {
+    border: none !important;
+  }
+  
+  .custom-quill-container .ql-editor {
+    border: none !important;
+    padding: 0 !important; /* Optional: Remove padding if needed */
+  }
+  
+  .custom-quill-container {
+    border: none !important;
+  }
+
+  .interact-resizable {
+    position: relative;
+  }
+  
+  .interact-resizable img {
+    max-width: none; /* Allow images to exceed container width if resized */
+  }
+  
+  .interact-resizable .interact-resizable-handle {
+    position: absolute;
+    background: #ddd;
+    border: 1px solid #aaa;
+    width: 8px;
+    height: 8px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+
+
+  .ql-editor img {
+    max-width: 100%; /* Ensure images do not exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    cursor: pointer;
+    border: 1px solid #ddd;
+    padding: 4px;
+    background: #f9f9f9;
+    -webkit-user-drag: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 700px;
+  }
+  
+  /* Optional: Adjust image alignment */
+  .custom-quill-container .ql-editor img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }

@@ -1,0 +1,81 @@
+.compiler-editor-pane {
+  display: flex;
+  flex-direction: column;
+  background: var(--app-bg-panel);
+}
+
+.compiler-editor-pane-head {
+  background: color-mix(in srgb, var(--app-bg-soft) 76%, transparent);
+}
+
+.compiler-editor-icon {
+  background: var(--app-bg-soft);
+  border: 1px solid var(--app-border);
+}
+
+.compiler-editor-frame {
+  flex: 0 0 auto;
+  height: 640px;
+  min-height: 640px;
+  max-height: 640px;
+  overflow: hidden;
+}
+
+.compiler-preview-surface {
+  background: var(--app-bg-panel);
+}
+
+.compiler-preview-head {
+  background: color-mix(in srgb, var(--app-bg-soft) 76%, transparent);
+}
+
+.compiler-web-shell .CodeMirror {
+  height: 640px !important;
+  min-height: 640px;
+  max-height: 640px;
+  border-radius: 0;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.compiler-web-shell .controlled-editor {
+  height: 640px;
+}
+
+.compiler-web-shell .CodeMirror-scroll {
+  height: 100% !important;
+  max-height: 640px;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+}
+
+.compiler-web-shell .CodeMirror-gutters {
+  background: #20262a !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.compiler-web-shell .CodeMirror,
+.compiler-web-shell .CodeMirror-scroll {
+  background: linear-gradient(180deg, #151a1d 0%, #111517 100%) !important;
+  color: #d9f3ec !important;
+}
+
+.compiler-web-shell .CodeMirror-cursor {
+  border-left: 1px solid #86f7a2 !important;
+}
+
+.compiler-web-shell .CodeMirror-linenumber {
+  color: rgba(227, 235, 232, 0.42) !important;
+}
+
+.compiler-web-shell .CodeMirror-selected {
+  background: rgba(134, 247, 162, 0.16) !important;
+}
+
+.compiler-resize-handle {
+  background: linear-gradient(180deg, rgba(134, 247, 162, 0.18), rgba(134, 247, 162, 0.06));
+}
+
+.compiler-resize-handle:hover {
+  background: linear-gradient(180deg, rgba(134, 247, 162, 0.3), rgba(134, 247, 162, 0.12));
+}

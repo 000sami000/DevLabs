@@ -1,0 +1,33 @@
+let mongoose = require("mongoose");
+let problem_schema = mongoose.Schema(
+  {
+    profile_img_: { type: Object, default: null },
+    title: { type: String, required: true },
+    problem_content: { type: String, required: true },
+    tags: [String],
+    likes: {
+      type: [String],
+      default: [],
+    },
+    saved_prob_by: {
+      type: [String],
+      default: [],
+    },
+    total_sol: {
+      type: [String],
+      default: [],
+    },
+    creator_name: { type: String, default: "" },
+    creator_username: { type: String, default: "", required: true },
+    creator_id: { type: String, default: "", required: true },
+    isApproved: { type: Boolean, default: true },
+    isSolved: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
+const problem_Model = mongoose.model("problems_", problem_schema);
+module.exports = problem_Model;
+
+
+
