@@ -1,9 +1,7 @@
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const express = require("express");
-const fs = require("fs");
 const morgan = require("morgan");
-const os = require("os");
 const path = require("path");
 const { exec } = require("child_process");
 const { randomUUID } = require("crypto");
@@ -11,6 +9,14 @@ const env = require("./config/env");
 const { apiRateLimiter } = require("./middlewares/rateLimiter");
 const { notFoundHandler, errorHandler } = require("./middlewares/error.middleware");
 const routes = require("./routes");
+const Docker = require("dockerode");
+const fs = require("fs");
+const os = require("os");
+
+const { randomUUID } = require("crypto");
+const { runPython, runJS, runCPP } = require("../code");
+
+const docker = new Docker();
 
 const app = express();
 
@@ -87,6 +93,36 @@ app.post("/run", (req, res) => {
     return res.json({ output: stdout });
   });
 });
+
+/*
+app.post("/run", async (req, res) => {
+  const { language, code } = req.body;
+
+  try {
+    let output = "";
+
+    if (language === "python") {
+      output = await runPython(code);
+    } 
+    else if (language === "javascript") {
+      output = await runJS(code);
+    } 
+    else if (language === "c_cpp") {
+      output = await runCPP(code);
+    } 
+    else {
+      return res.status(400).json({ output: "Unsupported language" });
+    }
+
+    return res.json({ output: output.toString() });
+
+  } catch (err) {
+    return res.status(500).json({
+      output: err.message
+    });
+  }
+});
+*/
 
 app.use(routes);
 app.use(notFoundHandler);
