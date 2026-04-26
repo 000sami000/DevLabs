@@ -60,7 +60,6 @@ dist/
 # MongoDB dump files
 dump/
 *.bson
-*.json
 
 # ==============================
 # OS Files
