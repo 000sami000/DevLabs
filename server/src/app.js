@@ -13,7 +13,6 @@ const Docker = require("dockerode");
 const fs = require("fs");
 const os = require("os");
 
-const { randomUUID } = require("crypto");
 const { runPython, runJS, runCPP } = require("../code");
 
 const docker = new Docker();

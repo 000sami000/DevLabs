@@ -132,7 +132,7 @@ function Article_form({ user, Edit_articleobj, setEdit_articleobj, onArticleSave
   const handleFileClick = () => inputRef.current?.click();
 
   return (
-    <div className="theme-surface overflow-hidden rounded-lg border">
+    <div className="theme-surface overflow-visible rounded-lg border">
       {/* Header with actions */}
       <div className="border-b border-[var(--app-border)] bg-[var(--app-bg-soft)] px-5 py-4 md:px-7">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -313,9 +313,9 @@ function Article_form({ user, Edit_articleobj, setEdit_articleobj, onArticleSave
         )}
 
         {/* Editor / Preview area */}
-        <div className="mt-2">
+        <div className="relative z-10 mt-2">
           {activeView === "edit" ? (
-            <div className="overflow-hidden rounded-lg border border-[var(--app-border)] bg-[var(--app-bg)] transition focus-within:ring-1 focus-within:ring-[var(--app-accent)]">
+            <div className="relative overflow-visible rounded-lg border border-[var(--app-border)] bg-[var(--app-bg)] transition focus-within:ring-1 focus-within:ring-[var(--app-accent)]">
               <div className="border-b border-[var(--app-border)] bg-[var(--app-bg-soft)] px-4 py-2 text-xs font-medium text-[var(--app-muted)]">
                 {isLegacyContent ? "Rich text editor (HTML)" : "Block editor"}
               </div>

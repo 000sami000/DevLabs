@@ -20,7 +20,7 @@ services:
     container_name: devlabs-mongo-express
     restart: unless-stopped
     ports:
-      - "8081:8081"
+      - "8081:3000"
     env_file:
       - .env
     environment:

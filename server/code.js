@@ -1,4 +1,4 @@
-export async function runPython(code) {
+ async function runPython(code) {
   const id = randomUUID();
   const dir = path.join(os.tmpdir(), id);
 
@@ -31,7 +31,7 @@ export async function runPython(code) {
 }
 
 
-export async function runJS(code) {
+ async function runJS(code) {
   const id = randomUUID();
   const dir = path.join(os.tmpdir(), id);
 
@@ -63,7 +63,7 @@ export async function runJS(code) {
   return logs.toString();
 }
 
-export async function runCPP(code) {
+async function runCPP(code) {
   const id = randomUUID();
   const dir = path.join(os.tmpdir(), id);
 
@@ -93,3 +93,9 @@ export async function runCPP(code) {
 
   return logs.toString();
 }
+
+module.exports = {
+  runPython,
+  runJS,
+  runCPP,
+};

@@ -1,114 +1,70 @@
 const app = require("./app");
 const mongoose = require("mongoose");
-const connectToDatabase = require("./config/db");
+const connectDB = require("./config/db");
 const { getPoolStatus } = require("./config/db");
 const env = require("./config/env");
 const logger = require("./config/logger");
 
-let server = null;
-let isShuttingDown = false;
+let server;
+let shuttingDown = false;
 
-const gracefulShutdown = async (signal) => {
-  if (isShuttingDown) {
-    logger.warn("Graceful shutdown already in progress", { signal });
-    return;
-  }
+async function gracefulShutdown(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
 
-  isShuttingDown = true;
-  logger.warn(`Received ${signal}, starting graceful shutdown...`);
+  logger.warn(`Shutting down (${signal})...`);
+  logger.info("Pool status:", getPoolStatus());
 
-  const finalPoolStatus = getPoolStatus();
-  logger.info("Final connection pool status", finalPoolStatus);
-
-  const shutdownTimeout = setTimeout(() => {
-    logger.error("Forced shutdown due to timeout");
+  const timeout = setTimeout(() => {
+    logger.error("Forced shutdown");
     process.exit(1);
   }, 10000);
 
   try {
-    if (server) {
-      await new Promise((resolve, reject) => {
-        server.close((err) => {
-          if (err) reject(err);
-          else resolve();
-        });
-      });
-      logger.info("HTTP server closed");
-    }
+    if (server) await new Promise(res => server.close(res));
+    if (mongoose.connection.readyState === 1) await mongoose.disconnect();
 
-    if (mongoose.connection.readyState === 1) {
-      logger.info("Waiting for pending database operations to complete...");
-      await mongoose.disconnect();
-      logger.info("Database connection pool drained and closed");
-    }
-
-    clearTimeout(shutdownTimeout);
-    logger.info("Graceful shutdown completed");
+    clearTimeout(timeout);
+    logger.info("Shutdown complete");
     process.exit(0);
-  } catch (error) {
-    logger.error("Error during graceful shutdown", { error: error.message });
-    clearTimeout(shutdownTimeout);
+  } catch (err) {
+    logger.error("Shutdown error:", err.message);
     process.exit(1);
   }
-};
+}
 
-const startServer = async () => {
+async function start() {
   try {
-    await connectToDatabase();
+    await connectDB();
 
-    const initialPoolStatus = getPoolStatus();
-    logger.info("Initial connection pool status", initialPoolStatus);
+    logger.info("DB connected:", getPoolStatus());
 
     server = app.listen(env.port, () => {
-      logger.info("Server running", {
-        port: env.port,
-        envPath: env.envPath,
-        poolConfig: {
-          maxSize: env.dbPoolMaxSize,
-          minSize: env.dbPoolMinSize,
-        },
-      });
+      logger.info(`Server running on port ${env.port}`);
     });
 
-    server.on("error", (error) => {
-      logger.error("Server error", { error: error.message });
-      gracefulShutdown("SERVER_ERROR");
-    });
+    server.on("error", () => gracefulShutdown("SERVER_ERROR"));
 
-    process.on("SIGINT", () => gracefulShutdown("SIGINT"));
-    process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+    ["SIGINT", "SIGTERM"].forEach(sig =>
+      process.on(sig, () => gracefulShutdown(sig))
+    );
 
-    process.on("uncaughtException", (error) => {
-      logger.error("Uncaught Exception", { error: error.message, stack: error.stack });
+    process.on("uncaughtException", err => {
+      logger.error("Uncaught:", err);
       gracefulShutdown("UNCAUGHT_EXCEPTION");
     });
 
-    process.on("unhandledRejection", (reason) => {
-      logger.error("Unhandled Rejection", {
-        reason: reason?.message || reason,
-        stack: reason?.stack,
-      });
-
+    process.on("unhandledRejection", err => {
+      logger.error("Unhandled:", err);
       if (env.nodeEnv === "production") {
         gracefulShutdown("UNHANDLED_REJECTION");
-        return;
       }
-
-      logger.warn("Unhandled rejection ignored in non-production mode");
     });
 
-    if (app.get("env") !== "production") {
-      app.get("/db-pool-status", (req, res) => {
-        res.json(getPoolStatus());
-      });
-    }
-  } catch (error) {
-    logger.error("Failed to start server", {
-      message: error.message,
-      stack: error.stack,
-    });
+  } catch (err) {
+    logger.error("Startup failed:", err);
     process.exit(1);
   }
-};
+}
 
-startServer();
+start();

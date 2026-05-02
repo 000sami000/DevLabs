@@ -139,7 +139,7 @@ function Create_main() {
         {activeType === "problem" ? (
           <Problem_form user={user} />
         ) : (
-          <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
+          <div className="grid gap-5 xl:grid-cols-[260px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)]">
             <aside className="theme-surface rounded-md border p-4">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-lg font-semibold">Drafts</h2>
