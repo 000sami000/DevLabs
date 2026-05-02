@@ -1,8 +1,8 @@
 # DevLabs — Developer Community Platform
 
-A full-stack developer community platform designed to enable collaboration, learning, and career growth. DevLabs provides a centralized environment where developers can solve problems, share knowledge, explore content, and discover opportunities.
+A full-stack developer community platform designed for learning, and career growth. DevLabs provides a centralized environment where developers can solve problems, share knowledge, explore content, and discover opportunities.
 
-**Repository:** [https://github.com/000sami000/DevLabs](https://github.com/000sami000/DevLabs)
+
 
 ---
 
@@ -116,14 +116,10 @@ npm run dev:server
 - Secure authentication using JWT
 - Structured content management for rich text editors
 - Scalable MongoDB schema design
-- Support for real-time collaborative features
+
 
 ---
 
-## Timeline
-
-**December 2023 – February 2024**  
-University of Engineering and Technology, Lahore
 
 ---
 
@@ -137,13 +133,7 @@ University of Engineering and Technology, Lahore
 
 ---
 
-## Future Enhancements
 
-- [ ] Real-time notifications using WebSockets
-- [ ] AI-assisted code suggestions
-- [ ] Improved mobile responsiveness
-- [ ] Multi-language support
-- [ ] Advanced analytics and recommendation systems
 
 ---
 
