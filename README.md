@@ -1,45 +1,164 @@
-# DevLabs
+# DevLabs — Developer Community Platform
 
-Production-oriented monorepo layout for the DevLabs platform.
+A full-stack developer community platform designed to enable collaboration, learning, and career growth. DevLabs provides a centralized environment where developers can solve problems, share knowledge, explore content, and discover opportunities.
 
-## Structure
+**Repository:** [https://github.com/000sami000/DevLabs](https://github.com/000sami000/DevLabs)
 
-- `client/`: React + Vite frontend
-- `server/`: Express + MongoDB backend
-- `.env`: runtime environment values
-- `.env.example`: example environment template
-- `docker-compose.yml`: local MongoDB dependency
+---
 
-## Commands
+## Overview
 
-- `npm run dev:client`: start the frontend
-- `npm run dev:server`: start the backend with Node watch mode
-- `npm run build:client`: build the frontend
-- `npm run start:server`: run the backend in start mode
+DevLabs is built to support developers across different stages of their journey. It integrates problem-solving, content creation, learning resources, job discovery, and collaboration tools into a single platform.
 
-## Server Layout
+---
 
-- `server/src/config`: env, logger, and database bootstrap
-- `server/src/modules`: feature-based modules
-- `server/src/middlewares`: auth, error, and rate-limiting middleware
-- `server/src/routes`: central route composition
-- `server/src/utils`: shared helpers
-- `server/src/app.js`: express app wiring
-- `server/src/server.js`: process bootstrap
+## Tech Stack
 
-## Environment
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React.js, Tailwind CSS, Editor.js, Quill.js |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB |
+| **Auth** | JSON Web Tokens (JWT) |
+| **Extras** | Map-based job visualization, Job scraping utilities, Collaborative whiteboard |
 
-Copy `.env.example` to `.env` and fill in the required values.
+---
 
-At minimum the backend needs:
+## Features
 
-- `JWT_SECRET`
-- `MONGODB_URI`
-- `ORIGIN`
+### 🧩 Problem Solving
+- Post coding problems
+- Submit and browse solutions
+- Community-driven discussions
 
-The frontend reads `VITE_API_URL`.
+### 📝 Article Platform
+- Rich text editor support
+- Tag-based categorization
+- Thumbnail-based content presentation
 
-## Notes
+### 📚 Course Section
+- Admin-uploaded PDF learning materials
+- Structured educational content
 
-- The new runtime source of truth is `client/` and `server/`.
-- Existing `Frontend/` and `Backend/` folders may still exist locally as migration fallback until you remove them.
+### 💼 Job Portal
+- Scraped job listings
+- Map-based job location navigation
+
+### 👤 User Profiles
+- Profile management
+- Activity tracking and dashboards
+
+### 🎨 Collaborative Whiteboard
+- Real-time brainstorming tool
+- Persistent saved sessions
+
+### 📊 Analytics Dashboard
+- Platform usage insights
+- User engagement tracking
+
+---
+
+## Project Structure
+
+```
+DevLabs/
+│
+├── client/        # Frontend application
+├── server/        # Backend application
+│
+└── package.json   # Root configuration
+```
+
+---
+
+## Root Scripts
+
+```json
+{
+  "name": "devlabs",
+  "private": true,
+  "scripts": {
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build:client": "npm --prefix client run build",
+    "start:server": "npm --prefix server run start",
+    "lint:client": "npm --prefix client run lint"
+  }
+}
+```
+
+---
+
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```bash
+npm install
+cd client && npm install
+cd ../server && npm install
+```
+
+### 2. Run the Application
+
+```bash
+# In separate terminals
+npm run dev:client
+npm run dev:server
+```
+
+---
+
+## Architecture
+
+- Modular full-stack architecture with separate client and server layers
+- RESTful API design using Express.js
+- Secure authentication using JWT
+- Structured content management for rich text editors
+- Scalable MongoDB schema design
+- Support for real-time collaborative features
+
+---
+
+## Timeline
+
+**December 2023 – February 2024**  
+University of Engineering and Technology, Lahore
+
+---
+
+## Use Cases
+
+- Practicing data structures and algorithms
+- Publishing technical articles
+- Accessing curated learning materials
+- Exploring job opportunities
+- Collaborating on ideas and problem-solving
+
+---
+
+## Future Enhancements
+
+- [ ] Real-time notifications using WebSockets
+- [ ] AI-assisted code suggestions
+- [ ] Improved mobile responsiveness
+- [ ] Multi-language support
+- [ ] Advanced analytics and recommendation systems
+
+---
+
+## Author
+
+**Muhammad Sami** — Software Engineer
+
+---
+
+## License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## Contribution
+
+Contributions are welcome. Please fork the repository and submit a pull request for review.
