@@ -121,7 +121,6 @@ npm run dev:server
 ---
 
 
----
 
 ## Use Cases
 
@@ -135,17 +134,10 @@ npm run dev:server
 
 
 
----
 
 ## Author
 
 **Muhammad Sami** — Software Engineer
-
----
-
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
