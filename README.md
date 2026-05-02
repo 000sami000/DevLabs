@@ -48,9 +48,9 @@ DevLabs is built to support developers across different stages of their journey.
 - Profile management
 - Activity tracking and dashboards
 
-### 🎨 Collaborative Whiteboard
-- Real-time brainstorming tool
-- Persistent saved sessions
+### 🎨 Whiteboard
+- Create and manage multiple whiteboards
+- Save whiteboard snapshots for later reference
 
 ### 📊 Analytics Dashboard
 - Platform usage insights
